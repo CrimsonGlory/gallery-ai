@@ -68,3 +68,6 @@ target/
 /*.snap
 /*_source.tar.bz2
 /gallery-dl
+
+# Upstream-merge automation logs (pull_upstream.sh)
+/tmp/
