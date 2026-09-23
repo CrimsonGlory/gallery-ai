@@ -738,8 +738,7 @@ class InstagramHighlightsExtractor(InstagramExtractor):
     example = "https://www.instagram.com/USER/highlights/"
 
     def posts(self):
-        uid = self.api.user(self.item)["id"]
-        return self.api.highlights_media(uid)
+        return self.api.highlights_media(self.item)
 
 
 class InstagramFollowersExtractor(InstagramExtractor):
@@ -855,8 +854,8 @@ class InstagramAPI():
         else:
             self._strategy_uid = ("search", "web")
 
-    def highlights_media(self, user_id, chunk_size=5):
-        reel_ids = [hl["id"] for hl in self.highlights_tray(user_id)]
+    def highlights_media(self, handle, chunk_size=5):
+        reel_ids = [hl["id"] for hl in self.highlights_tray(handle)]
 
         if order := self.extractor.config("order-posts"):
             if order in {"desc", "reverse"}:
@@ -872,7 +871,17 @@ class InstagramAPI():
             yield from self.reels_media(
                 reel_ids[offset : offset+chunk_size])
 
-    def highlights_tray(self, user_id):
+    def highlights_tray(self, handle):
+        user = self.user(handle)
+        variables = {"user_id": str(user["id"])}
+
+        return self._pagination_graphql(
+            "PolarisProfileStoryHighlightsTrayContentQuery",
+            "highlights",
+            "26970053832668570",
+            variables)
+
+    def highlights_tray_legacy(self, user_id):
         endpoint = f"/v1/highlights/{user_id}/highlights_tray/"
         return self._call(endpoint)["tray"]
 
@@ -896,7 +905,6 @@ class InstagramAPI():
         return list(self._pagination_graphql(
             "PolarisStoriesV3HighlightsPageQuery",
             "xdt_api__v1__feed__reels_media__connection",
-            "",  # home page
             "28325328583775973",
             variables))
 
@@ -1076,7 +1084,6 @@ class InstagramAPI():
         return self._pagination_graphql(
             "PolarisProfilePostsTabContentQuery_connection",
             "xdt_api__v1__feed__user_timeline_graphql_connection",
-            "/" + username,
             "27648175911528613",
             variables)
 
@@ -1100,7 +1107,6 @@ class InstagramAPI():
         return self._pagination_graphql(
             "PolarisProfileReelsTabContentQuery",
             "fetch__XDTUserDict",
-            "/" + user["username"],
             "28170354102656082",
             variables)
 
@@ -1257,10 +1263,12 @@ class InstagramAPI():
                 return extr._update_cursor(None)
             params["max_id"] = extr._update_cursor(next_max_id)
 
-    def _pagination_graphql(self, opname, fieldname, path, doc_id, variables):
+    def _pagination_graphql(self, opname, fieldname, doc_id, variables):
         extr = self.extractor
         root = extr.root
         url = root + "/graphql/query"
+
+        path = ("/" + extr._user["username"]) if extr._user else ""
         fb_lsd, fb_dtsg = self._extract_fb_tokens(path)
         doc_id = extr.cache(self._extract_docid, path, opname,
                             _key=1, _exp=86400, _mem=False) or doc_id
