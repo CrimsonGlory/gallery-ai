@@ -7644,6 +7644,17 @@ Description
     a quoted (original) Tweet when it sees the Tweet which quotes it.
 
 
+extractor.twitter.quoted-expand
+-------------------------------
+Type
+    ``bool``
+Default
+    `extractor.twitter.quoted`_
+Description
+    When encountering a quoted Tweet with empty/missing data,
+    fetch its complete body via an additional API request.
+
+
 extractor.twitter.ratelimit
 ---------------------------
 Type
