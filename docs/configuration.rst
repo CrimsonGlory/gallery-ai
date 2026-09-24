@@ -328,7 +328,7 @@ Default
     `extractor.parent <extractor.*.parent_>`__
 Description
     Share a parent's
-    `session <https://requests.readthedocs.io/en/latest/user/advanced/#session-objects>`__
+    `session <https://curl-cffi.readthedocs.io/en/latest/quick_start.html>`__
     with its child extractors, including
     `cookies <extractor.*.cookies_>`__,
     `headers <extractor.*.headers_>`__,
@@ -931,7 +931,7 @@ Description
       specify different proxy URLs for each scheme.
       It is also possible to set a proxy for a specific host by using
       ``scheme://host`` as key.
-      See `Requests' proxy documentation`_ for more details.
+      See `curl_cffi's proxy documentation`_ for more details.
 Note
     If a proxy URL does not include a scheme, ``http://`` is assumed.
 
@@ -1037,7 +1037,8 @@ Example
     * ``"chrome/138:macos"``
 Description
     | Try to emulate a real browser (``firefox`` or ``chrome``)
-    | by using its HTTP headers and TLS ciphers for HTTP requests
+    | by using its HTTP headers and, via curl_cffi_, its TLS and HTTP/2
+      fingerprint for HTTP requests
       by setting specialized defaults for
 
     * `user-agent <extractor.*.user-agent_>`__
@@ -1062,8 +1063,8 @@ Note
     Any value *not* matching a supported browser
     will fall back to ``"firefox"``.
 
-    ``requests`` and ``urllib3`` only support HTTP/1.1, while a real
-    browser would use HTTP/2 and HTTP/3.
+    With a supported browser, requests are sent by curl_cffi_ with that
+    browser's TLS and HTTP/2 fingerprint. HTTP/3 is not used by default.
 
 
 extractor.*.referer
@@ -1154,13 +1155,12 @@ Example
          "ECDHE-RSA-CHACHA20-POLY1305"]
 
 Description
-    List of TLS/SSL cipher suites in
-    `OpenSSL cipher list format <https://docs.openssl.org/master/man1/openssl-ciphers/#cipher-list-format>`__
-    to be passed to
-    `ssl.SSLContext.set_ciphers() <https://docs.python.org/3/library/ssl.html#ssl.SSLContext.set_ciphers>`__
+    | TLS cipher configuration for HTTPS requests made with curl_cffi_.
+    | A list or an OpenSSL cipher string is passed to libcurl
+      (``TLS_*`` names are TLS 1.3 ciphers; other names are TLS 1.2).
 
     Set this option to ``"firefox"`` or ``"chrome"``
-    to use these browser's default ciphers.
+    to impersonate that browser instead of sending a raw cipher list.
 
 
 extractor.*.tls12
@@ -1175,9 +1175,9 @@ Default
     ``true``
         otherwise
 Description
-    Allow selecting TLS 1.2 cipher suites.
+    Allow TLS 1.2.
 
-    Can be disabled to alter TLS fingerprints
+    Can be disabled to offer only TLS 1.3
     and potentially bypass Cloudflare blocks.
 
 
@@ -11052,7 +11052,7 @@ Default
     ``"default"``
 Description
     The `Warnings Filter action <https://docs.python.org/3/library/warnings.html#the-warnings-filter>`__
-    used for (urllib3) warnings.
+    used for curl_cffi_ warnings.
 
 
 server.host
@@ -11712,7 +11712,7 @@ Reference
 .. |jinja| replace:: Jinja
 
 .. |.netrc| replace:: ``.netrc``
-.. |requests.request()| replace:: ``requests.request()``
+.. |requests.request()| replace:: ``curl_cffi`` request
 .. |timeout| replace:: ``timeout``
 .. |verify| replace:: ``verify``
 .. |mature_content| replace:: ``mature_content``
@@ -11769,7 +11769,8 @@ Reference
 .. _youtube-dl:         https://github.com/ytdl-org/youtube-dl
 .. _yt-dlp:             https://github.com/yt-dlp/yt-dlp
 .. _FFmpeg:             https://www.ffmpeg.org/
-.. _requests.request(): https://requests.readthedocs.io/en/master/api/#requests.request
-.. _timeout:            https://requests.readthedocs.io/en/master/user/advanced/#timeouts
-.. _verify:             https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification
-.. _`Requests' proxy documentation`: https://requests.readthedocs.io/en/master/user/advanced/#proxies
+.. _requests.request(): https://curl-cffi.readthedocs.io/en/latest/api.html
+.. _timeout:            https://curl-cffi.readthedocs.io/en/latest/api.html
+.. _verify:             https://curl-cffi.readthedocs.io/en/latest/api.html
+.. _curl_cffi:          https://curl-cffi.readthedocs.io/
+.. _`curl_cffi's proxy documentation`: https://curl-cffi.readthedocs.io/en/latest/quick_start.html#proxies

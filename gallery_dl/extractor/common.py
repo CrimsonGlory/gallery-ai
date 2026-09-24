@@ -10,7 +10,6 @@
 
 import os
 import re
-import ssl
 import time
 import netrc
 import queue
@@ -18,13 +17,10 @@ import pickle
 import random
 import getpass
 import logging
-import requests
 import threading
 from xml.etree import ElementTree
-from requests.adapters import HTTPAdapter
 from .message import Message
-from .. import config, output, text, util, dt, cache, exception
-urllib3 = requests.packages.urllib3
+from .. import config, output, text, util, dt, cache, exception, http
 
 
 class Extractor():
@@ -183,7 +179,7 @@ class Extractor():
         while True:
             try:
                 response = session.request(method, url, **kwargs)
-            except requests.exceptions.ConnectionError as exc:
+            except http.ConnectionError as exc:
                 try:
                     reason = exc.args[0].reason
                     cls = reason.__class__.__name__
@@ -192,12 +188,12 @@ class Extractor():
                 except Exception:
                     msg = exc
                 code = 0
-            except (requests.exceptions.Timeout,
-                    requests.exceptions.ChunkedEncodingError,
-                    requests.exceptions.ContentDecodingError) as exc:
+            except (http.Timeout,
+                    http.ChunkedEncodingError,
+                    http.ContentDecodingError) as exc:
                 msg = exc
                 code = 0
-            except (requests.exceptions.RequestException) as exc:
+            except (http.RequestException) as exc:
                 msg = exc
                 break
             else:
@@ -528,12 +524,12 @@ class Extractor():
                 self.request_interval_429)
 
     def _init_session(self):
-        self.session = session = requests.Session()
+        self.session = session = http.Session()
         headers = session.headers
         headers.clear()
-        ssl_options = ssl_ciphers = 0
 
-        # .netrc Authorization headers are always disabled
+        # .netrc Authorization headers are not injected.
+        # trust_env still controls http_proxy / https_proxy / all_proxy.
         session.trust_env = True if self.config("proxy-env", True) else False
 
         browser = self.config("browser")
@@ -567,17 +563,21 @@ class Extractor():
                 else:
                     headers[key] = value
 
-            ssl_options |= (ssl.OP_NO_SSLv2 | ssl.OP_NO_SSLv3 |
-                            ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1)
-            ssl_ciphers = CIPHERS[browser]
+            # TLS/HTTP2 fingerprint of that browser. Headers above stay
+            # gallery-dl's; curl_cffi must not replace them.
+            session.impersonate = (
+                "chrome" if browser.startswith("chrome") else "firefox")
         else:
             headers["User-Agent"] = self.useragent
             headers["Accept"] = "*/*"
             headers["Accept-Language"] = "en-US,en;q=0.5"
 
-            ssl_ciphers = self.ciphers
-            if ssl_ciphers is not None and ssl_ciphers in CIPHERS:
-                ssl_ciphers = CIPHERS[ssl_ciphers]
+            if self.ciphers in CIPHERS:
+                preset = self.ciphers.partition("/")[0]
+                if preset in ("firefox", "chrome"):
+                    session.impersonate = preset
+            elif self.ciphers:
+                _apply_cipher_list(session, self.ciphers)
 
         if BROTLI:
             headers["Accept-Encoding"] = "gzip, deflate, br"
@@ -641,38 +641,51 @@ class Extractor():
 
         if custom_ciphers := self.config("ciphers"):
             if isinstance(custom_ciphers, list):
-                ssl_ciphers = ":".join(custom_ciphers)
+                cipher_list = ":".join(custom_ciphers)
             elif custom_ciphers in CIPHERS:
-                ssl_ciphers = CIPHERS[custom_ciphers]
+                preset = custom_ciphers.partition("/")[0]
+                if preset in ("firefox", "chrome"):
+                    # a named preset is a browser fingerprint, not a raw list
+                    session.impersonate = preset
+                    cipher_list = None
+                else:
+                    cipher_list = CIPHERS[custom_ciphers]
             else:
-                ssl_ciphers = custom_ciphers
+                cipher_list = custom_ciphers
+            if cipher_list:
+                # an explicit list replaces impersonation, which would
+                # overwrite these cipher options on each request
+                session.impersonate = None
+                _apply_cipher_list(session, cipher_list)
 
         if source_address := self.config("source-address"):
             if isinstance(source_address, str):
                 source_address = (source_address, 0)
             else:
                 source_address = (source_address[0], source_address[1])
+            session.interface = source_address[0]
+            if source_address[1]:
+                session.curl_options[http.CurlOpt.LOCALPORT] = \
+                    str(source_address[1])
 
         tls12 = self.config("tls12")
         if tls12 is None:
             tls12 = self.tls12
         if not tls12:
-            ssl_options |= ssl.OP_NO_TLSv1_2
+            # minimum version TLS 1.3, so 1.2 suites are not offered
+            session.curl_options[http.CurlOpt.SSLVERSION] = str(
+                int(http.CurlSslVersion.TLSv1_3))
             self.log.debug("TLS 1.2 disabled.")
 
         if self.config("truststore"):
             try:
-                from truststore import SSLContext as ssl_ctx
+                import truststore  # noqa: F401
             except ImportError as exc:
                 self.log.error("%s: %s", exc.__class__.__name__, exc)
-                ssl_ctx = None
-        else:
-            ssl_ctx = None
-
-        adapter = _build_requests_adapter(
-            ssl_options, ssl_ciphers, ssl_ctx, source_address)
-        session.mount("https://", adapter)
-        session.mount("http://", adapter)
+            else:
+                self.log.warning(
+                    "truststore is not used by curl_cffi; "
+                    "certificate verification uses curl's CA bundle")
 
     def _init_cookies(self):
         """Populate the session's cookiejar"""
@@ -1151,55 +1164,12 @@ class BaseExtractor(Extractor):
                 f"(?:https?://)?(?:{'|'.join(pattern_list)}))")
 
 
-class RequestsAdapter(HTTPAdapter):
-
-    def __init__(self, ssl_context=None, source_address=None):
-        self.ssl_context = ssl_context
-        self.source_address = source_address
-        HTTPAdapter.__init__(self)
-
-    def init_poolmanager(self, *args, **kwargs):
-        kwargs["ssl_context"] = self.ssl_context
-        kwargs["source_address"] = self.source_address
-        return HTTPAdapter.init_poolmanager(self, *args, **kwargs)
-
-    def proxy_manager_for(self, *args, **kwargs):
-        kwargs["ssl_context"] = self.ssl_context
-        kwargs["source_address"] = self.source_address
-        return HTTPAdapter.proxy_manager_for(self, *args, **kwargs)
-
-
-def _build_requests_adapter(
-        ssl_options, ssl_ciphers, ssl_ctx, source_address):
-
-    key = (ssl_options, ssl_ciphers, ssl_ctx, source_address)
-    try:
-        return CACHE_ADAPTERS[key]
-    except KeyError:
-        pass
-
-    if ssl_options or ssl_ciphers or ssl_ctx:
-        if ssl_ctx is None:
-            ssl_context = urllib3.connection.create_urllib3_context(
-                options=ssl_options or None, ciphers=ssl_ciphers)
-            if not requests.__version__ < "2.32":
-                # https://github.com/psf/requests/pull/6731
-                ssl_context.load_verify_locations(requests.certs.where())
-        else:
-            ssl_ctx_orig = urllib3.util.ssl_.SSLContext
-            try:
-                urllib3.util.ssl_.SSLContext = ssl_ctx
-                ssl_context = urllib3.connection.create_urllib3_context(
-                    options=ssl_options or None, ciphers=ssl_ciphers)
-            finally:
-                urllib3.util.ssl_.SSLContext = ssl_ctx_orig
-        ssl_context.check_hostname = False
-    else:
-        ssl_context = None
-
-    adapter = CACHE_ADAPTERS[key] = RequestsAdapter(
-        ssl_context, source_address)
-    return adapter
+def _apply_cipher_list(session, cipher_list):
+    tls12_ciphers, tls13_ciphers = http._split_ciphers(cipher_list)
+    if tls12_ciphers:
+        session.curl_options[http.CurlOpt.SSL_CIPHER_LIST] = tls12_ciphers
+    if tls13_ciphers:
+        session.curl_options[http.CurlOpt.TLS13_CIPHERS] = tls13_ciphers
 
 
 def _browser_useragent(browser):
@@ -1244,7 +1214,6 @@ def _browser_useragent(browser):
     return useragent.decode()
 
 
-CACHE_ADAPTERS = {}
 CACHE_COOKIES = {}
 CACHE_MEMORY = {}
 CACHE_UTILS = {}
@@ -1435,30 +1404,6 @@ CIPHERS = {
 }
 
 
-# disable Basic Authorization header injection from .netrc data
-try:
-    requests.sessions.get_netrc_auth = lambda _: None
-except Exception:
-    pass
-
-# detect brotli support
-try:
-    BROTLI = urllib3.response.brotli is not None
-except AttributeError:
-    BROTLI = False
-
-# detect zstandard support
-try:
-    ZSTD = urllib3.response.HAS_ZSTD
-except AttributeError:
-    ZSTD = False
-
-# set (urllib3) warnings filter
-action = config.getg("warnings", "default")
-if action:
-    try:
-        import warnings
-        warnings.simplefilter(action, urllib3.exceptions.HTTPWarning)
-    except Exception:
-        pass
-del action
+# brotli / zstd are decoded by the curl build curl_cffi ships
+BROTLI = http.BROTLI
+ZSTD = http.ZSTD

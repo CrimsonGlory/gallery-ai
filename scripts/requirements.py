@@ -11,7 +11,7 @@ import util
 import sys
 import re
 import argparse
-import requests
+from curl_cffi import requests
 
 session = None
 results = {}

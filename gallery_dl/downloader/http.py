@@ -10,10 +10,12 @@
 
 import time
 import mimetypes
-from requests.exceptions import RequestException, ConnectionError, Timeout
-from .common import DownloaderBase
-from .. import text, util, output, exception
 from ssl import SSLError
+from .common import DownloaderBase
+from .. import text, util, output, exception, http
+RequestException = http.RequestException
+ConnectionError = http.ConnectionError
+Timeout = http.Timeout
 FLAGS = util.FLAGS
 
 
@@ -277,20 +279,17 @@ class HttpDownloader(DownloaderBase):
                 pathfmt.build_path()
                 if pathfmt.exists():
                     pathfmt.temppath = ""
-                    # release the connection back to pool by explicitly
-                    # calling .close()
-                    # see https://requests.readthedocs.io/en/latest/user
-                    # /advanced/#body-content-workflow
-                    # when the image size is on the order of megabytes,
-                    # re-establishing a TLS connection will typically be faster
-                    # than consuming the whole response
+                    # close without reading the body. For a multi-megabyte
+                    # file, dropping the connection is faster than consuming
+                    # the rest of the response.
                     response.close()
                     return True
                 if self.part and metadata:
                     pathfmt.part_enable(self.partdir)
                 metadata = False
 
-            content = response.iter_content(self.chunk_size)
+            # curl_cffi ignores chunk_size; read whatever libcurl yields
+            content = response.iter_content()
 
             validate_sig = kwdict.get("_http_signature")
             validate_ext = (adjust_extension and
@@ -299,9 +298,11 @@ class HttpDownloader(DownloaderBase):
             # check filename extension against file header
             if not offset and (validate_ext or validate_sig):
                 try:
-                    file_header = next(
-                        content if response.raw.chunked
-                        else response.iter_content(16), b"")
+                    file_header = b""
+                    for chunk in content:
+                        file_header += chunk
+                        if len(file_header) >= 16:
+                            break
                 except (RequestException, SSLError) as exc:
                     msg = str(exc)
                     continue
@@ -384,7 +385,7 @@ class HttpDownloader(DownloaderBase):
     def _release_conn_impl(self, response):
         """Release connection back to pool by consuming response body"""
         try:
-            for _ in response.iter_content(self.chunk_size):
+            for _ in response.iter_content():
                 pass
         except (RequestException, SSLError) as exc:
             output.stderr_write("\n")

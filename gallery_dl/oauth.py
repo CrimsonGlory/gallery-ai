@@ -16,10 +16,8 @@ import hashlib
 import binascii
 import urllib.parse
 
-import requests
-import requests.auth
-
 from . import text
+from .http import Session
 
 
 def nonce(size, alphabet=string.ascii_letters):
@@ -37,13 +35,13 @@ def concat(*args):
     return "&".join(quote(item) for item in args)
 
 
-class OAuth1Session(requests.Session):
-    """Extension to requests.Session to support OAuth 1.0"""
+class OAuth1Session(Session):
+    """Extension to curl_cffi's Session to support OAuth 1.0"""
 
     def __init__(self, consumer_key, consumer_secret,
                  token=None, token_secret=None):
 
-        requests.Session.__init__(self)
+        Session.__init__(self)
         self.auth = OAuth1Client(
             consumer_key, consumer_secret,
             token, token_secret,
@@ -55,7 +53,7 @@ class OAuth1Session(requests.Session):
             prepared_request.prepare_auth(self.auth)
 
 
-class OAuth1Client(requests.auth.AuthBase):
+class OAuth1Client():
     """OAuth1.0a authentication"""
 
     def __init__(self, consumer_key, consumer_secret,

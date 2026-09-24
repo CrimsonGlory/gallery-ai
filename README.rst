@@ -22,8 +22,8 @@ options, as well as powerful
 Dependencies
 ============
 
-- Python_ 3.8+
-- Requests_
+- Python_ 3.10+
+- curl_cffi_
 
 Optional
 --------
@@ -63,7 +63,7 @@ can be done with pip_ as well:
 
     python -m pip install -U --force-reinstall --no-deps https://codeberg.org/mikf/gallery-dl/archive/master.tar.gz
 
-Omit :code:`--no-deps` if Requests_ hasn't been installed yet.
+Omit :code:`--no-deps` if curl_cffi_ hasn't been installed yet.
 
 Note: Windows users should use :code:`py` instead of :code:`python`.
 
@@ -473,7 +473,7 @@ To authenticate with a ``mastodon`` instance, run *gallery-dl* with
 .. _Python:     https://www.python.org/downloads/
 .. _PyPI:       https://pypi.org/
 .. _pip:        https://pip.pypa.io/en/stable/
-.. _Requests:   https://requests.readthedocs.io/en/latest/
+.. _curl_cffi:  https://curl-cffi.readthedocs.io/
 .. _FFmpeg:     https://www.ffmpeg.org/
 .. _mkvmerge:   https://www.matroska.org/downloads/mkvtoolnix.html
 .. _yt-dlp:     https://github.com/yt-dlp/yt-dlp
