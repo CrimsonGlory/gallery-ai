@@ -6,7 +6,7 @@
 # it under the terms of the GNU General Public License version 2 as
 # published by the Free Software Foundation.
 
-"""Helpers for interacting with youtube-dl"""
+"""Helpers for interacting with yt-dlp, yt-ai, and youtube-dl"""
 
 import shlex
 import itertools
@@ -14,11 +14,27 @@ from . import text, util, exception
 
 
 def import_module(module_name):
+    """Import a yt-dlp-compatible module.
+
+    ``None`` tries ``yt_dlp``, then ``yt_ai``, then ``youtube_dl``.
+    ``"yt-ai"`` / ``"yt_ai"`` tries the ``yt_ai`` module and, if that
+    package still ships as ``yt_dlp``, that module instead.
+    """
     if module_name is None:
         try:
             return __import__("yt_dlp")
         except (ImportError, SyntaxError):
-            return __import__("youtube_dl")
+            try:
+                return __import__("yt_ai")
+            except (ImportError, SyntaxError):
+                return __import__("youtube_dl")
+
+    if module_name in {"yt-ai", "yt_ai"}:
+        try:
+            return __import__("yt_ai")
+        except (ImportError, SyntaxError):
+            return __import__("yt_dlp")
+
     return util.import_file(module_name)
 
 

@@ -28,7 +28,7 @@ Dependencies
 Optional
 --------
 
-- yt-dlp_ or youtube-dl_: HLS/DASH video downloads, ``ytdl`` integration
+- yt-dlp_, yt-ai_, or youtube-dl_: HLS/DASH video downloads, ``ytdl`` integration
 - FFmpeg_: Pixiv Ugoira conversion
 - mkvmerge_: Accurate Ugoira frame timecodes
 - PySocks_: SOCKS proxy support
@@ -477,6 +477,7 @@ To authenticate with a ``mastodon`` instance, run *gallery-dl* with
 .. _FFmpeg:     https://www.ffmpeg.org/
 .. _mkvmerge:   https://www.matroska.org/downloads/mkvtoolnix.html
 .. _yt-dlp:     https://github.com/yt-dlp/yt-dlp
+.. _yt-ai:      https://github.com/CrimsonGlory/yt-ai
 .. _youtube-dl: https://ytdl-org.github.io/youtube-dl/
 .. _PySocks:    https://pypi.org/project/PySocks/
 .. _brotli:     https://github.com/google/brotli

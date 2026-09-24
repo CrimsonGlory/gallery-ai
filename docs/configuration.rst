@@ -8540,12 +8540,18 @@ Default
     ``null``
 Example
     * ``"yt-dlp"``
+    * ``"yt-ai"``
     * ``"/home/user/.local/lib/python3.13/site-packages/youtube_dl"``
 Description
     The ``ytdl`` |Module|_ to import.
 
-    Setting this to ``null`` will try to import ``"yt_dlp"``
-    followed by ``"youtube_dl"`` as fallback.
+    Setting this to ``null`` will try to import ``"yt_dlp"``,
+    then ``"yt_ai"`` (the `yt-ai`_ fork),
+    then ``"youtube_dl"`` as fallback.
+
+    ``"yt-ai"`` imports ``yt_ai`` when that module exists, and otherwise
+    ``yt_dlp``, which is the name yt-ai still uses when it is installed
+    in place of yt-dlp.
 
 
 extractor.ytdl.raw-options
@@ -9069,12 +9075,18 @@ Default
     ``null``
 Example
     * ``"yt-dlp"``
+    * ``"yt-ai"``
     * ``"/home/user/.local/lib/python3.13/site-packages/youtube_dl"``
 Description
     The ``ytdl`` |Module|_ to import.
 
-    Setting this to ``null`` will try to import ``"yt_dlp"``
-    followed by ``"youtube_dl"`` as fallback.
+    Setting this to ``null`` will try to import ``"yt_dlp"``,
+    then ``"yt_ai"`` (the `yt-ai`_ fork),
+    then ``"youtube_dl"`` as fallback.
+
+    ``"yt-ai"`` imports ``yt_ai`` when that module exists, and otherwise
+    ``yt_dlp``, which is the name yt-ai still uses when it is installed
+    in place of yt-dlp.
 
 
 downloader.ytdl.outtmpl
@@ -11706,8 +11718,8 @@ Reference
 .. _formatting: formatting.md
 
 
-.. |ytdl| replace:: `yt-dlp`_/`youtube-dl`_
-.. |ytdl's| replace:: yt-dlp's/youtube-dl's
+.. |ytdl| replace:: `yt-dlp`_/`yt-ai`_/`youtube-dl`_
+.. |ytdl's| replace:: yt-dlp's/yt-ai's/youtube-dl's
 .. |ffmpeg| replace:: FFmpeg_
 .. |jinja| replace:: Jinja
 
@@ -11768,6 +11780,7 @@ Reference
 .. _OAuth:              https://codeberg.org/mikf/gallery-dl#oauth
 .. _youtube-dl:         https://github.com/ytdl-org/youtube-dl
 .. _yt-dlp:             https://github.com/yt-dlp/yt-dlp
+.. _yt-ai:              https://github.com/CrimsonGlory/yt-ai
 .. _FFmpeg:             https://www.ffmpeg.org/
 .. _requests.request(): https://curl-cffi.readthedocs.io/en/latest/api.html
 .. _timeout:            https://curl-cffi.readthedocs.io/en/latest/api.html

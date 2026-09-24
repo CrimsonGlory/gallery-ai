@@ -130,7 +130,7 @@ class TestExtractorModule(unittest.TestCase):
             extr = cls.from_url(url)
             find = extractor.find(url)
         except ImportError as exc:
-            if exc.name in ("youtube_dl", "yt_dlp"):
+            if exc.name in ("youtube_dl", "yt_dlp", "yt_ai"):
                 return sys.stdout.write(
                     f"Skipping '{cls.category}' category checks\n")
             raise
@@ -185,7 +185,7 @@ class TestExtractorModule(unittest.TestCase):
             if extr.finalize is not None:
                 extr.finalize(0)
         except ImportError as exc:
-            if exc.name in ("youtube_dl", "yt_dlp"):
+            if exc.name in ("youtube_dl", "yt_dlp", "yt_ai"):
                 raise unittest.SkipTest(f"cannot import module '{exc.name}'")
             raise
 

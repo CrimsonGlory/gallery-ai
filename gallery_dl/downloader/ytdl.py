@@ -6,7 +6,7 @@
 # it under the terms of the GNU General Public License version 2 as
 # published by the Free Software Foundation.
 
-"""Downloader module for URLs requiring youtube-dl support"""
+"""Downloader module for URLs requiring yt-dlp, yt-ai, or youtube-dl"""
 
 from .common import DownloaderBase
 from .. import ytdl, text, util
@@ -55,7 +55,8 @@ class YoutubeDLDownloader(DownloaderBase):
                     module = ytdl.import_module(self.config("module"))
                 except (ImportError, SyntaxError) as exc:
                     if exc.__context__:
-                        self.log.error("Cannot import yt-dlp or youtube-dl")
+                        self.log.error(
+                            "Cannot import yt-dlp, yt-ai, or youtube-dl")
                     else:
                         self.log.error("Cannot import module '%s'",
                                        getattr(exc, "name", ""))

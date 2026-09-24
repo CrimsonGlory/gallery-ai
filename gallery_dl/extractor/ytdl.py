@@ -6,7 +6,7 @@
 # it under the terms of the GNU General Public License version 2 as
 # published by the Free Software Foundation.
 
-"""Extractors for sites supported by youtube-dl"""
+"""Extractors for sites supported by yt-dlp, yt-ai, or youtube-dl"""
 
 from .common import Extractor, Message
 from .. import ytdl, config
