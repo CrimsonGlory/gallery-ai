@@ -905,6 +905,18 @@ Description
       of a valid cookies.txt file, update its contents.
 
 
+extractor.nhentai.api-key
+-------------------------
+Type
+    ``string``
+Default
+    ``null``
+Description
+    Your nHentai API key. Send it as an ``Authorization: Key <key>`` header
+    with API requests. Required for API endpoints that need account
+    authentication, such as favorites.
+
+
 extractor.*.proxy
 -----------------
 Type
