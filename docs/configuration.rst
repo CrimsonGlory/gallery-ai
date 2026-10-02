@@ -912,9 +912,9 @@ Type
 Default
     ``null``
 Description
-    Your nHentai API key. Send it as an ``Authorization: Key <key>`` header
-    with API requests. Required for API endpoints that need account
-    authentication, such as favorites.
+    Your nHentai API key. Required for API endpoints that need account
+    authentication, such as favorites. Generate an API key in your
+    `account settings <https://nhentai.net/user/settings#apikeys>`__
 
 
 extractor.*.proxy
