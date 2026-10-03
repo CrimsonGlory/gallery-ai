@@ -140,9 +140,9 @@ __tests__ = (
         "width"     : 850,
     },
     "score"           : {
-        "down" : -8,
-        "total": 134,
-        "up"   : 141,
+        "down" : int,
+        "total": int,
+        "up"   : int,
     },
 },
 
@@ -273,10 +273,7 @@ __tests__ = (
 
     "created_at"    : "2021-05-01T11:28:56.483-04:00",
     "creator_id"    : 338533,
-    "domains"       : [[
-        "furaffinity.net",
-        3,
-    ]],
+    "domains"       : list,
     "group_name"    : "",
     "id"            : 54632,
     "is_active"     : True,

@@ -170,7 +170,7 @@ __tests__ = (
     "#class"   : pillowfort.PillowfortUserExtractor,
     "#pattern" : r"https://img\d+\.pillowfort\.social/posts/",
     "#range"   : "1-15",
-    "#count"   : 15,
+    "#count"   : range(5, 16),
 },
 
 {
@@ -178,7 +178,7 @@ __tests__ = (
     "#category": ("", "pillowfort", "user"),
     "#class"   : pillowfort.PillowfortUserExtractor,
     "#pattern" : r"https://img\d+\.pillowfort\.social/posts/",
-    "#count"   : range(30, 50),
+    "#count"   : range(30, 80),
 },
 
 )

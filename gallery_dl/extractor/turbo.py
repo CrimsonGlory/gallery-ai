@@ -25,34 +25,54 @@ class TurboAlbumExtractor(LolisafeAlbumExtractor):
 
     def fetch_album(self, album_id):
         url = f"{self.root}/a/{album_id}"
-        extr = text.extract_from(self.request(url).text)
+        page = self.request(url).text
+        extr = text.extract_from(page)
         title = extr("<h1 ", "<")
         descr = extr("<p ", "<")
-        tbody = extr('id="fileTbody"', '</tbody>')
         headers = {"Referer": url}
 
-        return self._extract_files(tbody, headers), {
+        files = list(self._extract_files(page, headers))
+        return files, {
             "album_id"     : album_id,
             "album_name"   : text.unescape(title[title.find(">")+1:]),
             "description"  : text.unescape(descr[descr.find(">")+1:]),
-            "album_size"   : sum(map(text.parse_int, text.extract_iter(
-                tbody, 'data-size="', '"'))),
-            "count"        : tbody.count("data-id="),
+            "album_size"   : sum(f.get("size") or 0 for f in files),
+            "count"        : len(files),
             "_http_headers": headers,
         }
 
     def _extract_files(self, body, headers):
-        for file in text.extract_iter(body, "<tr", "</tr>"):
-            data_id = text.extr(file, 'data-id="', '"')
-            url = f"{self.root}/api/sign?v={data_id}"
-            data = self.request_json(url, headers=headers)
-            name = data.get("original_filename") or data.get("filename")
-            yield text.nameext_from_name(name, {
-                "id"  : data_id,
-                "file": data.get("url"),
-                "size": text.parse_int(text.extr(file, 'data-size="', '"')),
-                "_http_headers": headers,
-            })
+        tbody = text.extr(body, 'id="fileTbody"', "</tbody>")
+        if tbody:
+            for file in text.extract_iter(tbody, "<tr", "</tr>"):
+                data_id = text.extr(file, 'data-id="', '"')
+                if not data_id:
+                    continue
+                yield self._sign_file(
+                    data_id, headers,
+                    text.parse_int(text.extr(file, 'data-size="', '"')))
+            return
+
+        files_js = text.extr(body, "const FILES = [", "];")
+        if files_js:
+            for match in text.re(
+                    r'id\s*:\s*"([^"]+)"\s*,\s*name\s*:\s*"([^"]+)"'
+                    r'\s*,\s*size\s*:\s*(\d+)').finditer(files_js):
+                data_id, name, size = match.groups()
+                yield self._sign_file(
+                    data_id, headers, text.parse_int(size), name)
+
+    def _sign_file(self, data_id, headers, size=0, name=None):
+        url = f"{self.root}/api/sign?v={data_id}"
+        data = self.request_json(url, headers=headers)
+        name = (name or data.get("original_filename") or
+                data.get("filename"))
+        return text.nameext_from_name(name, {
+            "id"  : data_id,
+            "file": data.get("url"),
+            "size": size or text.parse_int(data.get("size")),
+            "_http_headers": headers,
+        })
 
 
 class TurboMediaExtractor(TurboAlbumExtractor):
@@ -80,7 +100,9 @@ class TurboMediaExtractor(TurboAlbumExtractor):
         headers = {"Referer": url}
         page = self.request(url).text
         size = text.extr(page, 'id="fileSizeBytes">', '<')
-        date = text.extract(page, "<span>", "<", page.find("File ID:"))[0]
+        date = ""
+        if match := text.re(r"<span>(\d{4}-\d{2}-\d{2})</span>").search(page):
+            date = match.group(1)
 
         url = f"{self.root}/api/sign?v={data_id}"
         data = self.request_json(url, headers=headers)

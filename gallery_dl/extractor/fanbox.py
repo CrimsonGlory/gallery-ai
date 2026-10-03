@@ -85,11 +85,13 @@ class FanboxExtractor(Extractor):
         else:
             return True
 
-    def _request_post(self, item):
+    def _request_post(self, item, skip=True):
         try:
             url = "https://api.fanbox.cc/post.info?postId=" + item["id"]
             item = self.request_json(url, headers=self.headers)["body"]["post"]
         except Exception as exc:
+            if not skip:
+                raise
             self.log.warning("Skipping post %s (%s: %s)",
                              item["id"], exc.__class__.__name__, exc)
         return item
@@ -138,6 +140,12 @@ class FanboxExtractor(Extractor):
         post["isCoverImage"] = False
 
         cid = post.get("creatorId")
+        if not cid:
+            creator = post.get("creator") or {}
+            if isinstance(creator, dict):
+                cid = creator.get("creatorId") or creator.get("userId")
+            post["creatorId"] = cid or ""
+            cid = post["creatorId"] or None
         if self._meta_user and cid is not None:
             post["user"] = self.cache(self._get_user_data, cid)
         if self._meta_plan and cid is not None:
@@ -422,7 +430,7 @@ class FanboxPostExtractor(FanboxExtractor):
 
     def posts(self):
         item = {"id": self.groups[2], "feeRequired": 0}
-        post = self._request_post(item)
+        post = self._request_post(item, skip=False)
         if not self._check_fee(post):
             post = item
         self._check_fee = util.false

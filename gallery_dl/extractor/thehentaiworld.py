@@ -27,6 +27,8 @@ class ThehentaiworldExtractor(Extractor):
         for url in self.posts():
             try:
                 post = self._extract_post(url)
+            except self.exc.ExtractionError:
+                raise
             except Exception as exc:
                 self.status |= 1
                 self.log.warning("Failed to extract post %s (%s: %s)",

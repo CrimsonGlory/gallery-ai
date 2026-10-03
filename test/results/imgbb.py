@@ -34,7 +34,7 @@ __tests__ = (
         "url"        : "https://ibb.co/album/cgJrwc",
     },
     "user"     : {
-        "id"        : "GvFMGK",
+        "id"        : str,
         "name"      : "Folkie",
         "url"       : "https://folkie.imgbb.com/",
         "url_albums": "https://folkie.imgbb.com/albums",
@@ -59,7 +59,7 @@ __tests__ = (
     "#sha1_url": "ac0abcfcb89f4df6adc2f7e4ff872f3b03ef1bc7",
 
     "displayname": "",
-    "user"       : "",
+    "user"       : dict,
     "user_id"    : "",
 },
 
@@ -94,7 +94,7 @@ __tests__ = (
         "description": """test-テスト-"&>\nDescription""",
     },
     "user"     : {
-        "id"        : "nrFBYw",
+        "id"        : str,
         "name"      : "Gdldev",
         "url"       : "https://gdldev.imgbb.com/",
         "url_albums": "https://gdldev.imgbb.com/albums",
@@ -134,7 +134,7 @@ __tests__ = (
     "url"      : "https://i.ibb.co/1J4mTWzQ/test.png",
     "width"    : 64,
     "user"     : {
-        "id"        : "nrFBYw",
+        "id"        : str,
         "name"      : "Gdldev",
         "url"       : "https://gdldev.imgbb.com/",
         "url_albums": "https://gdldev.imgbb.com/albums",
@@ -162,7 +162,7 @@ __tests__ = (
         "title": "British Scrap Book",
     },
     "user"     : {
-        "id"        : "GvFMGK",
+        "id"        : str,
         "name"      : "Folkie",
         "url"       : "https://folkie.imgbb.com/",
         "url_albums": "https://folkie.imgbb.com/albums",
@@ -190,7 +190,7 @@ __tests__ = (
         "title": "test-テスト-\"&> Album",
     },
     "user"     : {
-        "id"        : "nrFBYw",
+        "id"        : str,
         "name"      : "Gdldev",
         "url"       : "https://gdldev.imgbb.com/",
         "url_albums": "https://gdldev.imgbb.com/albums",

@@ -46,6 +46,8 @@ class KemonoExtractor(Extractor):
         self._find_inline = text.re(
             r'src="(?:https?://(?:kemono\.cr|coomer\.st))?(/inline/[^"]+'
             r'|/[0-9a-f]{2}/[0-9a-f]{2}/[0-9a-f]{64}\.[^"]+)').findall
+        self._hash_file = text.re(
+            r"(/[0-9a-f]{2}/[0-9a-f]{2}/[0-9a-f]{64}\.[^/?#]+)")
         self._json_dumps = json.JSONEncoder(
             ensure_ascii=False, check_circular=False,
             sort_keys=True, separators=(",", ":")).encode
@@ -154,11 +156,7 @@ class KemonoExtractor(Extractor):
                 else:
                     file["hash"] = hash = ""
 
-                if url[0] == "/":
-                    url = f"{self.root}/data{url}"
-                elif url.startswith(self.root):
-                    url = f"{self.root}/data{url[20:]}"
-                file["url"] = url
+                file["url"] = self._original_file_url(url)
 
                 if name := file.get("name"):
                     text.nameext_from_name(name, file)
@@ -212,6 +210,16 @@ class KemonoExtractor(Extractor):
                     else:
                         self.log.warning("%s: Skipping %s",
                                          post["id"], file["path"][7:])
+
+    def _original_file_url(self, path):
+        """Map a kemono/coomer file path to the original /data/ URL."""
+        if match := self._hash_file.search(path):
+            return f"{self.root}/data{match[1]}"
+        if path.startswith("http"):
+            return path
+        if path.startswith("/data"):
+            return self.root + path
+        return f"{self.root}/data{path}"
 
     def login(self):
         username, password = self._get_auth_info()
@@ -548,10 +556,7 @@ class KemonoDiscordExtractor(KemonoExtractor):
                         post_archives.append(archive)
 
                 if original:
-                    if url[0] == "/":
-                        url = f"{self.root}/data{url}"
-                    elif url.startswith(self.root):
-                        url = f"{self.root}/data{url[20:]}"
+                    url = self._original_file_url(url)
                 elif ext in exts_thmb:
                     url = root_thmb + file["path"]
                     post["extension"] = "jpg"

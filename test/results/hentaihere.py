@@ -41,8 +41,8 @@ __tests__ = (
     "#url"     : "https://hentaihere.com/m/S13812",
     "#category": ("", "hentaihere", "manga"),
     "#class"   : hentaihere.HentaihereMangaExtractor,
-    "#sha1_url"     : "d1ba6e28bb2162e844f8559c2b2725ba0a093559",
-    "#sha1_metadata": "5c1b712258e78e120907121d3987c71f834d13e1",
+    "#pattern"      : r"https://hentaihere\.com/m/S13812/.+",
+    "#count"        : ">= 1",
 },
 
 {

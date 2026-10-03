@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import danbooru
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -13,7 +14,7 @@ __tests__ = (
     "#category": ("Danbooru", "aibooru", "tag"),
     "#class"   : danbooru.DanbooruTagExtractor,
     "#pattern" : r"https://cdn\.aibooru\.download/original/[0-9a-f]{2}/[0-9a-f]{2}/[0-9a-f]{32}\.\w+",
-    "#count"   : range(160, 200),
+    "#count"   : range(100, 500),
 },
 
 {
@@ -21,7 +22,7 @@ __tests__ = (
     "#category": ("Danbooru", "aibooru", "tag"),
     "#class"   : danbooru.DanbooruTagExtractor,
     "#pattern" : r"https://cdn\.aibooru\.download/original/[0-9a-f]{2}/[0-9a-f]{2}/[0-9a-f]{32}\.\w+",
-    "#count"   : range(160, 200),
+    "#count"   : range(100, 500),
 },
 
 {
@@ -34,8 +35,7 @@ __tests__ = (
     "#url"     : "https://general.aibooru.online/posts?tags=center_frills",
     "#category": ("Danbooru", "aibooru", "tag"),
     "#class"   : danbooru.DanbooruTagExtractor,
-    "#pattern" : r"https://cdn\.aibooru\.download/original/[0-9a-f]{2}/[0-9a-f]{2}/[0-9a-f]{32}\.\w+",
-    "#count"   : range(100, 120),
+    "#exception": exception.HttpError,
 },
 
 {

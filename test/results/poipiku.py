@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import poipiku
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -154,13 +155,11 @@ __tests__ = (
 
 {
     "#url"     : "https://poipiku.com/11513074/12290032.html",
-    "#comment" : "Sign-In Only (publish_login.png) + Password",
+    "#comment" : "Sign-In Only (publish_login.png) + Password; post 404",
     "#class"   : poipiku.PoipikuPostExtractor,
     "#metadata": "post",
     "#auth"    : False,
-
-    "requires": "login",
-    "password": True,
+    "#exception": exception.HttpError,
 },
 
 {

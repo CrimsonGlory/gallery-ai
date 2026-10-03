@@ -291,12 +291,20 @@ class Extractor():
             return util.json_loads(response.text)
         except Exception as exc:
             fatal = kwargs.get("fatal", True)
+            challenge = util.detect_challenge(response)
             if not fatal or fatal is ...:
-                if challenge := util.detect_challenge(response):
+                if challenge:
                     self.log.warning(challenge)
                 else:
                     self.log.warning("%s: %s", exc.__class__.__name__, exc)
                 return {}
+            if challenge:
+                raise exception.ChallengeError(challenge, response) from exc
+            status = getattr(response, "status_code", 0) or 0
+            if status >= 400:
+                raise exception.HttpError(
+                    f"'{status} {response.reason}' for '{response.url}'",
+                    response) from exc
             raise
 
     def request_xml(self, url, xmlns=True, **kwargs):
@@ -527,6 +535,10 @@ class Extractor():
         self.session = session = http.Session()
         headers = session.headers
         headers.clear()
+        try:
+            headers.encoding = "utf-8"
+        except Exception:
+            pass
 
         # .netrc Authorization headers are not injected.
         # trust_env still controls http_proxy / https_proxy / all_proxy.
@@ -665,16 +677,21 @@ class Extractor():
                 source_address = (source_address[0], source_address[1])
             session.interface = source_address[0]
             if source_address[1]:
-                session.curl_options[http.CurlOpt.LOCALPORT] = \
-                    str(source_address[1])
+                session.curl_options[http.CurlOpt.LOCALPORT] = int(
+                    source_address[1])
 
         tls12 = self.config("tls12")
         if tls12 is None:
             tls12 = self.tls12
         if not tls12:
-            # minimum version TLS 1.3, so 1.2 suites are not offered
-            session.curl_options[http.CurlOpt.SSLVERSION] = str(
-                int(http.CurlSslVersion.TLSv1_3))
+            # With browser impersonation the JA3/JA4 fingerprint already
+            # matches a real client; forcing TLS 1.3-only on top of that
+            # breaks sites that still expect the impersonated mix (403).
+            if not getattr(session, "impersonate", None):
+                session.curl_options[http.CurlOpt.SSLVERSION] = (
+                    int(http.CurlSslVersion.TLSv1_3) |
+                    int(http.CurlSslVersion.MAX_DEFAULT)
+                )
             self.log.debug("TLS 1.2 disabled.")
 
         if self.config("truststore"):

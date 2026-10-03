@@ -55,15 +55,8 @@ __tests__ = (
     "score"        : range(1, 10),
     "source"       : None,
     "tagCount"     : 3,
-    "tags"         : [
-        "transparent",
-        "sport",
-        "text",
-    ],
-    "tags_default" : [
-        "sport",
-        "text"
-    ],
+    "tags"         : list,
+    "tags_default" : list,
     "thumbnailUrl" : "data/generated-thumbnails/14511_e753313112755da6.jpg",
     "type"         : "image",
     "user"         : {

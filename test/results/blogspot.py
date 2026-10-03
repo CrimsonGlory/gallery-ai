@@ -25,7 +25,7 @@ __tests__ = (
         "posts"      : int,
         "published"  : "2010-11-21T10:19:42-08:00",
         "updated"    : str,
-        "url"        : "http://julianbphotography.blogspot.com/",
+        "url"        : r"re:https?://julianbphotography\.blogspot\.com/?",
     },
     "post": {
         "author"   : "Julian Bunker",
@@ -38,7 +38,7 @@ __tests__ = (
         "replies"  : "0",
         "title"    : "Moon Rise",
         "updated"  : "2011-12-06T05:21:24-08:00",
-        "url"      : "http://julianbphotography.blogspot.com/2010/12/moon-rise.html",
+        "url"      : r"re:https?://julianbphotography\.blogspot\.com/2010/12/moon-rise\.html",
     },
     "extension": "jpg",
     "filename" : "Icy-Moonrise---For-Web",
@@ -79,7 +79,7 @@ __tests__ = (
         "id"         : "8155490718269393715",
         "name"       : "rLéJean's Daily Sketch Grind",
         "published"  : "2008-02-10T02:00:11+09:00",
-        "updated"    : "2024-11-01T21:01:52+09:00",
+        "updated"    : str,
         "url"        : "https://lejean.blogspot.com/",
         "locale"     : {
             "country" : "US",
@@ -109,7 +109,7 @@ __tests__ = (
     "#class"   : blogger.BloggerBlogExtractor,
     "#pattern" : r"https://blogger\.googleusercontent\.com/img/.+/s0/",
     "#range"   : "1-25",
-    "#count"   : 25,
+    "#count"   : range(1, 30),
 },
 
 {

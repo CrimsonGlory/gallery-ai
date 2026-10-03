@@ -38,7 +38,7 @@ __tests__ = (
     "headline"   : "角兎図書館「雨のピリオード」No,16",
     "image"      : "https://media.ci-en.jp/public/article_cover/creator/00007491/cb4062e8d885ab93e0d0fb3133265a7ad1056c906fd4ab81da509220620901e1/image-1280-c.jpg",
     "keywords"   : "お知らせ,角兎図書館",
-    "mainEntityOfPage": "https://ci-en.net/creator/7491/article/1194568",
+    "mainEntityOfPage": r"re:https?://ci-en\.net/creator/7491/article/1194568",
     "name"       : "角兎図書館「雨のピリオード」No,16",
     "num"        : 1,
     "post_id"    : 1194568,

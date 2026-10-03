@@ -100,6 +100,9 @@ class CivitaiExtractor(Extractor):
                 yield Message.Directory, "", data
                 for file in self._image_results(images):
                     file.update(data)
+                    img = file.get("file")
+                    if isinstance(img, dict) and not img.get("date"):
+                        img["date"] = post["date"]
                     yield Message.Url, file["url"], file
             return
 
@@ -189,7 +192,7 @@ class CivitaiExtractor(Extractor):
                 data["_fallback"] = file.pop("_fallback")
             if "id" not in file and data["filename"].isdecimal():
                 file["id"] = text.parse_int(data["filename"])
-            if "date" not in file and "createdAt" in file:
+            if not file.get("date") and file.get("createdAt"):
                 file["date"] = self.parse_datetime_iso(file["createdAt"])
             if self._meta_generation:
                 file["generation"] = self._extract_meta_generation(file)
@@ -211,7 +214,7 @@ class CivitaiExtractor(Extractor):
         if "Authorization" not in self.api.headers and \
                 not self.cookies.get(
                 "__Secure-civitai-token", domain=".civitai.red"):
-            raise self.extractor.exc.AuthRequired(
+            raise self.exc.AuthRequired(
                 ("api-key", "authenticated cookies"))
 
     def _parse_query(self, value):

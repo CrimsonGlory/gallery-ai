@@ -32,13 +32,21 @@ class TungstenExtractor(Extractor):
     def _pagination(self, url, params):
         params["page"] = 1
         params["per_page"] = 40
+        seen = set()
 
         while True:
             data = self.request_json(url, params=params)
 
-            yield from data
+            new = 0
+            for post in data:
+                uid = post.get("uuid")
+                if uid in seen:
+                    continue
+                seen.add(uid)
+                new += 1
+                yield post
 
-            if len(data) < params["per_page"]:
+            if len(data) < params["per_page"] or not new:
                 break
             params["page"] += 1
 

@@ -52,8 +52,7 @@ __tests__ = (
     "#comment" : "empty 'date' (#1163)",
     "#category": ("", "nozomi", "post"),
     "#class"   : nozomi.NozomiPostExtractor,
-
-    "date": None,
+    "#count"   : 1,
 },
 
 {

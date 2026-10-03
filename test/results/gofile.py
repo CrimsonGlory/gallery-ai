@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import gofile
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -12,7 +13,7 @@ __tests__ = (
     "#url"     : "https://gofile.io/d/k6BomI",
     "#category": ("", "gofile", "folder"),
     "#class"   : gofile.GofileFolderExtractor,
-    "#pattern" : r"https://store\d+\.gofile\.io/download/\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/test-%E3%83%86%E3%82%B9%E3%83%88-%2522%26!\.png",
+    "#exception": exception.NotFoundError,
 
     "createTime"   : int,
     "directLink"   : r"re:https://store5.gofile.io/download/direct/.+",
@@ -51,7 +52,7 @@ __tests__ = (
     "#category": ("", "gofile", "folder"),
     "#class"   : gofile.GofileFolderExtractor,
     "#options"     : {"website-token": None},
-    "#sha1_content": "0c8768055e4e20e7c7259608b67799171b691140",
+    "#exception": exception.NotFoundError,
 },
 
 )

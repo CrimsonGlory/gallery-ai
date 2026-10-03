@@ -43,7 +43,8 @@ __tests__ = (
     "#url"     : "https://misskey.art/@risiy/banner",
     "#category": ("misskey", "misskey.art", "background"),
     "#class"   : misskey.MisskeyBackgroundExtractor,
-    "#results" : "https://files.misskey.art/f02b97ea-dc2a-4b5a-acf1-dfe360ba8bd8.png",
+    "#pattern" : r"https://files\.misskey\.art/[\w-]+\.(png|webp|jpg|jpeg)",
+    "#count"   : 1,
 },
 
 {

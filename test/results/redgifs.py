@@ -43,7 +43,7 @@ __tests__ = (
     "#class"   : redgifs.RedgifsUserExtractor,
     "#options" : {"post-range": "1000-1100"},
     "#pattern" : r"^https://media.redgifs.com/\w+-large.jpg$",
-    "#count"   :  100,
+    "#count"   : range(100, 110),
 },
 
 {

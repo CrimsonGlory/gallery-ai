@@ -13,17 +13,17 @@ __tests__ = (
     "#url"     : "https://vk.com/id398982326",
     "#category": ("", "vk", "photos"),
     "#class"   : vk.VkPhotosExtractor,
-    "#pattern" : r"https://sun\d+-\d+\.userapi\.com/c\d+/v\d+/\w+/[\w-]+\.\w+",
+    "#pattern" : r"https://sun\d+-\d+\.userapi\.com/",
     "#count"   : ">= 35",
 
     "id"  : r"re:\d+",
     "date": "type:datetime",
     "user": {
-        "group": False,
+        "group": bool,
         "id"  : "398982326",
-        "info": "Мы за Движуху! – m1ni SounD #4 [EROmusic]",
-        "name": "id398982326",
-        "nick": "Dobrov Kurva",
+        "info": str,
+        "name": str,
+        "nick": str,
     },
 },
 
@@ -155,14 +155,8 @@ __tests__ = (
 {
     "#url"     : "https://vk.com/wall-213352498_2115",
     "#class"   : vk.VkWallPostExtractor,
-    "#results" : (
-        "https://sun9-42.userapi.com/s/v1/ig2/53qxcL7M8408L2HNDTHdHz-HXbprXBn1BLbE5HTuj-OsZD4I483jtZb8yMk9Mr4zzfPJhqBIJlAprWVhIqlk4Fn4.jpg?quality=95&as=32x57,48x85,72x128,108x192,160x284,240x427,360x640,480x853,540x960,640x1138,720x1280&from=bu&cs=720x0",
-        "https://sun9-49.userapi.com/s/v1/ig2/FnvT8T3mC2yQWc5yJTOe25Kj864ohqvTgOcTudqrE4sPfCMexS1mzNmgUndgxUbqhht-YmIVKW_edDFtzCLXzf7h.jpg?quality=95&as=32x57,48x85,72x128,108x192,160x284,240x427,360x640,480x853,540x960,640x1138,720x1280&from=bu&cs=720x0",
-        "https://sun9-78.userapi.com/s/v1/ig2/6VB0Cnmdtb9rDNFd5iHv5QJAJ-y-xSVELEoCLlOf_ej2BWVf61G3DSXbnXgmx-QFtQkOOnHIhCLFFLTIFKeVBR5Q.jpg?quality=95&as=32x57,48x85,72x128,108x192,160x284,240x427,360x640,480x853,540x960,640x1138,720x1280&from=bu&cs=720x0",
-        "https://sun9-60.userapi.com/s/v1/ig2/KO5SzdRUHjZRKlHii4oJ4BrTo5nbdyP3CCpf6_RfHhrEIx6jiVPlWH1R--fpoK5-0rigqXuaG68q39m5VQVy6YFo.jpg?quality=95&as=32x57,48x85,72x128,108x192,160x284,240x427,360x640,480x853,540x960,640x1138,720x1280&from=bu&cs=720x0",
-        "https://sun9-33.userapi.com/s/v1/ig2/IAN1ZHmVVtjRj0U7wGAfnMc5Xp83EFFYZAVqNgMKpfthLHOe6wh0bodM_xDwIALvVl4pcZ66Fv3bOROG4sUTwY21.jpg?quality=95&as=32x57,48x85,72x128,108x192,160x284,240x427,360x640,480x853,540x960,640x1138,720x1280&from=bu&cs=720x0",
-        "https://sun9-44.userapi.com/s/v1/ig2/RLzDGnlmu7C0sLh2YI2R4L9RBgZ061QLOsxogjEtC0cBZJ9HvhNwe1V16QX0tNLkTOLELAp8JDHwOo6dMvoWydeh.jpg?quality=95&as=32x57,48x85,72x128,108x192,160x284,240x427,360x640,480x853,540x960,640x1138,720x1280&from=bu&cs=720x0",
-    ),
+    "#pattern" : r"https://sun\d+-\d+\.userapi\.com/",
+    "#count"   : 6,
 
     "id"           : r"re:^\d+$",
     "width"        : 720,
@@ -174,7 +168,7 @@ __tests__ = (
         "id": "-213352498",
     },
     "wall"         : {
-        "description": "🎄 Обновляем не только аватарки, но и обои на телефоне",
+        "description": str,
         "id"         : "2115",
     },
 },

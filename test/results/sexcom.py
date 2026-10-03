@@ -133,13 +133,13 @@ __tests__ = (
     "#comment" : "video",
     "#category": ("", "sexcom", "pin"),
     "#class"   : sexcom.SexcomPinExtractor,
-    "#results" : "ytdl:https://videos.sex.com/680933/video.m3u8",
+    "#pattern" : r"ytdl:https://videos\d*\.sex\.com/680933/video\.m3u8",
 
     "extension": "mp4",
     "pin_id"   : 680933,
     "title"    : "Underwater Big Boobs Kristy with Small Boobs Petra",
     "type"     : "video",
-    "url"      : "ytdl:https://videos.sex.com/680933/video.m3u8",
+    "url"      : r"re:ytdl:https://videos\d*\.sex\.com/680933/video\.m3u8",
     "tags"     : [
         "Babe",
         "Beach",

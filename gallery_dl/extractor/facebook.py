@@ -589,7 +589,7 @@ class FacebookPhotosExtractor(FacebookExtractor):
 
     def items(self):
         set_id = self.cache(
-            self._extract_profile, self.groups[0], True)["set_id"]
+            self._extract_profile, self.groups[0], True).get("set_id")
         if not set_id:
             return iter(())
 

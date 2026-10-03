@@ -109,8 +109,8 @@ __tests__ = (
     "#url"  : "https://motherless.com/G444B6FA",
     "#class": motherless.MotherlessGalleryExtractor,
     "#results": (
-        "https://motherless.com/GI444B6FA",
-        "https://motherless.com/GV444B6FA",
+        "https://motherless.xxx/GI444B6FA",
+        "https://motherless.xxx/GV444B6FA",
     ),
 },
 

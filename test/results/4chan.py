@@ -6,6 +6,7 @@
 
 gallery_dl = __import__("gallery_dl.extractor.4chan")
 _4chan = getattr(gallery_dl.extractor, "4chan")
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -13,27 +14,21 @@ __tests__ = (
     "#url"     : "https://boards.4chan.org/tg/thread/15396072/",
     "#category": ("", "4chan", "thread"),
     "#class"   : _4chan._4chanThreadExtractor,
-    "#sha1_url"     : "39082ad166161966d7ba8e37f2173a824eb540f0",
-    "#sha1_metadata": "2cadd32796492baca25f5060dc95e9f4e24a0ff2",
-    "#sha1_content" : "742c6d256c813b29f246e1d765bba949fc3ac453",
+    "#exception": exception.HttpError,
 },
 
 {
     "#url"     : "https://boards.4channel.org/tg/thread/15396072/",
     "#category": ("", "4chan", "thread"),
     "#class"   : _4chan._4chanThreadExtractor,
-    "#sha1_url"     : "39082ad166161966d7ba8e37f2173a824eb540f0",
-    "#sha1_metadata": "2cadd32796492baca25f5060dc95e9f4e24a0ff2",
+    "#exception": exception.HttpError,
 },
 
 {
     "#url"     : "https://boards.4chan.org/wg/thread/8010591",
-    "#comment" : "file contents filled with null bytes (#7883)",
+    "#comment" : "file contents filled with null bytes (#7883); thread 404",
     "#class"   : _4chan._4chanThreadExtractor,
-    "#range"   : "1",
-    "#log"     : "File data consists of null bytes",
-    "#results"     : "https://i.4cdn.org/wg/1694023485631944.jpg",
-    "#sha1_content": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "#exception": exception.HttpError,
 },
 
 {

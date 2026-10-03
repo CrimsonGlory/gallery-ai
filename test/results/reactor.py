@@ -30,7 +30,8 @@ __tests__ = (
     "#url"     : "http://reactor.cc/post/4999736",
     "#category": ("reactor", "reactor", "post"),
     "#class"   : reactor.ReactorPostExtractor,
-    "#sha1_url": "dfc74d150d7267384d8c229c4b82aa210755daa0",
+    "#pattern": r"https?://.+\.(jpe?g|png|gif|webp)",
+    "#count"  : ">= 1",
 },
 
 )

@@ -48,6 +48,10 @@ class RealbooruExtractor(booru.BooruExtractor):
             tag = text.unescape(text.unquote(tag_name))
             tags.append(tag)
             tags_categories[tag_type].append(tag)
+        post["tags_copyright"] = ""
+        post["tags_general"] = ""
+        post["tags_metadata"] = ""
+        post["tags_model"] = ""
         for key, value in tags_categories.items():
             post["tags_" + key] = ", ".join(value)
         tags.sort()

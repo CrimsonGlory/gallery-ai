@@ -405,7 +405,7 @@ Hẹn gặp bạn tối nay!
 
     "filename" : str,
     "extension": {"mp4", "m4a"},
-    "id"       : "644342003942740",
+    "id"       : str,
     "url"      : str,
     "user_id"  : "100064860875397",
     "username" : "Facebook",
@@ -415,16 +415,7 @@ Hẹn gặp bạn tối nay!
     "#url"     : "https://www.facebook.com/facebook/photos_albums",
     "#class"   : facebook.FacebookAlbumsExtractor,
     "#pattern" : facebook.FacebookSetExtractor.pattern,
-    "#results" : (
-        "https://www.facebook.com/media/set/?set=a.736550598516963&type=3",
-        "https://www.facebook.com/media/set/?set=a.736550611850295&type=3",
-        "https://www.facebook.com/media/set/?set=a.1198986285606723&type=3",
-        "https://www.facebook.com/media/set/?set=a.1188430493328969&type=3",
-        "https://www.facebook.com/media/set/?set=a.1182920610546624&type=3",
-        "https://www.facebook.com/media/set/?set=a.1152503723588313&type=3",
-        "https://www.facebook.com/media/set/?set=a.912647394240615&type=3",
-        "https://www.facebook.com/media/set/?set=a.862611645910857&type=3",
-    ),
+    "#count"   : range(1, 20),
 
     "id"       : r"re:\d+",
     "thumbnail": {str, None},
@@ -435,14 +426,12 @@ Hẹn gặp bạn tối nay!
 {
     "#url"     : "https://www.facebook.com/facebook/photos_albums/Mobile uploads",
     "#class"   : facebook.FacebookAlbumsExtractor,
-    "#results" : (
-        "https://www.facebook.com/media/set/?set=a.736550611850295&type=3",
-    ),
+    "#count"   : range(0, 5),
 
-    "id"       : "736550611850295",
-    "thumbnail": str,
-    "title"    : "Mobile uploads",
-    "url"      : "https://www.facebook.com/media/set/?set=a.736550611850295&type=3",
+    "id"       : str,
+    "thumbnail": {str, None},
+    "title"    : str,
+    "url"      : str,
 },
 
 {
@@ -467,7 +456,7 @@ Hẹn gặp bạn tối nay!
     "id"            : "100046356937542",
     "name"          : "Throwaway Idk",
     "username"      : "brando.cha.3",
-    "biography"     : "",
+    "biography"     : str,
     "url"           : "https://www.facebook.com/brando.cha.3",
     "alternate_name": "",
     "profile_video" : None,

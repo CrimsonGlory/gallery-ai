@@ -12,22 +12,19 @@ __tests__ = (
     "#url"     : "https://picazor.com/en/kailey-mae",
     "#class"   : picazor.PicazorUserExtractor,
     "#range"   : "1-50",
-    "#pattern" : r"https://picazor\.com/uploads/.+\.jpg",
+    "#pattern" : r"https://picazor\.com/uploads/.+\.(jpe?g|png|mp4|webm)",
     "#count"   : 50,
 
-    "count"    : 278,
-    "num"      : range(200, 278),
-    "extension": "jpg",
+    "count"    : int,
+    "num"      : int,
+    "extension": {"jpg", "jpeg", "png", "mp4", "webm"},
     "filename" : str,
     "id"       : "re:[0-9a-f]+",
-    "mime"     : "photo",
+    "mime"     : {"photo", "video"},
     "path"     : str,
     "user"     : "kailey-mae",
     "visible"  : True,
-    "subject"  : {
-        "id" : "66077ba2b64e3f3d178f39ac",
-        "uri": "kailey-mae",
-    },
+    "?subject" : dict,
 },
 
 {

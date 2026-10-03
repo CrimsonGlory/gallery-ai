@@ -312,13 +312,25 @@ class MastodonAPI():
                 raise self.exc.AbortExtraction(
                     f"Invalid or missing access token.\nRun 'gallery-dl oauth:"
                     f"mastodon:{self.extractor.instance}' to obtain one.")
-            if code == 404:
+            if code in (404, 410):
                 raise self.exc.NotFoundError()
             if code == 429:
                 self.extractor.wait(until=self.extractor.parse_datetime_iso(
                     response.headers["x-ratelimit-reset"]))
                 continue
-            raise self.exc.AbortExtraction(response.json().get("error"))
+            if code >= 900:
+                raise self.exc.HttpError(
+                    response.reason or str(code), response)
+            try:
+                data = response.json()
+            except Exception:
+                data = None
+            if isinstance(data, dict):
+                msg = data.get("error") or data.get("error_description")
+            else:
+                msg = None
+            raise self.exc.AbortExtraction(
+                msg or f"{code} {response.reason}")
 
     def _pagination(self, endpoint, params):
         url = endpoint

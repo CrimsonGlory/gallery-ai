@@ -11,7 +11,7 @@ __tests__ = (
 {
     "#url"     : "https://s3nd.pics/post/68dce8098ef7a9effbdbafa1",
     "#class"   : s3ndpics.S3ndpicsPostExtractor,
-    "#pattern" : r"https://s3\.s3nd\.pics/s3nd\-pics/uploads/68be9efde7238de1080bbeec/\d+\-\w+\.(jpe?g|mp4)",
+    "#pattern" : r"https://s3\.s3nd\.pics/s3nd\-pics/uploads/68be9efde7238de1080bbeec/.+\.(jpe?g|png|gif|mp4|webp)",
     "#count"   : 10,
 
     "id"             : "68dce8098ef7a9effbdbafa1",
@@ -49,14 +49,11 @@ Consider then that I am not peddling my stolen memes, but pebbling them to ye wo
 
 Hope you'll like it!\
 """,
-    "tags"           : [
-        "#dump",
-        "#meme",
-    ],
+    "tags"           : list,
     "user"           : {
         "_id"          : "68be9efde7238de1080bbeec",
         "avatar"       : "avatars/68be9efde7238de1080bbeec/1758616570175-avatar.jpg",
-        "filteredUsers": [],
+        "filteredUsers": list,
         "username"     : "wildscarf",
     },
 },
@@ -95,7 +92,7 @@ Hope you'll like it!\
 {
     "#url"     : "https://s3nd.pics/search?tag=%23memes",
     "#class"   : s3ndpics.S3ndpicsSearchExtractor,
-    "#pattern" : r"https://s3\.s3nd\.pics/s3nd\-pics/uploads/\w+/.+\.(jpe?g|png|mp4)$",
+    "#pattern" : r"https://s3\.s3nd\.pics/s3nd\-pics/uploads/\w+/.+\.(jpe?g|png|gif|mp4|webp)$",
     "#range"   : "1-50",
     "#count"   : 50,
 

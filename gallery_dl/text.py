@@ -390,4 +390,12 @@ quote = urllib.parse.quote
 unquote = urllib.parse.unquote
 
 escape = html.escape
-unescape = html.unescape
+
+
+def unescape(txt):
+    """Decode HTML entities. ``None`` and other non-strings become ``""``."""
+    if not txt:
+        return ""
+    if not isinstance(txt, str):
+        txt = str(txt)
+    return html.unescape(txt)

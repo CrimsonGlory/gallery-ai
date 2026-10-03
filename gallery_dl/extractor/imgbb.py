@@ -18,7 +18,7 @@ class ImgbbExtractor(Extractor):
     directory_fmt = ("{category}", "{user[name]:?//}{user[id]:? (/)/}",
                      "{album[title]} ({album[id]})")
     filename_fmt = "{title} ({id}).{extension}"
-    archive_fmt = "{user[id]} {id}"
+    archive_fmt = "{user[id]:? //}{id}"
     cookies_domain = ".imgbb.com"
     cookies_names = ("PHPSESSID", "LID")
     root = "https://ibb.co"
@@ -67,7 +67,15 @@ class ImgbbExtractor(Extractor):
         seek, pos = text.extract(page, 'data-seek="', '"')
         tokn, pos = text.extract(page, 'PF.obj.config.auth_token="', '"', pos)
         resc, pos = text.extract(page, "CHV.obj.resource=", "};", pos)
-        self.kwdict["user"] = util.json_loads(resc + "}").get("user")
+        user = {}
+        if resc:
+            try:
+                parsed = util.json_loads(resc + "}")
+            except Exception:
+                parsed = None
+            if isinstance(parsed, dict) and parsed.get("user"):
+                user = parsed["user"]
+        self.kwdict["user"] = user
 
         data = None
         while True:
@@ -81,6 +89,9 @@ class ImgbbExtractor(Extractor):
                 image["width"] = text.parse_int(post["width"])
                 image["height"] = text.parse_int(post["height"])
                 image["size"] = text.parse_int(image["size"])
+                image["displayname"] = (
+                    user.get("name") or user.get("username") or "")
+                image["user_id"] = str(user.get("id") or "")
                 yield image
 
             if data:

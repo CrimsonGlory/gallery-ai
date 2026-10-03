@@ -71,11 +71,12 @@ class HentainexusGalleryExtractor(GalleryExtractor):
 
         results = []
         for img in imgs:
-            try:
-                results.append(
-                    (img.get("image_source") or img["image_fallback"], img))
-            except KeyError:
-                pass
+            url = (img.get("image_source") or img.get("image") or
+                   img.get("image_fallback") or img.get("image_avif"))
+            if not url:
+                continue
+            img["image"] = url
+            results.append((url, img))
         return results
 
     def _decode(self, data):

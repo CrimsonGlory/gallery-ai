@@ -11,7 +11,7 @@ __tests__ = (
 {
     "#url"     : "https://rawkuma.net/manga/saikyou-onmyouji-no-isekai-tenseiki-geboku-no-youkaidomo-ni-kurabete-monster-ga-yowaisugirundaga/chapter-3.28214/",
     "#class"   : rawkuma.RawkumaChapterExtractor,
-    "#pattern" : r"https://rcdn\.kyut\.dev/images/s/saikyou-inyoushi-no-isekai-tenseiki-manga-raw/3/\d+\.png",
+    "#pattern" : r"https://(?:rcdn\.kyut\.dev|cdn\.rawkuma\.com)/images/s/saikyou-inyoushi-no-isekai-tenseiki-manga-raw/3/\d+\.png",
     "#count"   : 28,
 
     "chapter"      : 3,
@@ -31,7 +31,7 @@ __tests__ = (
 {
     "#url"     : "https://rawkuma.net/manga/makutsu-no-ou-yomei-ikkagetsu-no-doutei-mahou-shoujo-harem-o-kizuite-ou-e-kunrinsu/chapter-3.4.205398/",
     "#class"   : rawkuma.RawkumaChapterExtractor,
-    "#pattern" : r"https://rcdn\.kyut\.dev/m/makutsu\-no\-ou\-yomei\-ikkagetsu\-no\-doutei\-mahou\-shoujo\-harem\-o\-kizuite\-ou\-e\-kunrinsu/chapter\-3\-4/\d+\.jpg",
+    "#pattern" : r"https://(?:rcdn\.kyut\.dev|cdn\.rawkuma\.com)/m/makutsu\-no\-ou\-yomei\-ikkagetsu\-no\-doutei\-mahou\-shoujo\-harem\-o\-kizuite\-ou\-e\-kunrinsu/chapter\-3\-4/\d+\.jpg",
     "#count"   : 10,
 
     "chapter"      : 3,
@@ -51,12 +51,8 @@ __tests__ = (
 {
     "#url"     : "https://rawkuma.net/manga/yani-neko/chapter-270.160879/",
     "#class"   : rawkuma.RawkumaChapterExtractor,
-    "#results" : (
-        "https://rcdn.kyut.dev/images/y/yani-neko/270/1.jpg",
-        "https://rcdn.kyut.dev/images/y/yani-neko/270/2.jpg",
-        "https://rcdn.kyut.dev/images/y/yani-neko/270/3.jpg",
-        "https://rcdn.kyut.dev/images/y/yani-neko/270/4.jpg",
-    ),
+    "#pattern" : r"https://(?:rcdn\.kyut\.dev|cdn\.rawkuma\.com)/images/y/yani-neko/270/\d+\.jpg",
+    "#count"   : 4,
 
     "chapter"      : 270,
     "chapter_id"   : 160879,
@@ -73,12 +69,8 @@ __tests__ = (
 {
     "#url"     : "https://rawkuma.net/manga/yani-neko/chapter-274.160909/",
     "#class"   : rawkuma.RawkumaChapterExtractor,
-    "#results" : (
-        "https://rcdn.kyut.dev/y/yani-neko/chapter-274/1.jpg",
-        "https://rcdn.kyut.dev/y/yani-neko/chapter-274/2.jpg",
-        "https://rcdn.kyut.dev/y/yani-neko/chapter-274/3.jpg",
-        "https://rcdn.kyut.dev/y/yani-neko/chapter-274/4.jpg",
-    ),
+    "#pattern" : r"https://(?:rcdn\.kyut\.dev|cdn\.rawkuma\.com)/y/yani-neko/chapter-274/\d+\.jpg",
+    "#count"   : 4,
 
     "chapter"      : 274,
     "chapter_id"   : 160909,

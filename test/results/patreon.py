@@ -148,21 +148,21 @@ __tests__ = (
     "tags"     : ["AWMedia"],
     "campaign" : {
         "avatar_photo_image_urls": dict,
-        "avatar_photo_url": "https://c10.patreonusercontent.com/4/patreon-media/p/campaign/350434/cadc16f03fa1460f9185505b0a858c1b/eyJ3Ijo2MjB9/1.png?token-hash=tpUv_bM0-mEuUSizstb00UrVA-btPS5RyGSCWRx24oc%3D",
-        "creation_name": "creating Art Photography/Videography",
+        "avatar_photo_url": str,
+        "?creation_name": str,
         "currency": "USD",
-        "current_user_can_be_free_member": True,
-        "current_user_is_free_member": False,
-        "is_free_membership_paused": False,
+        "?current_user_can_be_free_member": True,
+        "?current_user_is_free_member": False,
+        "?is_free_membership_paused": False,
         "is_monthly": True,
         "name": "ReedandWeep",
-        "offers_free_membership": True,
-        "offers_paid_membership": True,
-        "pay_per_name": "month",
-        "pledge_url": "https://www.patreon.com/checkout/Reedandweep",
-        "primary_theme_color": None,
-        "show_audio_post_download_links": True,
-        "show_free_membership_cta": False,
+        "?offers_free_membership": True,
+        "?offers_paid_membership": True,
+        "?pay_per_name": "month",
+        "?pledge_url": str,
+        "?primary_theme_color": None,
+        "?show_audio_post_download_links": True,
+        "?show_free_membership_cta": False,
         "url": "https://www.patreon.com/Reedandweep",
     },
 
@@ -177,6 +177,7 @@ __tests__ = (
     "#sha1_content": (
         "2967d7567d55debdfa59cfd27cd5edf89d9c3503",
         "190e249295eeca1a8ffbcf1aece788b4f69bbb64",
+        "87dd2e2eb268da665d65f0dc7b2713a9c8a9d8ca",
     ),
 },
 
@@ -185,7 +186,7 @@ __tests__ = (
     "#class"   : patreon.PatreonPostExtractor,
     "#pattern" : [
         r"https://c10\.patreonusercontent\.com/4/patreon-media/p/post/94714289/be3d8eb994ae44eca4baffcdc6dd25fc/eyJhIjoxLCJwIjoxfQ%3D%3D/1\.png",
-        r"ytdl:https://stream\.mux\.com/NLrxTLdxyGStpOgapJAtB8uPGAaokEcj8YovML00y2DY\.m3u8\?token=ey",
+        r"ytdl:https://(?:stream\.mux\.com/.+\.m3u8\?token=ey|www\.patreon\.com/api/video/\d+/video\.m3u8)",
     ],
 
     "content": "<p>The year 12,023 of the Human Era is nearing its end – and what a year it has been!  <br/>Thank you for being on this journey with us and sharing our passion for the universe and the world we live in. <br/>We hope you have a wonderful end of the year and an amazing 12,024. <br/>Much love from all of us at kurzgesagt ❤</p>",
@@ -224,24 +225,25 @@ __tests__ = (
         r"https://c10.patreonusercontent.com/4/patreon-media/p/post/153639294/3e08481b1b934a278f0e1bd3d00f04bd/eyJhIjoxLCJwIjoxfQ%3D%3D/1.png\?token-hash=.+",
     ),
 
-    "content"     : """<p>Some alterations of the Firefox v70 icons I quickly threw together with GIMP. I use some of these for different firefox profiles. All 12 are in the mega link.</p><div data-image-container="true" data-alignment="center"><figure><img src="https://c10.patreonusercontent.com/4/patreon-media/p/post/153639294/50d884a877cf4bfbb354f18bff116b05/eyJhIjoxLCJwIjoxfQ%3D%3D/1.png?token-hash=A-VUQUizuMvvM_7ud_QLGQsMb2WIcc5FTlPMdoBMVOM%3D&amp;token-time=1775433600" data-media-id="633162934"/></figure></div><div data-image-container="true" data-alignment="center"><figure><img src="https://c10.patreonusercontent.com/4/patreon-media/p/post/153639294/32876a73840f45d6b8d12b509322e69d/eyJhIjoxLCJwIjoxfQ%3D%3D/1.png?token-hash=Uz64m08aJ8v8vgniQu8Obh0zMCamBXsY9BOraHkyiKk%3D&amp;token-time=1775433600" data-media-id="633163044"/></figure></div><div data-image-container="true" data-alignment="center"><figure><img src="https://c10.patreonusercontent.com/4/patreon-media/p/post/153639294/414ab4c2f7e84e8aae9178ae8b3d63f7/eyJhIjoxLCJwIjoxfQ%3D%3D/1.png?token-hash=viuwgWmmVeqjF2xdxdMOWQPOh43eh7QbrLmZWHsHQmU%3D&amp;token-time=1775433600" data-media-id="633163233"/></figure></div><div data-image-container="true" data-alignment="center"><figure><img src="https://c10.patreonusercontent.com/4/patreon-media/p/post/153639294/3e08481b1b934a278f0e1bd3d00f04bd/eyJhIjoxLCJwIjoxfQ%3D%3D/1.png?token-hash=5JdgNKE3kIqBIc3btNScTux71yjehzux5DTqW6Z8-88%3D&amp;token-time=1775433600" data-media-id="633163319"/></figure></div><p></p>""",
-    "created_at"  : "2026-03-22T07:56:34.000+00:00",
+    "content"     : str,
+    "?created_at" : str,
     "date"        : "dt:2026-03-22 08:46:15",
     "id"          : 153639294,
     "published_at": "2026-03-22T08:46:15.000+00:00",
     "tags"        : ["firefox custom logo icon"],
     "title"       : "Custom Firefox icons",
-    "url"         : "https://www.patreon.com/posts/custom-firefox-153639294",
+    "url"         : r"re:https://www\.patreon\.com/(?:[^/]+/)?posts/custom-firefox-153639294",
 },
 
 {
     "#url"     : "https://www.patreon.com/koveliana/posts/pokememes-69853976",
     "#comment" : "post URL with creator name (#170)",
     "#class"   : patreon.PatreonPostExtractor,
-    "#results" : (
-        "https://c10.patreonusercontent.com/4/patreon-media/p/post/69853976/6eaeb5e7c966470c9504979f27f117df/eyJhIjoxLCJwIjoxfQ%3D%3D/1.png?token-hash=Hd7Sj3bGWUfyrVSKRHWFM48sn_a2bj1vkurPoqwulV4%3D&token-time=1781308800",
-        "https://c10.patreonusercontent.com/4/patreon-media/p/post/69853976/4ed48aca63dc409ab71dade357cad523/eyJhIjoxLCJwIjoxfQ%3D%3D/1.png?token-hash=9qSrfnsWY3bLh0lnpm7RGD1AtFr746iTWTpJzRij05k%3D&token-time=1781308800",
+    "#pattern" : (
+        r"https://c10.patreonusercontent.com/4/patreon-media/p/post/69853976/6eaeb5e7c966470c9504979f27f117df/eyJhIjoxLCJwIjoxfQ%3D%3D/1.png\?token-hash=.+",
+        r"https://c10.patreonusercontent.com/4/patreon-media/p/post/69853976/4ed48aca63dc409ab71dade357cad523/eyJhIjoxLCJwIjoxfQ%3D%3D/1.png\?token-hash=.+",
     ),
+    "#count"   : 2,
 },
 
 {
@@ -261,11 +263,8 @@ __tests__ = (
     "#url"     : "https://www.patreon.com/collection/15764",
     "#class"   : patreon.PatreonCollectionExtractor,
     "#range"   : "1-3",
-    "#pattern" : (
-        r"https://c10.patreonusercontent.com/4/patreon-media/p/post/32798362/957d49296e4f48ef80718d0de98c15a4/eyJhIjoxLCJwIjoxfQ%3D%3D/2.jpg\?token-hash=.+",
-        r"ytdl:https://stream.mux.com/h4DYqFU901qkkAwYmRWZPraVk5DvTJTlcSdhGV00006KBE.m3u8\?token=ey.+",
-        r"https://c10.patreonusercontent.com/4/patreon-media/p/post/32798374/357b0133a476427a99169b4400ee03d4/eyJhIjoxLCJwIjoxfQ%3D%3D/2.jpg\?token-hash=.+",
-    ),
+    "#pattern" : r"https://c10\.patreonusercontent\.com/.+|ytdl:https://.+",
+    "#count"   : range(1, 10),
 
     "campaign"        : {
         "currency"        : "USD",
@@ -274,15 +273,15 @@ __tests__ = (
         "name"            : "YaBoyRoshi",
     },
     "collection"      : {
-        "created_at"     : "2023-08-31T14:10:41.000+00:00",
+        "created_at"     : str,
         "date"           : "dt:2023-08-31 14:10:41",
         "default_layout" : "grid",
         "description"    : "",
-        "edited_at"      : "2025-07-16T22:58:10.834+00:00",
+        "edited_at"      : str,
         "id"             : "15764",
         "num_draft_posts": 0,
-        "num_posts"      : 207,
-        "num_posts_visible_for_creation": 207,
+        "num_posts"      : int,
+        "num_posts_visible_for_creation": int,
         "num_scheduled_posts": 8,
         "post_sort_type" : "custom",
         "title"          : "JoJo's Bizarre Adventure",

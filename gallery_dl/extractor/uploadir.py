@@ -9,7 +9,7 @@
 """Extractors for https://uploadir.com/"""
 
 from .common import Extractor, Message
-from .. import text
+from .. import text, exception
 
 
 class UploadirFileExtractor(Extractor):
@@ -32,7 +32,10 @@ class UploadirFileExtractor(Extractor):
 
         if 300 <= response.status_code < 400:
             url = response.headers["Location"]
-            extr = text.extract_from(self.request(url).text)
+            page = self.request(url).text
+            if "No Longer Exists" in page:
+                raise exception.NotFoundError("file")
+            extr = text.extract_from(page)
 
             name = text.unescape(extr("<h2>", "</h2>").strip())
             url = self.root + extr('class="form" action="', '"')
@@ -47,10 +50,30 @@ class UploadirFileExtractor(Extractor):
             })
 
         else:
-            hcd = response.headers.get("Content-Disposition")
-            name = (hcd.partition("filename*=UTF-8''")[2] or
-                    text.extr(hcd, 'filename="', '"'))
-            data = text.nameext_from_url(name)
+            hcd = response.headers.get("Content-Disposition") or ""
+            if "filename" not in hcd:
+                page = self.request(url).text
+                if "No Longer Exists" in page:
+                    raise exception.NotFoundError("file")
+                extr = text.extract_from(page)
+                name = text.unescape(extr("<h2>", "</h2>").strip())
+                action = extr('class="form" action="', '"')
+                if not action:
+                    raise exception.NotFoundError("file")
+                url = self.root + action
+                token = extr('name="authenticity_token" value="', '"')
+                data = text.nameext_from_url(name, {
+                    "_http_method": "POST",
+                    "_http_data"  : {
+                        "authenticity_token": token,
+                        "upload_id": self.file_id,
+                    },
+                })
+            else:
+                name = (hcd.partition("filename*=UTF-8''")[2] or
+                        text.extr(hcd, 'filename="', '"') or
+                        self.file_id)
+                data = text.nameext_from_url(name)
 
         data["id"] = self.file_id
         yield Message.Directory, "", data

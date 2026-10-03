@@ -33,7 +33,7 @@ __tests__ = (
     "#sha1_url": "c2d0079cc3b05de0fd93b0d0b1f47ff2a32119b7",
 
     "title"      : "Warum Sie nicht Ihren Mitarbeitenden ändern sollten, sondern Ihr Managementsystem",
-    "description": "Mitarbeitende verhalten sich mehrheitlich so, wie das System es ihnen vorgibt. Welche Voraussetzungen es braucht, damit Ihre Mitarbeitenden ihr ganzes Herzblut einsetzen, bespricht Fredi Schmidli in diesem Referat.",
+    "description": str,
 },
 
 {

@@ -32,8 +32,12 @@ class SpeakerdeckPresentationExtractor(GalleryExtractor):
         }
         data = self.request_json(url, params=params)
 
-        self.presentation_id = text.extr(
-            data["html"], 'src="//speakerdeck.com/player/', '"')
+        html = data["html"]
+        self.presentation_id = (
+            text.extr(html, 'src="//speakerdeck.com/player/', '"') or
+            text.extr(html, 'src="https://speakerdeck.com/player/', '"') or
+            text.extr(html, "/player/", '"')
+        )
 
         return {
             "user": user,
@@ -47,7 +51,9 @@ class SpeakerdeckPresentationExtractor(GalleryExtractor):
         url = f"{self.root}/player/{self.presentation_id}"
         page = self.request(url).text
         page = text.re(r"\s+").sub(" ", page)
+        headers = {"_http_headers": {"Referer": self.root + "/"}}
         return [
-            (url, None)
+            (url, headers)
             for url in text.extract_iter(page, 'js-sd-slide" data-url="', '"')
+            if "files.speakerdeck.com" in url
         ]

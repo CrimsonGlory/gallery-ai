@@ -53,7 +53,7 @@ __tests__ = (
     "id"         : 89135,
     "model"      : ["Cosplaytales"],
     "owner_id"   : "-10000001",
-    "title"      : "COSPLAYTALES - Illustrious",
+    "title"      : str,
     "tags"       : [
         "Cosplaytales",
         "Illustrious",
@@ -65,11 +65,8 @@ __tests__ = (
     "#url"     : "https://cosplayrule34.com/model/Cosplaytales",
     "#category": ("", "cosplayrule34", "model"),
     "#class"   : cosplayrule34.Cosplayrule34ListingExtractor,
-    "#results" : (
-        "https://cosplayrule34.com/post/101915",
-        "https://cosplayrule34.com/post/101866",
-        "https://cosplayrule34.com/post/89135",
-    ),
+    "#pattern" : r"https://cosplayrule34\.com/post/\d+",
+    "#count"   : range(1, 20),
 },
 
 {

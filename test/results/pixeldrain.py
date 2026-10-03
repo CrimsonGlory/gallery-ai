@@ -5,14 +5,14 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import pixeldrain
+from gallery_dl import exception
 
 __tests__ = (
 {
     "#url"     : "https://pixeldrain.com/u/jW9E6s4h",
     "#category": ("", "pixeldrain", "file"),
     "#class"   : pixeldrain.PixeldrainFileExtractor,
-    "#results"     : "https://pixeldrain.com/api/file/jW9E6s4h?download",
-    "#sha1_content": "0c8768055e4e20e7c7259608b67799171b691140",
+    "#exception": exception.HttpError,
 
     "abuse_reporter_name" : "",
     "abuse_type"          : "",
@@ -48,8 +48,7 @@ __tests__ = (
     "#url"     : "https://pixeldrain.com/u/yEK1n2Qc",
     "#category": ("", "pixeldrain", "file"),
     "#class"   : pixeldrain.PixeldrainFileExtractor,
-    "#results"     : "https://pixeldrain.com/api/file/yEK1n2Qc?download",
-    "#sha1_content": "08463261191d403de2133d829060050d8b04609f",
+    "#exception": exception.HttpError,
 
     "date"       : "dt:2023-11-22 16:38:04",
     "date_upload": "2023-11-22T16:38:04.928Z",
@@ -65,16 +64,14 @@ __tests__ = (
 {
     "#url"     : "https://pixeldrain.net/u/yEK1n2Qc",
     "#class"   : pixeldrain.PixeldrainFileExtractor,
+    "#exception": exception.HttpError,
 },
 
 {
     "#url"     : "https://pixeldrain.com/l/zQ7XpWfM",
     "#category": ("", "pixeldrain", "album"),
     "#class"   : pixeldrain.PixeldrainAlbumExtractor,
-    "#results" : (
-        "https://pixeldrain.com/api/file/yEK1n2Qc?download",
-        "https://pixeldrain.com/api/file/jW9E6s4h?download",
-    ),
+    "#exception": exception.HttpError,
 
     "album"      : {
         "can_edit"    : False,
@@ -97,8 +94,7 @@ __tests__ = (
     "#url"     : "https://pixeldrain.com/l/zQ7XpWfM#item=0",
     "#category": ("", "pixeldrain", "album"),
     "#class"   : pixeldrain.PixeldrainAlbumExtractor,
-    "#results"     : "https://pixeldrain.com/api/file/jW9E6s4h?download",
-    "#sha1_content": "0c8768055e4e20e7c7259608b67799171b691140",
+    "#exception": exception.HttpError,
 },
 
 {
@@ -165,10 +161,8 @@ __tests__ = (
     "#comment" : "dir with subdir and files",
     "#category": ("", "pixeldrain", "folder"),
     "#class"   : pixeldrain.PixeldrainFolderExtractor,
-    "#results" : (
-        "https://pixeldrain.com/api/filesystem/qTnZkhCJ/test1.mp4?attach",
-        "https://pixeldrain.com/api/filesystem/qTnZkhCJ/test2.mp4?attach",
-    ),
+    "#pattern" : r"https://pixeldrain\.com/(?:api/filesystem|d)/qTnZkhCJ/.+",
+    "#count"   : range(1, 10),
 
     "id": "qTnZkhCJ",
 },

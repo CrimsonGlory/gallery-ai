@@ -86,7 +86,7 @@ class OnlyhavenExtractor(Extractor):
                     else:
                         self.log.warning("%s/%s: General error (%s: %s)",
                                          post["id"], file.get("position"),
-                                         exc.__clasa__.__name__, exc)
+                                         exc.__class__.__name__, exc)
                     continue
                 path = variant["name"]
                 file["url"] = f"{self.root_dl}/{file['storageKey']}/{path}"

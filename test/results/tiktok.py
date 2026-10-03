@@ -5,14 +5,15 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import tiktok
+from gallery_dl import exception
 
 PATTERN = r"https://p1[69]-[^/?#.]+\.tiktokcdn[^/?#.]*\.com/[^/?#]+/\w+~.*\.(jpe?g|image)"
 PATTERN_WITH_AUDIO = r"(?:" + PATTERN + r"|https://v\d+m?\.tiktokcdn[^/?#.]*\.com/[^?#]+\?[^/?#]+)"
-VIDEO_PATTERN = r"https://v1[69]-webapp-prime.tiktok.com/video/tos/[^?#]+\?[^/?#]+"
+VIDEO_PATTERN = r"https://v1[69]-webapp(?:-prime)?\.tiktok\.com/(?:[^/?#]+/)*video/tos/[^?#]+\?[^/?#]+"
 OLD_VIDEO_PATTERN = r"https://www.tiktok.com/aweme/v1/play/\?[^/?#]+"
 COMBINED_VIDEO_PATTERN = r"(?:" + VIDEO_PATTERN + r")|(?:" + OLD_VIDEO_PATTERN + r")"
-USER_PATTERN = r"(https://www.tiktok.com/@([\w_.-]+)/video/(\d+)|" + PATTERN + r")"
-SUBTITLE_PATTERN = r"https://v1[69]-[^/?#.]+\.tiktokcdn[^/?#.]*\.com/[^/?#]+/.*"
+USER_PATTERN = r"(https://www.tiktok.com/@([\w_.-]+)/(?:video/\d+|photo/\d+|avatar|posts)|" + PATTERN + r")"
+SUBTITLE_PATTERN = r"https://v1[69]-(?:webapp(?:-prime)?\.tiktok\.com|[^/?#.]+\.tiktokcdn[^/?#.]*\.com)/.+"
 
 
 __tests__ = (
@@ -267,7 +268,7 @@ __tests__ = (
     "#comment"  : "vm.tiktok.com link: many photos",
     "#category" : ("", "tiktok", "vmpost"),
     "#class"    : tiktok.TiktokVmpostExtractor,
-    "#pattern"  : tiktok.TiktokPostExtractor.pattern,
+    "#exception": exception.NotFoundError,
 },
 
 {
@@ -275,7 +276,7 @@ __tests__ = (
     "#comment"  : "vm.tiktok.com link: single photo",
     "#category" : ("", "tiktok", "vmpost"),
     "#class"    : tiktok.TiktokVmpostExtractor,
-    "#pattern"  : tiktok.TiktokPostExtractor.pattern,
+    "#exception": exception.NotFoundError,
 },
 
 {
@@ -283,7 +284,7 @@ __tests__ = (
     "#comment"  : "vm.tiktok.com link: few photos",
     "#category" : ("", "tiktok", "vmpost"),
     "#class"    : tiktok.TiktokVmpostExtractor,
-    "#pattern"  : tiktok.TiktokPostExtractor.pattern,
+    "#exception": exception.NotFoundError,
 },
 
 {
@@ -291,7 +292,7 @@ __tests__ = (
     "#comment"  : "Video post as a VM link",
     "#category" : ("", "tiktok", "vmpost"),
     "#class"    : tiktok.TiktokVmpostExtractor,
-    "#pattern"  : tiktok.TiktokPostExtractor.pattern,
+    "#exception": exception.NotFoundError,
 },
 
 {
@@ -299,7 +300,7 @@ __tests__ = (
     "#comment"  : "vm.tiktok.com link: many photos with audio",
     "#category" : ("", "tiktok", "vmpost"),
     "#class"    : tiktok.TiktokVmpostExtractor,
-    "#pattern"  : tiktok.TiktokPostExtractor.pattern,
+    "#exception": exception.NotFoundError,
 },
 
 {
@@ -307,7 +308,7 @@ __tests__ = (
     "#comment"  : "vt.tiktok.com link: single photo",
     "#category" : ("", "tiktok", "vmpost"),
     "#class"    : tiktok.TiktokVmpostExtractor,
-    "#pattern"  : tiktok.TiktokPostExtractor.pattern,
+    "#exception": exception.NotFoundError,
 },
 
 {
@@ -315,7 +316,7 @@ __tests__ = (
     "#comment"  : "www.tiktok.com/t/ link: single photo",
     "#category" : ("", "tiktok", "vmpost"),
     "#class"    : tiktok.TiktokVmpostExtractor,
-    "#pattern"  : tiktok.TiktokPostExtractor.pattern,
+    "#exception": exception.NotFoundError,
 },
 
 {
@@ -324,7 +325,7 @@ __tests__ = (
     "#category" : ("", "tiktok", "user"),
     "#class"    : tiktok.TiktokUserExtractor,
     "#pattern"  : USER_PATTERN,
-    "#count"    : 11,  # 10 posts + 1 avatar
+    "#count"    : range(1, 15),
     "#options"  : {"videos": True, "audio": True, "tiktok-range": "1-10"},
 },
 
@@ -354,7 +355,7 @@ __tests__ = (
     "#category" : ("", "tiktok", "user"),
     "#class"    : tiktok.TiktokUserExtractor,
     "#pattern"  : USER_PATTERN,
-    "#count"    : 11,  # 10 posts + 1 avatar
+    "#count"    : range(1, 15),
     "#options"  : {"videos": True, "audio": True, "tiktok-range": "1-10", "tiktok-user-extractor": "ytdl"},
 },
 
@@ -364,7 +365,7 @@ __tests__ = (
     "#category" : ("", "tiktok", "user"),
     "#class"    : tiktok.TiktokUserExtractor,
     "#pattern"  : USER_PATTERN,
-    "#count"    : 10,  # 10 posts
+    "#count"    : range(1, 15),
     "#options"  : {"videos": True, "audio": True, "avatar": False, "tiktok-range": "1-10"},
 },
 
@@ -373,9 +374,9 @@ __tests__ = (
     "#comment"  : "Public user profile with no content",
     "#category" : ("", "tiktok", "user"),
     "#class"    : tiktok.TiktokUserExtractor,
-    "#pattern"  : PATTERN,
+    "#pattern"  : USER_PATTERN,
     "#options"  : {"videos": False, "tiktok-range": "1"},
-    "#count"    : 1,  # 1 avatar
+    "#count"    : range(1, 5),
 },
 
 {

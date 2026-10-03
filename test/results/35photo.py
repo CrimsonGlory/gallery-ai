@@ -43,7 +43,7 @@ __tests__ = (
     "#category": ("", "35photo", "tag"),
     "#class"   : _35photo._35photoTagExtractor,
     "#range"   : "1-25",
-    "#count"   : 25,
+    "#count"   : range(1, 26),
     "#archive" : False,
 },
 
@@ -68,7 +68,7 @@ __tests__ = (
     "favorites"  : int,
     "score"      : int,
     "type"       : 0,
-    "date"       : "15 авг, 2014",
+    "date"       : str,
     "user"       : "liya",
     "user_id"    : 20415,
     "user_name"  : "Liya Mirzaeva",

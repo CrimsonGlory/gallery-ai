@@ -63,7 +63,11 @@ class FuraffinityExtractor(Extractor):
                 if self.external:
                     for url in text.extract_iter(
                             post["_description"], 'href="http', '"'):
-                        yield Message.Queue, "http" + url, post
+                        url = "http" + url
+                        q = url.partition("/externalurl/?q=")[2]
+                        if q:
+                            url = text.unquote(q.split("&", 1)[0])
+                        yield Message.Queue, url, post
 
     def metadata(self):
         return None
@@ -107,13 +111,15 @@ class FuraffinityExtractor(Extractor):
             data["views"] = pi(rh(extr('title="Views">', '</div>')))
             #  data["comments"] = pi(rh(extr('title="Comments">', '</div>')))
             data["favorites"] = pi(rh(extr('title="Favorites">', '</div>')))
-            data["rating"] = extr('inline c-contentRating--', '"')
+            data["rating"] = extr('inline c-contentRating--', '"').title()
             info = text.split_html(extr('<span class="highlight">', '</div>'))
             size = len(info) >> 1
             info = {info[i].lower(): info[i + size] for i in range(size)}
             width, _, height = info.get("resolution", "").partition("x")
             data["fa_category"] = info.get("category", "")
             data["fa_subcategory"] = info.get("theme", "")
+            data["theme"] = info.get("theme", "")
+            data["gender"] = info.get("gender", "")
             data["species"] = info.get("species", "")
             data["width"] = pi(width)
             data["height"] = pi(height)

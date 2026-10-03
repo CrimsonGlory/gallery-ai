@@ -40,10 +40,8 @@ __tests__ = (
     "#url"     : "https://girlsreleased.com/model/11545/Ariana%20Regent",
     "#category": ("", "girlsreleased", "model"),
     "#class"   : girlsreleased.GirlsreleasedModelExtractor,
-    "#results" : (
-        "https://girlsreleased.com/set/142691",
-        "https://girlsreleased.com/set/142690",
-    ),
+    "#pattern" : r"https://girlsreleased\.com/set/\d+",
+    "#count"   : range(1, 20),
 },
 
 {

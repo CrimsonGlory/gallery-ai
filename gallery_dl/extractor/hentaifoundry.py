@@ -175,7 +175,8 @@ class HentaifoundryExtractor(Extractor):
             return
 
         url = self.root + "/?enterAgree=1"
-        self.request(url, method="HEAD")
+        # GET: some WAFs reject HEAD on this endpoint with 401
+        self.request(url)
 
         csrf_token = self.cookies.get(
             "YII_CSRF_TOKEN", domain=self.cookies_domain)

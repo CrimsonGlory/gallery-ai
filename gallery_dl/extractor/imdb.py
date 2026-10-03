@@ -9,7 +9,7 @@
 """Extractors for https://www.imdb.com/"""
 
 from .common import Extractor, Message
-from .. import text, util
+from .. import exception, text, util
 
 BASE_PATTERN = r"(?:https?://)?(?:www\.)?imdb\.com"
 
@@ -63,8 +63,12 @@ class ImdbExtractor(Extractor):
 
         while True:
             data = self.request_graphql(opname, variables)
+            payload = data.get("data") if isinstance(data, dict) else None
+            if not payload:
+                raise exception.AbortExtraction(
+                    data.get("errors") if isinstance(data, dict) else data)
 
-            info = data["data"].popitem()[1]
+            info = payload.popitem()[1]
             if callback is not None:
                 callback(info)
                 callback = None

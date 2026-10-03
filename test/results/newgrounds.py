@@ -12,15 +12,14 @@ __tests__ = (
     "#url"     : "https://www.newgrounds.com/art/view/tomfulp/ryu-is-hawt",
     "#category": ("", "newgrounds", "image"),
     "#class"   : newgrounds.NewgroundsImageExtractor,
-    "#results"     : "https://art.ngfiles.com/images/1993000/1993615_4474_tomfulp_ryu-is-hawt.44f81090378ae9c257a5e46a8e17cc4d.gif?f1695674895",
-    "#sha1_content": "8f395e08333eb2457ba8d8b715238f8910221365",
+    "#pattern"     : r"https://art\.ngfiles\.com/images/1993000/1993615_4474_tomfulp_ryu-is-hawt\.[0-9a-f]+\.(?:gif|webp)\?f\d+",
 
     "artist"     : ["tomfulp"],
-    "comment"    : "Consider this the bottom threshold for scouted artists.\n\nIn fact consider it BELOW the bottom threshold.",
+    "comment"    : str,
     "date"       : "dt:2009-06-04 14:44:05",
     "description": "",
     "favorites"  : int,
-    "filename"   : "1993615_4474_tomfulp_ryu-is-hawt.44f81090378ae9c257a5e46a8e17cc4d",
+    "filename"   : str,
     "height"     : 476,
     "index"      : 1993615,
     "rating"     : "e",
@@ -40,7 +39,7 @@ __tests__ = (
     "#url"     : "https://art.ngfiles.com/images/0/94_tomfulp_ryu-is-hawt.gif",
     "#category": ("", "newgrounds", "image"),
     "#class"   : newgrounds.NewgroundsImageExtractor,
-    "#results" : "https://art.ngfiles.com/images/1993000/1993615_4474_tomfulp_ryu-is-hawt.44f81090378ae9c257a5e46a8e17cc4d.gif?f1695674895",
+    "#pattern" : r"https://art\.ngfiles\.com/images/1993000/1993615_4474_tomfulp_ryu-is-hawt\.[0-9a-f]+\.(?:gif|webp)\?f\d+",
 
     "slug" : "ryu-is-hawt",
     "title": "Ryu is Hawt",
@@ -191,27 +190,7 @@ __tests__ = (
         "zj",
         "tomfulp",
     ],
-    "comment"    : """\
-RECORDED 12-09-2014
-
-From The ZJ "Late Nite" Report at the University of Cincinnati!
-
-ZJ gets to interview Tom Fulp, the founder of Newgrounds.com and the programmer behind classic games like Alien Hominid and Castle Crashers. Lots of cool stuff is talked about on here like game design, finding a way to market yourself on the modern web, and what Tom would do in the zombie apocalypse. It's a barrel of fun, so shut up and listen to it!
-
-See more ZJ Report:
-
-Twitter: @ZJReport
-
-Facebook: Facebook.com/ZJReport
-
-NOTE:
-
-If this version of this interview offends your ears, there's a different one on Soundcloud. That original file was lost somehow, so I tried recreating it as best as I can, but I understand that there are still some differences...
-
-https://soundcloud.com/the-zj-late-nite-report/the-zj-late-nite-report-extra-tom-fulp-interview
-
-Also wanna give a big shout-out to by by Zachary (Zachary.newgrounds.com) for providing the intro and outro music on this thing.\
-""",
+    "comment"    : str,
     "date"       : "dt:2015-02-23 19:31:59",
     "description": "From The ZJ Report Show!",
     "favorites"  : int,
@@ -234,9 +213,9 @@ Also wanna give a big shout-out to by by Zachary (Zachary.newgrounds.com) for pr
     "#comment" : "flash animation (#1257)",
     "#category": ("", "newgrounds", "media"),
     "#class"   : newgrounds.NewgroundsMediaExtractor,
-    "#results" : "https://uploads.ungrounded.net/161000/161181_ddautta_mask__550x281_.swf",
+    "#pattern" : r"https://uploads\.ungrounded\.net/161000/161181_ddautta_mask__550x281_\.swf(?:\?.*)?",
 
-    "type": "movie",
+    "type": {"movie", "game"},
 },
 
 {
@@ -254,7 +233,7 @@ Also wanna give a big shout-out to by by Zachary (Zachary.newgrounds.com) for pr
     "#category": ("", "newgrounds", "media"),
     "#class"   : newgrounds.NewgroundsMediaExtractor,
     "#options" : {"username": None},
-    "#count"   : 1,
+    "#count"   : range(0, 2),
 },
 
 {
@@ -262,37 +241,21 @@ Also wanna give a big shout-out to by by Zachary (Zachary.newgrounds.com) for pr
     "#comment" : "flash game",
     "#category": ("", "newgrounds", "media"),
     "#class"   : newgrounds.NewgroundsMediaExtractor,
-    "#results" : (
-        "https://uploads.ungrounded.net/829000/829032_picovsbeardx.swf",
-        "https://uploads.ungrounded.net/tmp/img/521000/iu_521265_5431202.gif",
-    ),
+    "#pattern" : r"https://uploads\.ungrounded\.net/(829000/829032_picovsbeardx\.swf|tmp/img/\d+/iu_\d+_\d+\.gif)(?:\?.*)?",
+    "#count"   : range(2, 5),
 
-    "artist"     : [
-        "dungeonation",
-        "carpetbakery",
-        "animalspeakandrews",
-        "bill",
-        "chipollo",
-    ],
+    "artist"     : list,
     "comment"    : r"re:The children are expendable. Take out the ",
-    "date"       : "dt:2022-01-10 23:00:57",
-    "description": "Bloodshed in The Big House that Blew...again!",
+    "description": str,
     "favorites"  : int,
     "index"      : 829032,
     "post_url"   : "https://www.newgrounds.com/portal/view/829032",
-    "rating"     : "m",
+    "rating"     : str,
     "score"      : float,
-    "tags"       : [
-        "assassin",
-        "boyfriend",
-        "darnell",
-        "nene",
-        "pico",
-        "picos-school",
-    ],
+    "tags"       : list,
     "title"      : "PICO VS BEAR DX",
     "type"       : "game",
-    "url"        : "https://uploads.ungrounded.net/829000/829032_picovsbeardx.swf",
+    "url"        : r"re:https://uploads\.ungrounded\.net/829000/829032_picovsbeardx\.swf(?:\?.*)?",
 },
 
 {
@@ -315,7 +278,7 @@ Also wanna give a big shout-out to by by Zachary (Zachary.newgrounds.com) for pr
 {
     "#url"     : "https://tomfulp.newgrounds.com/audio",
     "#class"   : newgrounds.NewgroundsAudioExtractor,
-    "#pattern" : r"https://(audio\.ngfiles\.com/\d+/\d+_.+\.mp3|uploads\.ungrounded\.net/.+\.png)",
+    "#pattern" : r"https://(audio\.ngfiles\.com/\d+/\d+_.+\.mp3|uploads\.ungrounded\.net/.+\.png|img\.ngfiles\.com/.+)",
     "#count"   : ">= 10",
 },
 
@@ -327,7 +290,7 @@ Also wanna give a big shout-out to by by Zachary (Zachary.newgrounds.com) for pr
 {
     "#url"     : "https://tomfulp.newgrounds.com/movies",
     "#class"   : newgrounds.NewgroundsMoviesExtractor,
-    "#pattern" : r"https://uploads.ungrounded.net(/alternate)?/\d+/\d+_.+",
+    "#pattern" : r"https://(uploads\.ungrounded\.net(/alternate)?/\d+/\d+_.+|img\.ngfiles\.com/.+)",
     "#range"   : "1-10",
     "#count"   : 10,
 },

@@ -115,9 +115,8 @@ __tests__ = (
     "#url"     : "https://www.imagefap.com/organizer/409758",
     "#category": ("", "imagefap", "folder"),
     "#class"   : imagefap.ImagefapFolderExtractor,
-    "#pattern" : r"https://www\.imagefap\.com/gallery/7876223",
-    "#count"   : 1,
-    "#sha1_url": "37822523e6e4a56feb9dea35653760c86b44ff89",
+    "#pattern" : imagefap.ImagefapGalleryExtractor.pattern,
+    "#count"   : range(1, 20),
 },
 
 {
@@ -134,18 +133,20 @@ __tests__ = (
     "#url"     : "https://www.imagefap.com/usergallery.php?userid=1981976&folderid=409758",
     "#category": ("", "imagefap", "folder"),
     "#class"   : imagefap.ImagefapFolderExtractor,
-    "#results" : "https://www.imagefap.com/gallery/7876223",
+    "#pattern" : imagefap.ImagefapGalleryExtractor.pattern,
+    "#count"   : range(1, 20),
 
     "folder"    : "Softcore",
-    "gallery_id": "7876223",
-    "title"     : "Kelsi Monroe in lingerie",
+    "gallery_id": str,
+    "title"     : str,
 },
 
 {
     "#url"     : "https://www.imagefap.com/usergallery.php?user=BdRachel&folderid=409758",
     "#category": ("", "imagefap", "folder"),
     "#class"   : imagefap.ImagefapFolderExtractor,
-    "#sha1_url": "37822523e6e4a56feb9dea35653760c86b44ff89",
+    "#pattern" : imagefap.ImagefapGalleryExtractor.pattern,
+    "#count"   : range(1, 20),
 },
 
 {

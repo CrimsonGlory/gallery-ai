@@ -5,16 +5,16 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import uploadir
+from gallery_dl import exception
 
 
 __tests__ = (
 {
     "#url"     : "https://uploadir.com/u/rd3t46ry",
-    "#comment" : "image",
+    "#comment" : "image; file gone",
     "#category": ("", "uploadir", "file"),
     "#class"   : uploadir.UploadirFileExtractor,
-    "#pattern" : r"https://uploadir\.com/u/rd3t46ry",
-    "#count"   : 1,
+    "#exception": exception.NotFoundError,
 
     "extension": "jpg",
     "filename" : "Chloe and Rachel 4K jpg",
@@ -23,11 +23,10 @@ __tests__ = (
 
 {
     "#url"     : "https://uploadir.com/uploads/gxe8ti9v/downloads/new",
-    "#comment" : "archive",
+    "#comment" : "archive; file gone",
     "#category": ("", "uploadir", "file"),
     "#class"   : uploadir.UploadirFileExtractor,
-    "#pattern" : r"https://uploadir\.com/uploads/gxe8ti9v/downloads",
-    "#count"   : 1,
+    "#exception": exception.NotFoundError,
 
     "extension": "zip",
     "filename" : "NYAN-Mods-Pack#1",
@@ -36,11 +35,10 @@ __tests__ = (
 
 {
     "#url"     : "https://uploadir.com/u/fllda6xl",
-    "#comment" : "utf-8 filename",
+    "#comment" : "utf-8 filename; file gone",
     "#category": ("", "uploadir", "file"),
     "#class"   : uploadir.UploadirFileExtractor,
-    "#pattern" : r"https://uploadir\.com/u/fllda6xl",
-    "#count"   : 1,
+    "#exception": exception.NotFoundError,
 
     "extension": "png",
     "filename" : "_圖片_🖼_image_",
@@ -51,12 +49,14 @@ __tests__ = (
     "#url"     : "https://uploadir.com/uploads/rd3t46ry",
     "#category": ("", "uploadir", "file"),
     "#class"   : uploadir.UploadirFileExtractor,
+    "#exception": exception.NotFoundError,
 },
 
 {
     "#url"     : "https://uploadir.com/user/uploads/rd3t46ry",
     "#category": ("", "uploadir", "file"),
     "#class"   : uploadir.UploadirFileExtractor,
+    "#exception": exception.NotFoundError,
 },
 
 )

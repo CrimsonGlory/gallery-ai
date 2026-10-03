@@ -14,7 +14,7 @@ __tests__ = (
     "#pattern" : r"https://vanlifetrader\.com/wp\-content/uploads/2025/08/.+",
     "#count"   : 30,
 
-    "date"      : "dt:2026-02-14 16:31:41",
+    "date"      : "type:datetime",
     "extension" : "jpg",
     "filename"  : str,
     "listing_id": 416977,

@@ -20,6 +20,64 @@ class NsfwalbumExtractor(GalleryExtractor):
     referer = False
 
     def images(self, page):
+        thumbs = self._thumbs(page)
+        if not thumbs:
+            album = (text.extr(page, 'href="' + self.root + '/album/', '"') or
+                     text.extr(page, 'href="/album/', '"'))
+            if album:
+                album_id = album.split("/", 1)[0]
+                thumbs = self._thumbs(self.request(
+                    f"{self.root}/album/{album_id}").text)
+                if self.subcategory == "image":
+                    image_id = self.groups[1]
+                    thumbs = [t for t in thumbs if t[0] == image_id]
+
+        if thumbs:
+            if self.start > 1:
+                thumbs = thumbs[self.start - 1:]
+            for image_id, url in thumbs:
+                yield url, {
+                    "id"    : text.parse_int(image_id),
+                    "width" : 0,
+                    "height": 0,
+                    "_http_validate": self._validate_response,
+                }
+            return
+
+        yield from self._images_backend(page)
+
+    def _thumbs(self, page):
+        if not page:
+            return []
+        pairs = text.re(
+            r'(?:data-src|src)="(https?://[^"]+)"[^>]*?data-img-id="(\d+)"'
+        ).findall(page)
+        if not pairs:
+            pairs = [
+                (url, image_id)
+                for image_id, url in text.re(
+                    r'data-img-id="(\d+)"[^>]*?(?:data-src|src)="(https?://[^"]+)"'
+                ).findall(page)
+            ]
+
+        seen = set()
+        thumbs = []
+        for url, image_id in pairs:
+            if image_id in seen:
+                continue
+            seen.add(image_id)
+            thumbs.append((image_id, self._full_from_thumb(url)))
+        return thumbs
+
+    def _full_from_thumb(self, url):
+        if "imagebam.com" in url:
+            url = url.replace("://thumbs", "://images", 1)
+            return url.replace("_t.", "_o.", 1)
+        if "_t." in url:
+            return url.replace("_t.", ".", 1)
+        return url
+
+    def _images_backend(self, page):
         iframe = self.root + "/iframe_image.php?id="
         backend = self.root + "/backend.php"
         retries = self._retries
@@ -43,13 +101,19 @@ class NsfwalbumExtractor(GalleryExtractor):
                 self.log.warning("Unable to fetch image %s", image_id)
                 continue
 
-            yield data[0], {
+            url = data[0] if data else ""
+            proxy = (f"{self.root}/imageProxy.php"
+                     f"?photoId={image_id}&spirit={spirit}")
+            if not url or url.rstrip("/").endswith("show_img.jpg"):
+                url = proxy
+            elif url[0] == "/":
+                url = self.root + url
+            yield url, {
                 "id"    : text.parse_int(image_id),
-                "width" : text.parse_int(data[1]),
-                "height": text.parse_int(data[2]),
+                "width" : text.parse_int(data[1]) if data else 0,
+                "height": text.parse_int(data[2]) if len(data) > 2 else 0,
                 "_http_validate": self._validate_response,
-                "_fallback": (f"{self.root}/imageProxy.php"
-                              f"?photoId={image_id}&spirit={spirit}",),
+                "_fallback": (proxy,),
             }
 
     def _validate_response(self, response):
@@ -57,6 +121,8 @@ class NsfwalbumExtractor(GalleryExtractor):
             ("/no_image.jpg", "/placeholder.png", "/error.jpg"))
 
     def _annihilate(self, value, base=6):
+        if not value:
+            return ""
         return "".join(
             chr(ord(char) ^ base)
             for char in value
@@ -96,11 +162,11 @@ class NsfwalbumImageExtractor(NsfwalbumExtractor):
     subcategory = "image"
     filename_fmt = "{id}.{extension}"
     directory_fmt = ("{category}",)
-    pattern = r"(?:https?://)?(?:www\.)?nsfwalbum\.com/photo/(\d+)"
+    pattern = r"(?:https?://)?(?:www\.)?nsfwalbum\.com(/photo/(\d+))"
     example = "https://nsfwalbum.com/photo/12345"
 
     def metadata(self, _):
         return {}
 
     def image_ids(self, _):
-        return (self.groups[0],)
+        return (self.groups[1],)

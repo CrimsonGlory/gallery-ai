@@ -117,12 +117,13 @@ class PawchiveExtractor(Extractor):
                     except self.exc.HttpError:
                         self.log.warning("%s/%s/%s: 'Creator not found'",
                                          service, creator_id, post["id"])
-                        creator = creator_info[key] = util.NONE
+                        creator = creator_info[key] = None
                 else:
                     creator = creator_info[key]
 
-                post["user_profile"] = creator
-                post["username"] = creator["name"]
+                if creator:
+                    post["user_profile"] = creator
+                    post["username"] = creator["name"]
 
             if comments:
                 post["comments"] = cmts = self.api.creator_post_comments(

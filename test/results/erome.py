@@ -17,7 +17,6 @@ __tests__ = (
     "#count"   : 1,
 
     "album_id": "NQgdlWvk",
-    "date"    : None,
     "count"   : 1,
     "num"     : 1,
     "title"   : "porn",

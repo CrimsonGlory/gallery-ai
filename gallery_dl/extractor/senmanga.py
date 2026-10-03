@@ -38,8 +38,11 @@ class SenmangaChapterExtractor(ChapterExtractor):
         }
 
     def images(self, page):
-        return [
+        images = [
             (text.ensure_http_scheme(url), None)
             for url in text.extract_iter(
                 page, '<img class="picture" src="', '"')
         ]
+        if not images:
+            raise self.exc.NotFoundError("chapter")
+        return images

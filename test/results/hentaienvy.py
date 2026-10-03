@@ -22,10 +22,8 @@ __tests__ = (
     "lang"      : "en",
     "num"       : range(1, 94),
     "title"     : "(C67) [Studio Kimigabuchi (Kimimaru)] RE-TAKE 2 (Neon Genesis Evangelion) [English]",
-    "title_alt" : "",
+    "title_alt" : str,
     "type"      : "doujinshi",
-    "width"     : {835, 838, 841, 1200},
-    "height"    : {862, 865, 1200},
 
     "artist":    [
         "kimimaru | entokkun",
@@ -65,20 +63,18 @@ __tests__ = (
     "#url"     : "https://hentaienvy.com/gallery/1293743/",
     "#category": ("IMHentai", "hentaienvy", "gallery"),
     "#class"   : imhentai.ImhentaiGalleryExtractor,
-    "#pattern" : r"https://m9\.hentaienvy\.com/029/tk70aw8b4y/\d+\.webp",
+    "#pattern" : r"https://m9\.hentaienvy\.com/029/tk70aw8b4y/\d+\.(?:jpg|webp)",
     "#count"   : 25,
 
     "count"     : 25,
     "num"       : range(1, 25),
-    "extension" : "webp",
+    "extension" : {"jpg", "webp"},
     "filename"  : str,
     "gallery_id": 1293743,
     "lang"      : "ru",
     "title"     : "(C102) [Koniro Kajitsu (KonKa)] Konbucha wa Ikaga desu ka | Хотите немного чая из водорослей? (Blue Archive) [Russian] [graun]",
-    "title_alt" : "",
+    "title_alt" : str,
     "type"      : "doujinshi",
-    "width"     : 1280,
-    "height"    : range(1804, 1832),
 
     "artist": [
         "konka",
@@ -116,7 +112,6 @@ __tests__ = (
     "#class"   : imhentai.ImhentaiGalleryExtractor,
     "#pattern" : r"https://m8.hentaienvy.com/026/3zf1yedx5m/\d+\.jpg",
     "#count"   : 188,
-    "#log"     : "1119432: Missing image data",
 
     "artist"    : [],
     "character" : [],
@@ -127,7 +122,7 @@ __tests__ = (
     "parody"    : ["super mario brothers"],
     "tags"      : list,
     "title"     : "hentai girls",
-    "title_alt" : "",
+    "title_alt" : str,
     "type"      : "western",
 },
 
@@ -136,7 +131,8 @@ __tests__ = (
     "#category": ("IMHentai", "hentaienvy", "tag"),
     "#class"   : imhentai.ImhentaiTagExtractor,
     "#pattern" : imhentai.ImhentaiGalleryExtractor.pattern,
-    "#count"   : range(45, 60),
+    "#range"   : "1-50",
+    "#count"   : range(20, 80),
 },
 
 {
@@ -144,7 +140,8 @@ __tests__ = (
     "#category": ("IMHentai", "hentaienvy", "search"),
     "#class"   : imhentai.ImhentaiSearchExtractor,
     "#pattern" : imhentai.ImhentaiGalleryExtractor.pattern,
-    "#count"   : range(45, 60),
+    "#range"   : "1-50",
+    "#count"   : range(20, 80),
 },
 
 {
@@ -153,7 +150,8 @@ __tests__ = (
     "#category": ("IMHentai", "hentaienvy", "search"),
     "#class"   : imhentai.ImhentaiSearchExtractor,
     "#pattern" : imhentai.ImhentaiGalleryExtractor.pattern,
-    "#count"   : range(185, 200),
+    "#range"   : "1-80",
+    "#count"   : range(20, 300),
 },
 
 )

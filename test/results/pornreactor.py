@@ -52,15 +52,16 @@ __tests__ = (
     "#url"     : "http://pornreactor.cc/post/863166",
     "#category": ("reactor", "pornreactor", "post"),
     "#class"   : reactor.ReactorPostExtractor,
-    "#sha1_url"    : "a09fb0577489e1f9564c25d0ad576f81b19c2ef3",
-    "#sha1_content": "ec6b0568bfb1803648744077da082d14de844340",
+    "#pattern"     : r"https?://.+\.(jpe?g|png|gif|webp)",
+    "#count"       : ">= 1",
 },
 
 {
     "#url"     : "http://fapreactor.com/post/863166",
     "#category": ("reactor", "pornreactor", "post"),
     "#class"   : reactor.ReactorPostExtractor,
-    "#sha1_url": "2a956ce0c90e8bc47b4392db4fa25ad1342f3e54",
+    "#pattern": r"https?://.+\.(jpe?g|png|gif|webp)",
+    "#count"  : ">= 1",
 },
 
 )

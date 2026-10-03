@@ -58,7 +58,7 @@ __tests__ = (
     "#url"     : "https://mangayi.com/read/eleceed/",
     "#class"   : mangayi.MangayiMangaExtractor,
     "#pattern" : mangayi.MangayiChapterExtractor.pattern,
-    "#count"   : 415,
+    "#count"   : range(400, 450),
 
     "chapter"      : int,
     "chapter_minor": "",

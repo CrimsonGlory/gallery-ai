@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import mastodon
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -24,10 +25,7 @@ __tests__ = (
     "#comment" : "null moved account",
     "#category": ("mastodon", "wanderingwires.net", "status"),
     "#class"   : mastodon.MastodonStatusExtractor,
-    "#results" : "https://s3.wanderingwires.net/null/4377e826-72ab-4659-885c-fa12945eb207.png",
-
-    "instance": "wanderingwires.net",
-    "instance_remote": None,
+    "#exception": exception.NotFoundError,
 },
 
 {

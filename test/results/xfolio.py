@@ -13,6 +13,7 @@ __tests__ = (
     "#url"     : "https://xfolio.jp/portfolio/yutakashii/works/23977",
     "#comment" : "original 'fullscale_image' files",
     "#class"   : xfolio.XfolioWorkExtractor,
+    "#auth"    : True,
     "#results" : (
         "https://xfolio.jp/user_asset.php?id=113179&work_id=23977&work_image_id=113179&type=work_image",
         "https://xfolio.jp/user_asset.php?id=113182&work_id=23977&work_image_id=113182&type=work_image",
@@ -45,7 +46,7 @@ __tests__ = (
     "#url"     : "https://xfolio.jp/en/portfolio/amakawatamawono/works/87495",
     "#comment" : "'.webp' image",
     "#class"   : xfolio.XfolioWorkExtractor,
-    "#results" : "https://assets.xfolio.jp/secure/1359786657/creator/6030/works/87495/305223_ryhzvHjwcY.webp?hash=IBd5Zt2fWIzYkJGR3AvRCQ&expires=1774386000",
+    "#pattern" : r"https://assets\.xfolio\.jp/secure/\d+/creator/6030/works/87495/305223_ryhzvHjwcY\.webp\?hash=.+",
     "#sha1_content": "4c2a471360268f50c8b49db3431ebe53b599635d",
 
     "count"          : 1,
@@ -60,7 +61,7 @@ __tests__ = (
     "num"            : 1,
     "series_id"      : "1257",
     "title"          : "鈴の音も聞こえない",
-    "url"            : "https://assets.xfolio.jp/secure/1359786657/creator/6030/works/87495/305223_ryhzvHjwcY.webp?hash=IBd5Zt2fWIzYkJGR3AvRCQ&expires=1774386000",
+    "url"            : r"re:https://assets\.xfolio\.jp/secure/\d+/creator/6030/works/87495/305223_ryhzvHjwcY\.webp\?hash=.+",
     "work_id"        : "87495",
 },
 

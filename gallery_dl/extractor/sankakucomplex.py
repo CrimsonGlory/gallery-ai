@@ -29,7 +29,7 @@ class SankakucomplexArticleExtractor(SankakucomplexExtractor):
     filename_fmt = "{filename}.{extension}"
     archive_fmt = "{date:%Y%m%d}_{filename}"
     pattern = (r"(?:https?://)?(?:news|www)\.sankakucomplex\.com"
-               r"/(\d\d\d\d/\d\d/\d\d/[^/?#]+)")
+               r"/(\d\d\d\d/\d\d/\d\d/[^/?#]+|n/[^/?#]+)")
     example = "https://news.sankakucomplex.com/1970/01/01/TITLE"
 
     def items(self):

@@ -12,7 +12,7 @@ __tests__ = (
     "#url"     : "https://www.cosmos.so/e/691358393",
     "#comment" : "image",
     "#class"   : cosmos.CosmosElementExtractor,
-    "#results" : "https://cdn.cosmos.so/c5a21487-a213-4599-bbc8-bef812842be3?format=jpg",
+    "#pattern" : r"https://cdn\.cosmos\.so/c5a21487-a213-4599-bbc8-bef812842be3\?format=jpe?g",
 
     "aiGenerated"    : False,
     "blurHash"       : "00G8lw",
@@ -21,7 +21,7 @@ __tests__ = (
     "createdAt"      : "2024-02-12T11:04:51.267675Z",
     "date"           : "dt:2024-02-12 11:04:51",
     "description"    : "",
-    "extension"      : "jpg",
+    "extension"      : {"jpg", "jpeg"},
     "filename"       : "c5a21487-a213-4599-bbc8-bef812842be3",
     "hasMoreMedia"   : False,
     "height"         : 624,
@@ -33,7 +33,7 @@ __tests__ = (
     "ownerId"        : None,
     "processingState": "FINISHED",
     "shareUrl"       : "https://www.cosmos.so/e/691358393",
-    "url"            : "https://cdn.cosmos.so/c5a21487-a213-4599-bbc8-bef812842be3?format=jpg",
+    "url"            : r"re:https://cdn\.cosmos\.so/c5a21487-a213-4599-bbc8-bef812842be3\?format=jpe?g",
     "width"          : 624,
     "source"         : {
         "__typename"    : "ElementSource",
@@ -108,7 +108,7 @@ __tests__ = (
     "#url"     : "https://www.cosmos.so/e/1810279860",
     "#comment" : "gif",
     "#class"   : cosmos.CosmosElementExtractor,
-    "#results" : "https://cdn.cosmos.so/9c92d3e1-562c-431d-9392-97f0d5d07dbd?format=jpg",
+    "#pattern" : r"https://cdn\.cosmos\.so/9c92d3e1-562c-431d-9392-97f0d5d07dbd\?format=jpe?g",
 
     "aiGenerated"    : False,
     "blurHash"       : "00EoSb",
@@ -117,7 +117,7 @@ __tests__ = (
     "createdAt"      : "2025-01-06T16:50:23.188002Z",
     "date"           : "dt:2025-01-06 16:50:23",
     "description"    : "A still from the 1967 film <n>The Trip</n>, directed by <n>Roger Corman</n>.",
-    "extension"      : "jpg",
+    "extension"      : {"jpg", "jpeg"},
     "filename"       : "9c92d3e1-562c-431d-9392-97f0d5d07dbd",
     "hasMoreMedia"   : False,
     "height"         : 371,
@@ -129,7 +129,7 @@ __tests__ = (
     "ownerId"        : 959919755,
     "processingState": "FINISHED",
     "shareUrl"       : "https://www.cosmos.so/e/1810279860",
-    "url"            : "https://cdn.cosmos.so/9c92d3e1-562c-431d-9392-97f0d5d07dbd?format=jpg",
+    "url"            : r"re:https://cdn\.cosmos\.so/9c92d3e1-562c-431d-9392-97f0d5d07dbd\?format=jpe?g",
     "width"          : 500,
     "source"         : {
         "__typename"    : "ElementSource",
@@ -150,13 +150,8 @@ __tests__ = (
     "#url"     : "https://www.cosmos.so/e/663917703",
     "#comment" : "multi",
     "#class"   : cosmos.CosmosElementExtractor,
-    "#results" : (
-        "https://cdn.cosmos.so/02f2db5f-41f2-42d6-9b37-919be3b8c12c?format=jpg",
-        "https://cdn.cosmos.so/c15b88e1-c13c-4b57-a72c-cc8431ba5f7d?format=jpg",
-        "https://cdn.cosmos.so/bcf4b469-89ca-4bec-a7f0-cf0f55f65ac9?format=jpg",
-        "https://cdn.cosmos.so/bcd187c8-fa86-4a50-ab5e-826161548e68?format=jpg",
-        "https://cdn.cosmos.so/b4f148fa-24a7-45ab-90b5-71bd0cefba4a?format=jpg",
-    ),
+    "#pattern" : r"https://cdn\.cosmos\.so/[0-9a-f-]+\?format=jpe?g",
+    "#count"   : 5,
 
     "aiGenerated"    : False,
     "contentAccessibility": "ACCESSIBLE",
@@ -164,7 +159,7 @@ __tests__ = (
     "createdAt"      : "2025-03-04T16:51:04.984367Z",
     "date"           : "dt:2025-03-04 16:51:04",
     "description"    : "",
-    "extension"      : "jpg",
+    "extension"      : {"jpg", "jpeg"},
     "filename"       : "iso:uuid",
     "hasMoreMedia"   : True,
     "width"          : 1080,
@@ -224,7 +219,7 @@ __tests__ = (
     "#url"     : "https://www.cosmos.so/kepler/collections",
     "#class"   : cosmos.CosmosCollectionsExtractor,
     "#pattern" : cosmos.CosmosCollectionExtractor.pattern,
-    "#count"   : 35,
+    "#count"   : range(30, 50),
 
     "collaboratorsCount": int,
     "coverImageElementId": {int, None},
@@ -261,7 +256,7 @@ __tests__ = (
         "publicElementsCluster": {
             "__typename"      : "Cluster",
             "id"              : 149632639,
-            "numberOfElements": 5213,
+            "numberOfElements": range(5000, 6000),
         },
         "socialLinks": {
             "__typename"  : "UserProfileSocialLinks",

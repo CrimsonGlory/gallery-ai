@@ -174,7 +174,7 @@ class PexelsAPI():
 
             else:
                 self.extractor.log.debug(response.text)
-                raise self.extractor.exc.AbortExtraction("API request failed")
+                raise self.extractor.exc.HttpError(response=response)
 
     def _pagination(self, endpoint, params):
         while True:

@@ -34,6 +34,17 @@ class ThefapExtractor(Extractor):
             url = self.root + url
         return url
 
+    def _is_media(self, url):
+        if any(s in url for s in (
+                "/assets/", "whos.amung.us", "earringsatisfiedsplice",
+                "googleads", "doubleclick", "gravatar.com")):
+            return False
+        path = url.split("?", 1)[0].lower()
+        return path.endswith((
+            ".jpg", ".jpeg", ".png", ".gif", ".webp", ".mp4", ".webm",
+            ":orig")) or "twimg.com" in url or "i.redd.it" in url or \
+            "pixhost" in url
+
 
 class ThefapPostExtractor(ThefapExtractor):
     """Extractor for individual thefap.net posts"""
@@ -46,7 +57,8 @@ class ThefapPostExtractor(ThefapExtractor):
         path, model, model_id, kind, post_id = self.groups
 
         page = self.request(self.root + path).text
-        if "Not Found" in page:
+        if "Not Found" in page or "Content removed" in page or \
+                "/assets/images/removed.png" in page:
             raise self.exc.NotFoundError("post")
 
         if model_name := text.extr(page, "<title>", " / "):
@@ -65,12 +77,22 @@ class ThefapPostExtractor(ThefapExtractor):
         yield Message.Directory, "", data
 
         data["num"] = 0
-        page = text.extract(
-            page, "\n</div>", "\n<!---->", page.index("</header>"))[0]
-        for url in text.extract_iter(page, '<img src="', '"'):
-            if url := self._normalize_url(url):
-                data["num"] += 1
-                yield Message.Url, url, text.nameext_from_url(url, data)
+        start = page.find("</header>")
+        chunk = page[start:] if start >= 0 else page
+        for marker in ('id="content"', "uk-divider-icon", "<footer"):
+            pos = chunk.find(marker, 200)
+            if pos > 0:
+                chunk = chunk[:pos]
+                break
+        seen = set()
+        for attr in ('src="', 'data-src="'):
+            for url in text.extract_iter(chunk, attr, '"'):
+                if url := self._normalize_url(url):
+                    if url in seen or not self._is_media(url):
+                        continue
+                    seen.add(url)
+                    data["num"] += 1
+                    yield Message.Url, url, text.nameext_from_url(url, data)
 
 
 class ThefapModelExtractor(ThefapExtractor):
@@ -109,8 +131,17 @@ class ThefapModelExtractor(ThefapExtractor):
             "Sec-Fetch-Site"  : "same-origin",
         }
 
-        page = text.extr(page, '<div id="content"', '<div id="showmore"')
-        imgs = text.extract_iter(page, 'data-src="', '"')
+        start = page.find('id="content"')
+        chunk = page[start:] if start >= 0 else ""
+        for marker in ('id="showmore"', "<footer", "</main>"):
+            pos = chunk.find(marker, 100)
+            if pos > 0:
+                chunk = chunk[:pos]
+                break
+        imgs = list(text.extract_iter(chunk, 'data-src="', '"'))
+        if not imgs:
+            imgs = [u for u in text.extract_iter(chunk, '<img src="', '"')
+                    if "/assets/" not in u]
         pnum = 1
         data["num"] = 0
 
@@ -124,4 +155,9 @@ class ThefapModelExtractor(ThefapExtractor):
             page = self.request(base + str(pnum), headers=headers).text
             if not page:
                 break
-            imgs = text.extract_iter(page, '<img src="', '"')
+            imgs = list(text.extract_iter(page, 'data-src="', '"'))
+            if not imgs:
+                imgs = [u for u in text.extract_iter(page, '<img src="', '"')
+                        if "/assets/" not in u]
+            if not imgs:
+                break

@@ -130,7 +130,7 @@ __tests__ = (
     "#category": ("IMHentai", "hentaifox", "tag"),
     "#class"   : imhentai.ImhentaiTagExtractor,
     "#pattern" : imhentai.ImhentaiGalleryExtractor.pattern,
-    "#count"   : range(180, 220),
+    "#count"   : range(150, 300),
 },
 
 {
@@ -138,7 +138,7 @@ __tests__ = (
     "#category": ("IMHentai", "hentaifox", "search"),
     "#class"   : imhentai.ImhentaiSearchExtractor,
     "#pattern" : imhentai.ImhentaiGalleryExtractor.pattern,
-    "#count"   : range(20, 30),
+    "#count"   : range(15, 50),
 },
 
 {

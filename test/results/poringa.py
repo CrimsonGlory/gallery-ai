@@ -10,15 +10,15 @@ from gallery_dl.extractor import poringa
 __tests__ = (
 {
     "#url"     : "http://www.poringa.net/posts/imagenes/3051081/Turrita-alto-ojete.html",
+    "#comment" : "post images removed",
     "#category": ("", "poringa", "post"),
     "#class"   : poringa.PoringaPostExtractor,
-    "#count"   : 26,
+    "#count"   : 0,
 
-    "count"    : 26,
-    "num"      : range(1, 26),
+    "count"    : 0,
     "post_id"  : "3051081",
     "title"    : "turrita alto ojete...",
-    "user"     : "vipower1top",
+    "user"     : str,
 },
 
 {
@@ -31,7 +31,7 @@ __tests__ = (
     "num"      : range(1, 15),
     "post_id"  : "3095554",
     "title"    : "Otra culona de instagram",
-    "user"     : "Expectro007",
+    "user"     : str,
 },
 
 {

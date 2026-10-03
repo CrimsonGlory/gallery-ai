@@ -28,7 +28,6 @@ __tests__ = (
         "https://weibo.com/u/1758989602?tabtype=newVideo",
         "https://weibo.com/u/1758989602?tabtype=article",
         "https://weibo.com/u/1758989602?tabtype=album",
-        "https://weibo.com/u/1758989602?tabtype=album-only",
     ),
 },
 
@@ -81,8 +80,7 @@ __tests__ = (
     "#comment" : "'tabtype=home' is broken on website itself",
     "#category": ("", "weibo", "home"),
     "#class"   : weibo.WeiboHomeExtractor,
-    "#range"   : "1-30",
-    "#count"   : 0,
+    "#exception": exception.AbortExtraction,
 },
 
 {
@@ -167,18 +165,15 @@ __tests__ = (
     "#comment" : "subalbum",
     "#class"   : weibo.WeiboAlbumExtractor,
     "#range"   : "1-3",
-    "#results" : (
-        "https://weibo.com/ajax/common/download?pid=002kXRnxly8i5b4anvvxbj60u00u078w02",
-        "https://weibo.com/ajax/common/download?pid=002kXRnxly8i2b7u68bfhj60u00u0dl002",
-        "https://weibo.com/ajax/common/download?pid=002kXRnxly8i2b6rmr1trj60rs0rstdn02",
-    ),
+    "#pattern" : r"https://weibo.com/ajax/common/download\?pid=\w+",
+    "#count"   : 3,
 
     "extension": "jpg",
     "pid"      : str,
     "type"     : "pic",
     "subalbum" : {
-        "containerid": "2318262142058927_-_pc_profile_album_-_photo_-_avatar_-_35046512_-_%E5%A4%B4%E5%83%8F",
-        "pic"        : "https://wx1.sinaimg.cn/webp720/002kXRnxly8i5b4anvvxbj60u00u078w02.jpg",
+        "containerid": str,
+        "pic"        : r"re:https://wx\d+\.sinaimg\.cn/webp720/\w+\.jpg",
         "pic_title"  : "头像",
     },
     "user"     : {
@@ -306,19 +301,18 @@ __tests__ = (
 
 {
     "#url"     : "https://weibo.com/1501933722/4142890299009993",
-    "#comment" : "empty 'playback_list' (#3301)",
+    "#comment" : "empty 'playback_list' (#3301); status 404",
     "#category": ("", "weibo", "status"),
     "#class"   : weibo.WeiboStatusExtractor,
-    "#pattern" : r"https://f\.us\.sinaimg\.cn/004zstGKlx07dAHg4ZVu010f01000OOl0k01\.mp4\?label=mp4_hd&template=template_7&ori=0&ps=1CwnkDw1GXwCQx.+&KID=unistore,video",
-    "#count"   : 1,
+    "#exception": exception.NotFoundError,
 },
 
 {
     "#url"     : "https://weibo.com/2427303621/MxojLlLgQ",
-    "#comment" : "mix_media_info (#3793)",
+    "#comment" : "mix_media_info (#3793); status 404",
     "#category": ("", "weibo", "status"),
     "#class"   : weibo.WeiboStatusExtractor,
-    "#count"   : 9,
+    "#exception": exception.NotFoundError,
 },
 
 {
@@ -382,7 +376,7 @@ __tests__ = (
     "#comment" : "stream without replay (#8339)",
     "#class"   : weibo.WeiboStatusExtractor,
     "#count"   : 0,
-    "#log"     : "HttpError: '404 ' for 'https://wblive-out.api.weibo.com/2/wblive/room/play?id=1022:2321325216257942356128'",
+    "#log"     : "~HttpError: '404 ' for 'https://wblive-out.api.weibo.com/2/wblive/room/play?id=1022:2321325216257942356128'",
 },
 
 {

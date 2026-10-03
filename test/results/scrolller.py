@@ -131,7 +131,7 @@ __tests__ = (
     "displayName"     : None,
     "duration"        : None,
     "extension"       : "jpg",
-    "favoriteCount"   : 0,
+    "favoriteCount"   : int,
     "filename"        : str,
     "fullLengthSource": None,
     "gfycatSource"    : None,

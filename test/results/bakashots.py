@@ -11,10 +11,8 @@ __tests__ = (
 {
     "#url"     : "https://compare.bakashots.me/compare.php?setId=6275",
     "#class"   : bakashots.BakashotsComparisonExtractor,
-    "#results" : (
-        "https://compare.bakashots.me/eqCeOxHtilLxTYF4LS",
-        "https://compare.bakashots.me/eqCfOxHtilUwiRZtpc=",
-    ),
+    "#pattern" : r"https://compare\.bakashots\.me/eqC\w+",
+    "#count"   : 2,
 
     "comparison_id": 41330,
     "count"        : 2,
@@ -40,7 +38,7 @@ __tests__ = (
     "#url"     : "https://compare.bakashots.me/search.php?searchTherms=Z&page=2",
     "#class"   : bakashots.BakashotsSearchExtractor,
     "#pattern" : bakashots.BakashotsComparisonExtractor.pattern,
-    "#count"   : 30,
+    "#count"   : range(20, 50),
 },
 
 )

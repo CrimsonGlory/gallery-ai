@@ -52,7 +52,7 @@ __tests__ = (
         "width"    : 2048,
     },
     "user": {
-        "avatarUrl": "https://images.boosty.to/user/173542/avatar?change_time=1580888689",
+        "avatarUrl": str,
         "blogUrl"  : "milshoo",
         "flags"    : {
             "showPostDonations": True,

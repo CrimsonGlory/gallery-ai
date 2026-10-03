@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import nudostar
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -34,11 +35,9 @@ __tests__ = (
 
 {
     "#url"     : "https://nudostar.tv/models/mikayladvip/",
-    "#comment" : "more than 1000 images (#9332)",
+    "#comment" : "more than 1000 images (#9332); model 404",
     "#class"   : nudostar.NudostarModelExtractor,
-    "#pattern" : r"https://nudostar\.tv/contents/m/i/mikayladvip/3000/mikayladvip_2\d\d\d\.jpg",
-    "#range"   : "2000-2999",
-    "#count"   : 1000,
+    "#exception": exception.NotFoundError,
 
     "count"      : range(4500, 6000),
     "extension"  : "jpg",

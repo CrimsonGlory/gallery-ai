@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import xvideos
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -12,8 +13,7 @@ __tests__ = (
     "#url"     : "https://www.xvideos.com/profiles/pervertedcouple/photos/751031",
     "#category": ("", "xvideos", "gallery"),
     "#class"   : xvideos.XvideosGalleryExtractor,
-    "#pattern" : r"https://profile-pics-cdn\d+\.xvideos-cdn\.com/[^/]+\,\d+/videos/profiles/galleries/84/ca/37/pervertedcouple/gal751031/pic_\d+_big\.jpg",
-    "#count"   : 8,
+    "#exception": exception.NotFoundError,
 
     "gallery": {
         "id"   : 751031,
@@ -49,11 +49,11 @@ __tests__ = (
 },
 
 {
-    "#url"     : "https://www.xvideos.com/profiles/pervertedcouple",
+    "#url"     : "https://www.xvideos.com/model-channels/little-caprice",
     "#category": ("", "xvideos", "user"),
     "#class"   : xvideos.XvideosUserExtractor,
-    "#sha1_url"     : "a413f3e60d6d3a2de79bd44fa3b7a9c03db4336e",
-    "#sha1_metadata": "335a3304941ff2e666c0201e9122819b61b34adb",
+    "#pattern"      : r"https://www\.xvideos\.com/profiles/little-caprice/photos/\d+",
+    "#count"        : range(1, 50),
 },
 
 {

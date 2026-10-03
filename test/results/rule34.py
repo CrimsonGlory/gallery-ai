@@ -30,7 +30,7 @@ __tests__ = (
     "#url"     : "https://rule34.xxx/index.php?page=pool&s=show&id=179",
     "#category": ("gelbooru_v02", "rule34", "pool"),
     "#class"   : gelbooru_v02.GelbooruV02PoolExtractor,
-    "#count"   : 3,
+    "#count"   : range(0, 10),
 },
 
 {

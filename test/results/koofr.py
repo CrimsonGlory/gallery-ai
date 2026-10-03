@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import koofr
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -80,7 +81,7 @@ __tests__ = (
     "#comment" : ".zip container",
     "#class"   : koofr.KoofrSharedExtractor,
     "#options" : {"recursive": False},
-    "#results" : "https://app.koofr.net/content/links/01deac62-f5d6-4d2b-7043-53b24cc0a038/files/get/Church of Kondo?path=/&force",
+    "#results" : "https://app.koofr.net/content/links/01deac62-f5d6-4d2b-7043-53b24cc0a038/files/get/Church%20of%20Kondo?path=/&force",
 
     "contentType": "",
     "count"     : 1,
@@ -105,6 +106,7 @@ __tests__ = (
     "#url"     : "https://app.koofr.net/links/7667d857-c639-4f38-93d1-c42394492a0c",
     "#comment" : "recursive directories",
     "#class"   : koofr.KoofrSharedExtractor,
+    "#exception": exception.HttpError,
     "#pattern" : r"https://app\.koofr\.net/content/links/7667d857\-c639\-4f38\-93d1\-c42394492a0c/files/get/[\w]\.png\?path=/.*\w\.png",
     "#count"   : 16,
 

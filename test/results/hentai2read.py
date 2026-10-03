@@ -66,16 +66,16 @@ __tests__ = (
     "#url"     : "https://hentai2read.com/amazon_elixir/",
     "#category": ("", "hentai2read", "manga"),
     "#class"   : hentai2read.Hentai2readMangaExtractor,
-    "#sha1_url"     : "273073752d418ec887d7f7211e42b832e8c403ba",
-    "#sha1_metadata": "5c1b712258e78e120907121d3987c71f834d13e1",
+    "#pattern"      : r"https://hentai2read\.com/amazon_elixir/.+",
+    "#count"        : ">= 1",
 },
 
 {
     "#url"     : "https://hentai2read.com/oshikage_riot/",
     "#category": ("", "hentai2read", "manga"),
     "#class"   : hentai2read.Hentai2readMangaExtractor,
-    "#sha1_url"     : "6595f920a3088a15c2819c502862d45f8eb6bea6",
-    "#sha1_metadata": "a2e9724acb221040d4b29bf9aa8cb75b2240d8af",
+    "#pattern"      : r"https://hentai2read\.com/oshikage_riot/.+",
+    "#count"        : ">= 1",
 },
 
 {

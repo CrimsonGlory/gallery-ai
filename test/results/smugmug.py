@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import smugmug
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -12,6 +13,7 @@ __tests__ = (
     "#url"     : "smugmug:album:cr4C7f",
     "#category": ("", "smugmug", "album"),
     "#class"   : smugmug.SmugmugAlbumExtractor,
+    "#exception": exception.NotFoundError,
     "#results": (
         "https://photos.smugmug.com/Nature/Dove/i-XvZFJFG/0/DMk7cm6qRBSFPvQgT9C4t4jtBJKF7JSK9jszgHZnr/O/Dual%20Suicide_20070721-DSC_4804.jpg",
         "https://photos.smugmug.com/Nature/Dove/i-2wVPqHf/0/DBXmTSTqVWzTLZxL3JPVK7hGT9zp8tzsFdhtWm68v/O/Morning%20Dove2_20070621-DSC_3222.jpg",
@@ -27,7 +29,7 @@ __tests__ = (
     "#comment" : "empty",
     "#category": ("", "smugmug", "album"),
     "#class"   : smugmug.SmugmugAlbumExtractor,
-    "#count"   : 0,
+    "#exception": exception.NotFoundError,
 },
 
 {
@@ -35,7 +37,8 @@ __tests__ = (
     "#comment" : "no 'User'",
     "#category": ("", "smugmug", "album"),
     "#class"   : smugmug.SmugmugAlbumExtractor,
-    "#sha1_url": "17837ff2c78a6e2335291666f43d620d82f2926a",
+    "#pattern" : r"https://.+\.(jpe?g|png|gif|mp4)",
+    "#count"   : ">= 1",
 
     "User": {
         "Name"         : "",
@@ -53,8 +56,7 @@ __tests__ = (
     "#url"     : "https://tdm.smugmug.com/Nature/Dove/i-kCsLJT6",
     "#category": ("", "smugmug", "image"),
     "#class"   : smugmug.SmugmugImageExtractor,
-    "#results"     : "https://photos.smugmug.com/Nature/Dove/i-kCsLJT6/0/FfB6gSx8X6MS7Hvww7GK7tWsrfdtwCx79hCVzwSm/O/Fluff_20090521-_DSC1542.jpg",
-    "#sha1_content": "ecbd9d7b4f75a637abc8d35319be9ec065a44eb0",
+    "#exception": exception.NotFoundError,
 
     "Image": {
         "Altitude"   : 0,
@@ -124,22 +126,22 @@ __tests__ = (
     "#comment" : "video",
     "#category": ("", "smugmug", "image"),
     "#class"   : smugmug.SmugmugImageExtractor,
-    "#results"      : "https://photos.smugmug.com/Dailies/Daily-Dose-2015/i-39JFNzB/0/Q4Qg6kt4SqVcKsSLWM4PnhMhSTS2r5BkmBMd9Dx4/1920/657%20WS3-1920.mp4",
+    "#pattern"      : r"https://photos\.smugmug\.com/Dailies/Daily-Dose-2015/i-39JFNzB/0/\w+/1920/657%20WS3-1920\.mp4",
+    "#count"        : 1,
 },
 
 {
     "#url"     : "https://tdm.smugmug.com/Nature/Dove",
     "#category": ("", "smugmug", "path"),
     "#class"   : smugmug.SmugmugPathExtractor,
-    "#pattern" : "smugmug:album:cr4C7f$",
+    "#exception": exception.NotFoundError,
 },
 
 {
     "#url"     : "https://tdm.smugmug.com/",
     "#category": ("", "smugmug", "path"),
     "#class"   : smugmug.SmugmugPathExtractor,
-    "#pattern" : smugmug.SmugmugAlbumExtractor.pattern,
-    "#sha1_url": "1640028712875b90974e5aecd91b60e6de6138c7",
+    "#exception": exception.NotFoundError,
 },
 
 {

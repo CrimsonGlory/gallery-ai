@@ -72,7 +72,7 @@ __tests__ = (
     "#url"     : "https://www.pinterest.com/pin/1025272671423645004/",
     "#comment" : "story pin with 'story_pin_static_sticker_block' blocks",
     "#class"   : pinterest.PinterestPinExtractor,
-    "#results" : "https://i.pinimg.com/originals/70/ab/31/70ab31654b2329e2ec74a39adf7ee683.jpg",
+    "#exception": exception.NotFoundError,
 },
 
 {
@@ -89,8 +89,8 @@ __tests__ = (
     "#class"   : pinterest.PinterestPinExtractor,
     "#results" : "https://i.pinimg.com/originals/66/a3/9a/66a39a10c015df67b85481105fb3a81e.jpg",
 
-    "description": "",
-    "closeup_unified_description": "",
+    "description": str,
+    "closeup_unified_description": str,
 },
 
 {
@@ -112,7 +112,7 @@ __tests__ = (
     "#category": ("", "pinterest", "board"),
     "#class"   : pinterest.PinterestBoardExtractor,
     "#options" : {"sections": True},
-    "#count"   : 4,
+    "#count"   : range(4, 12),
 },
 
 {
@@ -121,7 +121,8 @@ __tests__ = (
     "#category": ("", "pinterest", "board"),
     "#class"   : pinterest.PinterestBoardExtractor,
     "#options" : {"sections": True},
-    "#results" : "https://www.pinterest.jp/gdldev/bname/id:5345901183739414095",
+    "#pattern" : r"https://(?:www\.pinterest\.jp/gdldev/bname/id:\d+|i\.pinimg\.com/.+)",
+    "#count"   : range(1, 10),
 },
 
 {

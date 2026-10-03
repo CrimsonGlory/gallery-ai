@@ -70,7 +70,8 @@ class _4chanarchivesThreadExtractor(Extractor):
         return {
             "no"  : text.parse_int(extr('', '"')),
             "name": extr('class="name">', '<'),
-            "time": extr('class="dateTime postNum" >', '<').rstrip(),
+            "time": (extr('class="dateTime postNum" >', '<') or
+                     extr('class="dateTime" >', '<')).rstrip(),
             "com" : text.unescape(
                 html[html.find('<blockquote'):].partition(">")[2]),
         }
@@ -99,17 +100,23 @@ class _4chanarchivesBoardExtractor(Extractor):
     def items(self):
         data = {"_extractor": _4chanarchivesThreadExtractor}
         pnum = text.parse_int(self.page, 1)
-        needle = '''<span class="postNum desktop">
-                        <span><a href="'''
+        thread_re = text.re(
+            rf'{self.root}/board/{self.board}/thread/(\d+)')
+        seen = set()
 
         while True:
             url = f"{self.root}/board/{self.board}/{pnum}"
             page = self.request(url).text
 
-            thread = None
-            for thread in text.extract_iter(page, needle, '"'):
-                yield Message.Queue, thread, data
+            new = []
+            for thread_id in thread_re.findall(page):
+                if thread_id not in seen:
+                    seen.add(thread_id)
+                    new.append(thread_id)
+                    yield Message.Queue, (
+                        f"{self.root}/board/{self.board}/thread/{thread_id}"
+                    ), data
 
-            if thread is None:
+            if not new:
                 return
             pnum += 1

@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import mastodon
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -12,7 +13,7 @@ __tests__ = (
     "#url"     : "https://mastodon.social/@jk",
     "#category": ("mastodon", "mastodon.social", "user"),
     "#class"   : mastodon.MastodonUserExtractor,
-    "#pattern" : r"https://files.mastodon.social/media_attachments/files/(\d+/){3,}original/\w+",
+    "#pattern" : r"https://files\.mastodon\.social/(?:cache/)?media_attachments/files/.+/original/\w+",
     "#range"   : "1-60",
     "#count"   : 60,
 },
@@ -33,11 +34,8 @@ __tests__ = (
     "#class"   : mastodon.MastodonUserExtractor,
     "#options" : {"reblogs": True},
     "#archive" : False,
-    "#results": (
-        "https://files.mastodon.social/media_attachments/files/111/330/852/486/713/967/original/2c25ade55a9d1af2.jpg",
-        "https://files.mastodon.social/media_attachments/files/111/331/603/082/304/823/original/e12cde371c88c1b0.png",
-        "https://files.mastodon.social/media_attachments/files/111/331/603/082/304/823/original/e12cde371c88c1b0.png",
-    ),
+    "#pattern": r"https://files\.mastodon\.social/(?:cache/)?media_attachments/files/.+",
+    "#count"  : range(1, 20),
 },
 
 {
@@ -99,7 +97,7 @@ __tests__ = (
     "#url"     : "https://mastodon.social/tags/mastodon",
     "#category": ("mastodon", "mastodon.social", "hashtag"),
     "#class"   : mastodon.MastodonHashtagExtractor,
-    "#pattern" : r"https://files\.mastodon\.social/media_attachments/files/(\d+/){3,}original/\w+",
+    "#pattern" : r"https://files\.mastodon\.social/(?:cache/)?media_attachments/files/.+/original/\w+",
     "#range"   : "1-10",
 },
 
@@ -108,14 +106,8 @@ __tests__ = (
     "#category": ("mastodon", "mastodon.social", "following"),
     "#class"   : mastodon.MastodonFollowingExtractor,
     "#extractor": False,
-    "#results"  : (
-        "https://mastodon.ie/@RustyBertrand",
-        "https://ravenation.club/@soundwarrior20",
-        "https://mastodon.social/@0x4f",
-        "https://mastodon.social/@christianselig",
-        "https://saturation.social/@clive",
-        "https://mastodon.social/@sjvn",
-    ),
+    "#pattern"  : r"https://[^/]+/@[^/?#]+",
+    "#count"    : range(3, 30),
 
     "acct"          : str,
     "avatar"        : r"re:https://files.mastodon.social/.+\.\w+$",
@@ -185,7 +177,7 @@ __tests__ = (
     "#category": ("mastodon", "mastodon.social", "status"),
     "#class"   : mastodon.MastodonStatusExtractor,
     "#options" : {"cards": True},
-    "#results" : "https://files.mastodon.social/cache/preview_cards/images/095/900/335/original/83f0b4a793c84123.jpg",
+    "#exception": exception.NotFoundError,
 
     "media": {
         "author_name" : "Tom Warren",

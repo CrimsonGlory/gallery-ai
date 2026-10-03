@@ -44,6 +44,15 @@ class FitnakedgirlsExtractor(Extractor):
             title = title.rpartition(sep)[0]
         return title.strip()
 
+    def _post_id(self, page):
+        pid = text.extr(page, 'id="post-', '"')
+        if pid.isdigit():
+            return text.parse_int(pid)
+        pid = text.extr(page, "postid-", " ")
+        if pid.isdigit():
+            return text.parse_int(pid)
+        return text.parse_int(text.extr(page, 'data-post-id="', '"'))
+
 
 class FitnakedgirlsGalleryExtractor(GalleryExtractor, FitnakedgirlsExtractor):
     """Extractor for fitnakedgirls galleries"""
@@ -68,7 +77,7 @@ class FitnakedgirlsGalleryExtractor(GalleryExtractor, FitnakedgirlsExtractor):
                 break
 
         return {
-            "gallery_id"  : text.parse_int(extr('data-post-id="', '"')),
+            "gallery_id"  : self._post_id(page),
             "gallery_slug": self.groups[0],
             "model": title,
             "title": title,
@@ -147,7 +156,7 @@ class FitnakedgirlsVideoExtractor(FitnakedgirlsExtractor):
         data = {
             "slug"    : slug,
             "title"   : self._extract_title(extr, " | "),
-            "video_id": text.parse_int(extr('data-post-id="', '"')),
+            "video_id": self._post_id(page),
             "date"    : self.parse_datetime_iso(
                 extr('article:published_time" content="', '"')),
         }
@@ -180,7 +189,7 @@ class FitnakedgirlsBlogExtractor(FitnakedgirlsExtractor):
         data = {
             "slug"   : slug,
             "title"  : self._extract_title(extr),
-            "post_id": text.parse_int(extr('data-post-id="', '"')),
+            "post_id": self._post_id(page),
             "date"   : self.parse_datetime_iso(
                 extr('article:published_time" content="', '"')),
         }

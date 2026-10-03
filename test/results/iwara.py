@@ -279,7 +279,7 @@ Twitter : https://x.com/croove_nsfw\
         "id"         : "a2b21572-415d-4c2a-ab1b-313dbd723edf",
         "name"       : "goldenapple",
         "nick"       : "Old Apple",
-        "premium"    : True,
+        "premium"    : bool,
         "role"       : "user",
         "status"     : "active",
     },

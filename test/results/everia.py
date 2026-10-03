@@ -53,7 +53,7 @@ __tests__ = (
     "#pattern": r"https://1.bp.blogspot.com/-\S+/\S+/\S+/\S+/s0/(%\w\w|\d|\+)+\.jpg",
     "#count"  : 17,
 
-    "count"    : 17,
+    "?count"   : int,
     "num"      : range(1, 17),
     "extension": "jpg",
     "filename" : r"re:雯妹不讲道理\+\(\d+\)",

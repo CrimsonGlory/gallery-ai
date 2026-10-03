@@ -47,7 +47,7 @@ __tests__ = (
     "#count"   : ">= 100",
 
     "chapter"  : int,
-    "chapter_minor": {"", ".5", ".6"},
+    "chapter_minor": str,
     "date"     : str,
     "lang"     : "en",
     "language" : "English",

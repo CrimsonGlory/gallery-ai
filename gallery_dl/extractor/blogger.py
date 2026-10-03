@@ -38,8 +38,12 @@ class BloggerExtractor(BaseExtractor):
 
     def items(self):
         blog = self.api.blog_by_url("http://" + self.blog)
-        blog["pages"] = blog["pages"]["totalItems"]
-        blog["posts"] = blog["posts"]["totalItems"]
+        pages = blog.get("pages") or {}
+        posts = blog.get("posts") or {}
+        blog["pages"] = pages.get("totalItems", 0) if isinstance(pages, dict) \
+            else pages
+        blog["posts"] = posts.get("totalItems", 0) if isinstance(posts, dict) \
+            else posts
         blog["date"] = self.parse_datetime_iso(blog["published"])
         del blog["selfLink"]
 
@@ -62,8 +66,12 @@ class BloggerExtractor(BaseExtractor):
                     'class="BLOG_video_' in content):
                 self._extract_videos(files, post)
 
-            post["author"] = post["author"]["displayName"]
-            post["replies"] = post["replies"]["totalItems"]
+            author = post.get("author") or {}
+            post["author"] = author.get("displayName", author) \
+                if isinstance(author, dict) else author
+            replies = post.get("replies") or {}
+            post["replies"] = replies.get("totalItems", 0) \
+                if isinstance(replies, dict) else replies
             post["content"] = text.remove_html(content)
             post["date"] = self.parse_datetime_iso(post["published"])
             del post["selfLink"]

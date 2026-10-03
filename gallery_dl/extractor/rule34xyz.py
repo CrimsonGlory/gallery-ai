@@ -87,7 +87,10 @@ class Rule34xyzExtractor(BooruExtractor):
 
         tags = collections.defaultdict(list)
         for tag in post["tags"]:
-            tags[tag["type"]].append(tag["value"])
+            if isinstance(tag, str):
+                tags[None].append(tag)
+            else:
+                tags[tag.get("type")].append(tag.get("value", tag))
         types = self.TAG_TYPES
         for type, values in tags.items():
             post["tags_" + types[type]] = values

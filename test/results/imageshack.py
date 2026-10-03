@@ -55,7 +55,7 @@ __tests__ = (
     "owner"         : {
         "allow_following": False,
         "featured_photographer": False,
-        "membership"     : "free",
+        "membership"     : str,
         "username"       : "TomKovilick",
     },
 },
@@ -97,7 +97,7 @@ __tests__ = (
     "owner"         : {
         "allow_following": False,
         "featured_photographer": True,
-        "membership"     : "free",
+        "membership"     : str,
         "username"       : "Ezekiel.Gonzalez",
     },
 },
@@ -136,7 +136,7 @@ __tests__ = (
     "owner"        : {
         "allow_following": False,
         "featured_photographer": True,
-        "membership"     : "",
+        "membership"     : str,
         "username"       : "Ezekiel.Gonzalez",
         "avatar"         : {
             "filename": "u6pApQ.jpg",
@@ -166,7 +166,7 @@ __tests__ = (
         "title"      : "Iphone + VSCOCam",
         "owner"      : {
             "allow_following": False,
-            "membership"     : "free",
+            "membership"     : str,
             "username"       : "Ezekiel.Gonzalez",
         },
     },

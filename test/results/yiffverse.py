@@ -55,7 +55,7 @@ __tests__ = (
 {
     "#url"  : "https://yiffverse.com/tag/tree",
     "#class": yiffverse.YiffverseTagExtractor,
-    "#pattern": r"https://yiffverse\.com/posts/\d+/\d+/\d+\.(pic\.jpg|mov\d*\.mp4)",
+    "#pattern": r"https://(?:yiffverse\.com|furry34com\.b-cdn\.net)/posts/\d+/\d+/\d+\.(pic\.jpg|mov\d*\.mp4)",
     "#range"  : "1-10",
     "#count"  : 10,
 },

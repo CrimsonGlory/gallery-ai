@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import misskey
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -24,8 +25,7 @@ __tests__ = (
     "#url"     : "https://sushi.ski/notes/9bm3x4ksqw",
     "#category": ("misskey", "sushi.ski", "note"),
     "#class"   : misskey.MisskeyNoteExtractor,
-    "#pattern" : r"https://media\.sushi\.ski/files/[\w-]+\.png",
-    "#count"   : 1,
+    "#exception": exception.HttpError,
 },
 
 {

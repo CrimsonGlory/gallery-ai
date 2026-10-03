@@ -146,8 +146,8 @@ class _35photoTagExtractor(_35photoExtractor):
             page = self.request(url).text
             prev = None
 
-            for photo_id in text.extract_iter(page, "35photo.pro/photo_", "/"):
-                if photo_id != prev:
+            for photo_id in text.extract_iter(page, "/photo_", "/"):
+                if photo_id.isdigit() and photo_id != prev:
                     prev = photo_id
                     yield photo_id
 

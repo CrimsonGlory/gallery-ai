@@ -13,8 +13,7 @@ __tests__ = (
     "#url"     : "https://kabe-uchiroom.com/mypage/?id=919865303848255493",
     "#category": ("", "kabeuchi", "user"),
     "#class"   : kabeuchi.KabeuchiUserExtractor,
-    "#pattern" : r"https://kabe-uchiroom\.com/accounts/upfile/3/919865303848255493/\w+\.jpe?g",
-    "#count"   : ">= 24",
+    "#exception": exception.NotFoundError,
 },
 
 {

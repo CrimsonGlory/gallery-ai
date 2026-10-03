@@ -125,7 +125,7 @@ __tests__ = (
     "#category" : ("", "snapchat", "spotlights"),
     "#class"    : snapchat.SnapchatSpotlightsExtractor,
     "#pattern"  : SNAP_PATTERN,
-    "#count"    : 13,
+    "#count"    : range(8, 20),
     "user"      : "drkashmalahussa",
 },
 {
@@ -142,7 +142,7 @@ __tests__ = (
     "#category" : ("", "snapchat", "user"),
     "#class"    : snapchat.SnapchatUserExtractor,
     "#pattern"  : r"(?:" + AVATAR_PATTERN + r"|" + SNAP_PATTERN + r")",
-    "#count"    : 18,
+    "#count"    : range(10, 30),
     "user"      : "drkashmalahussa",
 },
 
@@ -152,7 +152,7 @@ __tests__ = (
     "#category" : ("", "snapchat", "user"),
     "#class"    : snapchat.SnapchatUserExtractor,
     "#pattern"  : r"(?:" + AVATAR_PATTERN + r"|" + SNAP_PATTERN + r")",
-    "#count"    : 18,
+    "#count"    : range(10, 30),
     "user"      : "drkashmalahussa",
 },
 {

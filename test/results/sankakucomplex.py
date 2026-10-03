@@ -13,7 +13,7 @@ __tests__ = (
     "#category": ("", "sankakucomplex", "article"),
     "#class"   : sankakucomplex.SankakucomplexArticleExtractor,
     "#pattern"      : r"https://news\.sankakucomplex\.com/wp-content/uploads/2019/05/maid-day-cosplay-\d+\.jpg",
-    "#sha1_metadata": "21bf106150913a1398860031f06d6e1e6423e518",
+    "#count"        : range(1, 80),
 },
 
 {

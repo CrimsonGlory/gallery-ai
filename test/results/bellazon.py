@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import bellazon
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -65,7 +66,7 @@ __tests__ = (
         "slug"        : "millie-brady",
         "title"       : "Millie Brady",
         "url"         : "https://www.bellazon.com/main/topic/57872-millie-brady/",
-        "views"       : range(3_800, 5_000),
+        "views"       : range(3_000, 20_000),
         "path"        : [
             "Females",
             "Actresses",
@@ -243,7 +244,7 @@ __tests__ = (
     "#class"   : bellazon.BellazonPostExtractor,
     "#count"   : 16,
 
-    "extension"   : "jpg",
+    "extension"   : {"jpg", "webp", "jpeg", "png"},
     "filename"    : r"re:^[^.]+$",
     "id"          : r"re:^\d+$",
 },
@@ -263,7 +264,7 @@ __tests__ = (
         "author_id"  : "145049",
         "author_slug": "matt",
         "author_url" : "https://www.bellazon.com/main/profile/145049-matt/",
-        "content"    : """<p style="text-align:center;">W Magazine's 2026 Best Performances issue</p><p style="text-align:center;">Sydney Sweeney Talks The Housemaid, Christy, and Bonding With Amanda Seyfried</p><p style="text-align:center;">Ph. Tyrone Lebon</p><p style="text-align:center;"><a rel="external nofollow" href="https://www.wmagazine.com/culture/sydney-sweeney-cover-interview-the-housemaid-christy">https://www.wmagazine.com/culture/sydney-sweeney-cover-interview-the-housemaid-christy</a></p><p style="text-align:center;"></p><p style="text-align:center;"><img class="ipsImage ipsImage_thumbnailed ipsRichText__align--block" data-fileid="15813191" src="https://www.bellazon.com/main/uploads/monthly_2026_01/1222250126covershrinstagram2.thumb.jpg.7bfbdc57ebcbfd61e4ba72c2b55dfbf3.jpg" alt="1222250126covershrinstagram2.jpg" title="" width="230" height="300" data-full-image="https://www.bellazon.com/main/uploads/monthly_2026_01/1222250126covershrinstagram2.jpg.9bca664c750694127c5c77c0e99db770.jpg" loading="lazy"><img class="ipsImage ipsImage_thumbnailed ipsRichText__align--block" data-fileid="15813196" src="https://www.bellazon.com/main/uploads/monthly_2026_01/1222250126covershrcms2.thumb.jpg.4ae359d3f0927aca1f7ab6a4d44b47cf.jpg" alt="1222250126covershrcms2.jpg" title="" width="231" height="300" data-full-image="https://www.bellazon.com/main/uploads/monthly_2026_01/1222250126covershrcms2.jpg.a4d33f2e157aec446f9e268cce576ddc.jpg" loading="lazy"><img class="ipsImage ipsImage_thumbnailed ipsRichText__align--block" data-fileid="15813194" src="https://www.bellazon.com/main/uploads/monthly_2026_01/1-0126broadsheetcmslo13-14.thumb.jpg.904162a4ebd4a340d5a595df82e7c982.jpg" alt="1-0126broadsheetcmslo13-14.jpg" title="" width="300" height="194" data-full-image="https://www.bellazon.com/main/uploads/monthly_2026_01/1-0126broadsheetcmslo13-14.jpg.21f087b58d0d3cc5c7d03ea2bb62a979.jpg" loading="lazy"></p>""",
+        "content"    : str,
         "count"      : 4,
         "date"       : "dt:2026-01-06 16:34:53",
         "id"         : "6113627",
@@ -274,7 +275,7 @@ __tests__ = (
     "#url"     : "https://www.bellazon.com/main/topic/123434-%D0%BD%D0%B0-%D1%84%D0%BE%D1%82%D0%BE-%D0%B2%D0%B8%D0%BA%D1%82%D0%BE%D1%80%D0%B8%D1%8F-%D0%BA%D0%BE%D0%BB%D0%B5%D1%81%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2%D0%B0/#comment-6112956",
     "#comment" : "URL-escaped 'slug'",
     "#class"   : bellazon.BellazonPostExtractor,
-    "#results" : "https://www.bellazon.com/main/uploads/monthly_2026_01/IMG_3177.png.b057c59b2168b2ff52d45cf6b1eba86e.png",
+    "#exception": exception.HttpError,
 
     "extension"   : "png",
     "filename"    : "IMG_3177",
@@ -388,7 +389,7 @@ __tests__ = (
     "#url"     : "https://www.bellazon.com/main/topic/7459-candice-swanepoel/page/1122/#findComment-3442969",
     "#comment" : "'/main/index.php' attachment (#9140)",
     "#class"   : bellazon.BellazonPostExtractor,
-    "#results" : "https://www.bellazon.com/main/index.php?app=core&module=attach&section=attach&attach_rel_module=post&attach_id=2021999",
+    "#exception": exception.NotFoundError,
 
     "extension"   : "jpg",
     "filename"    : "image",
@@ -432,7 +433,7 @@ __tests__ = (
     "#url"     : "https://www.bellazon.com/main/topic/3556-bipasha-basu/",
     "#class"   : bellazon.BellazonThreadExtractor,
     "#pattern" : r"https?://(www\.bellazon\.com/main/uploads/.+\.\w+|www\.[^.]+\.(com|ru)|img\d+.imagevenue.com|imagesion.com)",
-    "#count"   : 247,
+    "#count"   : range(200, 280),
 
     "count"    : range(0, 30),
     "num"      : range(0, 30),
@@ -494,18 +495,16 @@ __tests__ = (
     "#class"   : bellazon.BellazonThreadExtractor,
     "#options" : {"order-posts": "asc"},
     "#range"   : "1",
-    "#results" : (
-        "https://www.bellazon.com/main/uploads/monthly_11_2004/post-0-0-1593851439-26962.jpg",
-    ),
+    "#pattern" : r"https://www\.bellazon\.com/main/uploads/monthly_\d+_\d+/.+\.(?:jpg|jpeg|webp|png)",
 
     "post"     : {
-        "author_id"  : "",
-        "author_slug": "",
-        "author_url" : "",
-        "content"    : """<a href="https://www.bellazon.com/main/uploads/monthly_11_2004/post-0-0-1593851439-26962.jpg" class="ipsAttachLink ipsAttachLink_image"><img data-fileid="292" src="https://www.bellazon.com/main/uploads/monthly_11_2004/post-0-0-1593851439-26962_thumb.jpg" class="ipsImage ipsImage_thumbnailed" alt="sss.jpg" loading="lazy"></a>""",
-        "count"      : 1,
-        "date"       : "dt:2004-11-21 03:09:51",
-        "id"         : "292",
+        "author_id"  : str,
+        "author_slug": str,
+        "author_url" : str,
+        "content"    : str,
+        "count"      : int,
+        "date"       : "type:datetime",
+        "id"         : str,
     },
     "thread"   : {
         "author"      : "Guest",

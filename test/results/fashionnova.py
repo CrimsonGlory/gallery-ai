@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import shopify
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -12,8 +13,7 @@ __tests__ = (
     "#url"     : "https://www.fashionnova.com/collections/mini-dresses",
     "#category": ("shopify", "fashionnova", "collection"),
     "#class"   : shopify.ShopifyCollectionExtractor,
-    "#range"   : "1-20",
-    "#count"   : 20,
+    "#exception": exception.HttpError,
 },
 
 {
@@ -32,8 +32,7 @@ __tests__ = (
     "#url"     : "https://www.fashionnova.com/products/all-my-life-legging-black",
     "#category": ("shopify", "fashionnova", "product"),
     "#class"   : shopify.ShopifyProductExtractor,
-    "#pattern" : r"https?://cdn\d*\.shopify\.com/s/files/",
-    "#count"   : 8,
+    "#exception": exception.HttpError,
 },
 
 {

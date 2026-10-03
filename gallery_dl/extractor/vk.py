@@ -170,20 +170,35 @@ class VkPhotosExtractor(VkExtractor):
         page = self.request(url).text
         extr = text.extract_from(page)
 
+        nick = text.unescape(text.extr(page, "<title>", "</title>"))
+        if nick.endswith(" | VK"):
+            nick = nick[:-5]
+
         user = {
             "id"  : extr('property="og:url" content="https://vk.com/id', '"'),
-            "nick": text.unescape(extr(
-                "<title>", " | VK</title>")),
+            "nick": nick,
             "info": text.unescape(extr(
                 ',"activity":"', '","')).replace("\\/", "/"),
             "name": extr('href="https://m.vk.com/', '"'),
         }
+
+        if not user["id"]:
+            og_url = text.extr(page, 'property="og:url" content="', '"')
+            user_id = text.extr(og_url, "/id", "")
+            if "?" in user_id:
+                user_id = user_id.partition("?")[0]
+            if "/" in user_id:
+                user_id = user_id.partition("/")[0]
+            user["id"] = user_id
 
         if user["id"]:
             user["group"] = False
         else:
             user["group"] = True
             user["id"] = extr('data-from-id="', '"')
+            if not user["id"] and self.user_id:
+                user["id"] = self.user_id.lstrip("-")
+                user["group"] = self.user_id[:1] == "-"
 
         return {"user": user}
 

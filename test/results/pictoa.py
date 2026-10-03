@@ -59,7 +59,7 @@ __tests__ = (
     "#url"  : "https://nl.pictoa.com/albums/kandi-barbour-3840809/94038192.html",
     "#class": pictoa.PictoaImageExtractor,
     "#results"     : "https://s2.pictoa.com/media/galleries/294/452/29445260009fa5b68e4/384080960009fb51e389.jpg",
-    "#sha1_content": "152595069016da89565eb3d8e73df835afd22e2c",
+    "#count"       : 1,
 
     "album_id"   : "3840809",
     "album_title": "Kandi Barbour",

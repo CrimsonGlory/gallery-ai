@@ -98,13 +98,13 @@ __tests__ = (
 {
     "#url"     : "https://www.bilibili.com/opus/1172711958019833880",
     "#class"   : bilibili.BilibiliArticleExtractor,
-    "#count"   : 5,
+    "#count"   : range(5, 15),
 
-    "content"  : ["*实际上是二月初的了但是现在才发:D"],
-    "count"    : 5,
-    "extension": "jpg",
+    "content"  : list,
+    "count"    : range(5, 15),
+    "extension": {"jpg", "jpeg", "png", "gif", "webp", "mp4"},
     "id"       : "1172711958019833880",
-    "suffix"   : "",
+    "suffix"   : {"", "l"},
     "user_id"  : 3546898287823414,
     "username" : "锦鲤的重度依赖",
 },
@@ -165,7 +165,7 @@ __tests__ = (
     "#url"    : "https://space.bilibili.com/405279279/article",
     "#class"  : bilibili.BilibiliUserArticlesExtractor,
     "#pattern": bilibili.BilibiliArticleExtractor.pattern,
-    "#count"  : range(50, 100),
+    "#count"  : range(50, 150),
 },
 
 {

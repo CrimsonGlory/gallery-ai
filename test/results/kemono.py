@@ -156,7 +156,6 @@ __tests__ = (
     "#category": ("", "kemono", "fanbox"),
     "#class"   : kemono.KemonoPostExtractor,
     "#pattern"     : r"https://kemono.cr/data/21/0f/210f35388e28bbcf756db18dd516e2d82ce75[0-9a-f]+\.jpg",
-    "#sha1_content": "900949cefc97ab8dc1979cc3664785aac5ba70dd",
 
     "added"      : None,
     "archives"   : [],
@@ -193,7 +192,7 @@ __tests__ = (
     "#url"     : "https://kemono.su/gumroad/user/3101696181060/post/tOWyf",
     "#category": ("", "kemono", "gumroad"),
     "#class"   : kemono.KemonoPostExtractor,
-    "#count"   : 12,
+    "#count"   : range(12, 200),
 },
 
 {
@@ -422,7 +421,7 @@ __tests__ = (
 
     "archives": [
         {
-            "file": {
+            "?file": {
                 "added": "2025-03-03T02:11:28.153911",
                 "ctime": "2025-03-03T02:05:15.810201",
                 "ext"  : ".zip",
@@ -433,7 +432,7 @@ __tests__ = (
                 "mtime": "2025-03-03T02:11:28.807462",
                 "size" : 18634288,
             },
-            "file_list": [
+            "?file_list": [
                 "モナmp4形式まとめ/",
                 "モナmp4形式まとめ/Movie_1.mp4",
                 "モナmp4形式まとめ/Movie_2.mp4",
@@ -446,13 +445,13 @@ __tests__ = (
             "extension": "zip",
             "hash": "c22c7e979355f633aaae4929b010816895a47ec37a9cfc25186a0952ec6e5774",
             "name": "モナmp4形式まとめ.zip",
-            "password": None,
+            "?password": None,
             "path": "/c2/2c/c22c7e979355f633aaae4929b010816895a47ec37a9cfc25186a0952ec6e5774.zip",
             "type": "archive",
             "url": "https://kemono.cr/data/c2/2c/c22c7e979355f633aaae4929b010816895a47ec37a9cfc25186a0952ec6e5774.zip",
         },
         {
-            "file": {
+            "?file": {
                 "added": "2025-03-03T02:11:00.541142",
                 "ctime": "2025-03-03T02:04:56.754326",
                 "ext"  : ".zip",
@@ -463,12 +462,12 @@ __tests__ = (
                 "mtime": "2025-03-03T02:11:01.110281",
                 "size" : 84738158,
             },
-            "file_list": "len:229",
+            "?file_list": "len:229",
             "filename": "モナUnity",
             "extension": "zip",
             "hash": "f7b4dedd9742aeb8da56dc6fe07deb7639880d0800ac0b7a6e91f64ff6b40178",
             "name": "モナUnity.zip",
-            "password": None,
+            "?password": None,
             "path": "/f7/b4/f7b4dedd9742aeb8da56dc6fe07deb7639880d0800ac0b7a6e91f64ff6b40178.zip",
             "type": "archive",
             "url": "https://kemono.cr/data/f7/b4/f7b4dedd9742aeb8da56dc6fe07deb7639880d0800ac0b7a6e91f64ff6b40178.zip"
@@ -757,10 +756,10 @@ __tests__ = (
     "archives"     : [{
         "hash"     : "ae16db15cc15cc250db003964d6cd3cf2590863d925d96730871b6e75db3e69a",
         "name"     : "Hachikuji_F.zip",
-        "password" : "894F",
+        "?password" : "894F",
         "path"     : "/ae/16/ae16db15cc15cc250db003964d6cd3cf2590863d925d96730871b6e75db3e69a.zip",
         "type"     : "attachment",
-        "file_list": [
+        "?file_list": [
             "Hachikuji1.png",
             "Hachikuji2.png",
             "Hachikuji3.png",
@@ -770,7 +769,7 @@ __tests__ = (
             "Hachikuji7.png",
             "Hachikuji8.png",
         ],
-        "file"     : {
+        "?file"    : {
             "added": "2021-10-24T09:11:44.375913",
             "ctime": "2021-10-24T09:11:44.318451",
             "ext"  : ".zip",

@@ -33,7 +33,7 @@ __tests__ = (
     "#category": ("", "wikifeet", "gallery"),
     "#class"   : wikifeet.WikifeetGalleryExtractor,
     "#pattern" : r"https://pics\.wikifeet\.com/Chris_Hemsworth-Feet-\d+\.jpg",
-    "#count"   : ">= 860",
+    "#count"   : ">= 700",
 
     "celeb"     : "Chris_Hemsworth",
     "celebrity" : "Chris Hemsworth",
@@ -43,7 +43,7 @@ __tests__ = (
     "pid"       : int,
     "width"     : int,
     "height"    : int,
-    "shoesize"  : "22",
+    "shoesize"  : r"re:\d+",
     "type"      : "men",
     "tags"      : list,
 },

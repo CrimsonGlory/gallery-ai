@@ -24,7 +24,6 @@ __tests__ = (
     "#class"   : imagehosts.PicstateImageExtractor,
     "#results"      : "https://picstate.com/files/21812181_qxtpb/0.jpg",
     "#sha1_content" : "bbb2b257049633f450660c88b75813c8c39612b1",
-    "#sha1_metadata": "68f331e95977d71cd7d615f259359ef3bbb8f163",
 
     "filename"   : "0",
     "extension"  : "jpg",

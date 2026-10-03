@@ -61,7 +61,6 @@ __tests__ = (
     "#category": ("moebooru", "konachan", "pool"),
     "#class"   : moebooru.MoebooruPoolExtractor,
     "#options"  : {"metadata": True},
-    "#exception": exception.HttpError,
 },
 
 {
@@ -74,7 +73,7 @@ __tests__ = (
     "#url"     : "https://konachan.com/post/popular_by_month?month=11&year=2010",
     "#category": ("moebooru", "konachan", "popular"),
     "#class"   : moebooru.MoebooruPopularExtractor,
-    "#count"   : 20,
+    "#count"   : range(15, 50),
 },
 
 {

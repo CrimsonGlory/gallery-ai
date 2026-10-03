@@ -485,14 +485,30 @@ class FappicImageExtractor(ImagehostImageExtractor):
 
         thumb, token = self.groups
         if thumb is not None and token.endswith("_t"):
-            self.token = token = token[:-2]
+            token = token[:-2]
+        self.token = token
+        if thumb is not None:
+            self.page_url = f"https://www.fappic.com/{token}/pic.jpg"
         else:
-            self.token = token
-        self.page_url = f"https://fappic.com/{token}/pic.jpg"
+            url = self.url.partition("#")[0]
+            if "://" not in url:
+                url = "https://" + url
+            self.page_url = url
 
     def get_info(self, page):
-        url     , pos = text.extract(page, '<a href="#"><img src="', '"')
-        filename, pos = text.extract(page, 'alt="', '"', pos)
+        m = text.re(
+            r'<img\s+src="(https://img\d+\.fappic\.com/img/[^"]+)"').search(
+                page)
+        if m:
+            url = m.group(1)
+            alt = text.re(r'alt="([^"]*)"').search(
+                page, m.start(), m.start() + 800)
+            filename = alt.group(1) if alt else ""
+        else:
+            url, pos = text.extract(page, '<a href="#"><img src="', '"')
+            filename, pos = text.extract(page, 'alt="', '"', pos)
+        if not url:
+            raise self.exc.NotFoundError("image")
         return url, text.re(r"^Porn[ -]Pic(?:s|ture)[ -]").sub("", filename)
 
 
@@ -565,6 +581,8 @@ class ImgpvImageExtractor(ImagehostImageExtractor):
 
     def get_info(self, page):
         url, pos = text.extract(page, 'id="img-preview" src="', '"')
+        if not url:
+            self.not_found()
         alt, pos = text.extract(page, 'alt="', '"', pos)
         return url, text.unescape(alt)
 

@@ -26,11 +26,20 @@ class KomikcastBase():
             data = {}
 
         pattern = text.re(r"(?:(.*) Chapter )?0*(\d+)([^ ]*)(?: (?:- )?(.+))?")
-        match = pattern.match(text.unescape(chapter_string))
+        match = pattern.match(text.unescape(chapter_string or ""))
+        if match is None:
+            data["chapter"] = 0
+            data["chapter_minor"] = ""
+            data["title"] = text.unescape(chapter_string or "")
+            data["lang"] = "id"
+            data["language"] = "Indonesian"
+            return data
         manga, chapter, data["chapter_minor"], title = match.groups()
 
         if manga:
             data["manga"] = manga.partition(" Chapter ")[0]
+        else:
+            data.setdefault("manga", "")
         if title and not title.lower().startswith("bahasa indonesia"):
             data["title"] = title.strip()
         else:
@@ -49,6 +58,8 @@ class KomikcastChapterExtractor(KomikcastBase, ChapterExtractor):
 
     def metadata(self, page):
         info = text.extr(page, "<title>", " - Komikcast<")
+        if not info:
+            raise self.exc.AbortExtraction("Not a komikcast chapter page")
         return self.parse_chapter_string(info)
 
     def images(self, page):
@@ -82,7 +93,10 @@ class KomikcastMangaExtractor(KomikcastBase, MangaExtractor):
 
     def metadata(self, page):
         """Return a dict with general metadata"""
+        page = page or ""
         manga , pos = text.extract(page, "<title>" , " - Komikcast<")
+        if not manga:
+            raise self.exc.AbortExtraction("Not a komikcast manga page")
         genres, pos = text.extract(
             page, 'class="komik_info-content-genre">', "</span>", pos)
         author, pos = text.extract(page, ">Author:", "</span>", pos)

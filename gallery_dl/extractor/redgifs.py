@@ -253,7 +253,9 @@ class RedgifsAPI():
         return self._pagination(endpoint, params)
 
     def search_gifs(self, params):
-        endpoint = "/v2/search/gifs"
+        endpoint = "/v2/gifs/search"
+        if "query" in params:
+            params["search_text"] = params.pop("query")
         return self._pagination(endpoint, params)
 
     def _call(self, endpoint, params=None):

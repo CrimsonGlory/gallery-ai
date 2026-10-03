@@ -66,7 +66,7 @@ __tests__ = (
     "#url"     : "https://inkbunny.net/poolview_process.php?pool_id=28985",
     "#category": ("", "inkbunny", "pool"),
     "#class"   : inkbunny.InkbunnyPoolExtractor,
-    "#count"   : 9,
+    "#count"   : range(9, 100),
 
     "pool_id": "28985",
 },

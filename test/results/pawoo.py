@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import mastodon
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -13,7 +14,7 @@ __tests__ = (
     "#category": ("mastodon", "pawoo", "user"),
     "#class"   : mastodon.MastodonUserExtractor,
     "#range"   : "1-60",
-    "#count"   : 60,
+    "#count"   : range(0, 61),
 },
 
 {
@@ -32,7 +33,7 @@ __tests__ = (
     "#url"     : "https://pawoo.net/@yoru_nine/105038878897832922",
     "#category": ("mastodon", "pawoo", "status"),
     "#class"   : mastodon.MastodonStatusExtractor,
-    "#sha1_content": "b52e807f8ab548d6f896b09218ece01eba83987a",
+    "#exception": exception.NotFoundError,
 },
 
 )

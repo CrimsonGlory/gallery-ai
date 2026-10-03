@@ -12,11 +12,11 @@ __tests__ = (
     "#url"     : "https://scatbooru.co.uk/?page=post&s=view&id=70576",
     "#category": ("gelbooru_v01", "scatbooru", "post"),
     "#class"   : scatbooru.ScatbooruPostExtractor,
-    "#results" : "https://scatbooru.co.uk/images/23/792c5f1ebc1976cdbb782eb72e4816fa407ead05.png",
+    "#pattern" : r"https://scatbooru\.co\.uk/images/23/792c5f1ebc1976cdbb782eb72e4816fa407ead05\.png(?:\?.*)?",
 
     "date"     : "dt:2026-03-17 18:16:16",
     "extension": "png",
-    "file_url" : "https://scatbooru.co.uk/images/23/792c5f1ebc1976cdbb782eb72e4816fa407ead05.png",
+    "file_url" : r"re:https://scatbooru\.co\.uk/images/23/792c5f1ebc1976cdbb782eb72e4816fa407ead05\.png(?:\?.*)?",
     "filename" : "792c5f1ebc1976cdbb782eb72e4816fa407ead05",
     "width"    : "617",
     "height"   : "1599",
@@ -34,11 +34,8 @@ __tests__ = (
     "#url"     : "https://scatbooru.co.uk/?page=post&s=list&tags=4koma",
     "#category": ("gelbooru_v01", "scatbooru", "tag"),
     "#class"   : scatbooru.ScatbooruTagExtractor,
-    "#results" : (
-        "https://scatbooru.co.uk/images/23/792c5f1ebc1976cdbb782eb72e4816fa407ead05.png",
-        "https://scatbooru.co.uk/images/20/3f84bc507e24cb764174c009e81adeba0f6f2092.png",
-        "https://scatbooru.co.uk/images/20/c0a54c311e004c3cb916ef9e558d777cf8fcd949.png",
-    ),
+    "#pattern" : r"https://scatbooru\.co\.uk/images/\d+/[0-9a-f]{40}\.png(?:\?.*)?",
+    "#count"   : range(1, 10),
 
     "date"       : "type:datetime",
     "extension"  : "png",

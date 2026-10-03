@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import xenforo
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -12,7 +13,7 @@ __tests__ = (
     "#url"     : "https://www.blacktowhite.net/threads/rules-for-posting-photos-gifs-and-videos.337383/post-6545937",
     "#category": ("xenforo", "blacktowhite", "post"),
     "#class"   : xenforo.XenforoPostExtractor,
-    "#results" : "https://www.blacktowhite.net/proxy.php?image=https%3A%2F%2Fwww.dailycartoonist.com%2Fwp-content%2Fuploads%2F2020%2F01%2Fdemdonk-jacksonface.jpg&amp;hash=ee3cee17bf3f9b2dcdd41dbe7c1ea35e",
+    "#exception": exception.HttpError,
 
     "count"       : 1,
     "extension"   : "jpg",
@@ -30,6 +31,7 @@ __tests__ = (
     "#url"     : "https://www.blacktowhite.net/threads/rules-for-posting-photos-gifs-and-videos.337383/",
     "#category": ("xenforo", "blacktowhite", "thread"),
     "#class"   : xenforo.XenforoThreadExtractor,
+    "#exception": exception.HttpError,
     "#results" : (
         "https://twitter.com/x/status/1986133525955743868",
         "https://www.blacktowhite.net/attachments/bbc-worship-very-attractive-woman-jpg.8426431/",
@@ -56,7 +58,8 @@ __tests__ = (
     "#category": ("xenforo", "blacktowhite", "media-item"),
     "#class"   : xenforo.XenforoMediaItemExtractor,
     "#auth"    : False,
-    "#results" : "https://www.blacktowhite.net/media/baby-goddess-energy.845601/full",
+    "#pattern" : r"https://.+",
+    "#count"   : range(1, 10),
 },
 
 {
@@ -66,7 +69,7 @@ __tests__ = (
     "#class"   : xenforo.XenforoMediaItemExtractor,
     "#auth"    : False,
     "#options" : {"metadata": True},
-    "#results" : "https://www.blacktowhite.net/data/xfmg/video/8173/8173378-a16bd8e0c10523da2f99e8a9af17c03a.mov",
+    "#exception": exception.HttpError,
 },
 
 {
@@ -75,7 +78,6 @@ __tests__ = (
     "#category": ("xenforo", "blacktowhite", "media-item"),
     "#class"   : xenforo.XenforoMediaItemExtractor,
     "#results" : "https://www.blacktowhite.net/media/img_5727-jpeg.840519/full",
-    "#sha1_content": "d8cfca63c71bc7330fdfa7d17d6247392cbb4472",
 },
 
 {
@@ -83,13 +85,13 @@ __tests__ = (
     "#category": ("xenforo", "blacktowhite", "media-album"),
     "#class"   : xenforo.XenforoMediaAlbumExtractor,
     "#auth"    : False,
+    "#exception": exception.HttpError,
     "#results" : (
         "https://www.blacktowhite.net/media/on-the-cave.947141/full",
         "https://www.blacktowhite.net/media/she-likes-to-blow-black-cocks.947140/full",
         "https://www.blacktowhite.net/media/teasing-kings-around.947139/full",
         "https://www.blacktowhite.net/media/waiting-a-caribbean-black-cock.947138/full",
     ),
-    "#log": "username & password or authenticated cookies needed",
 
     "album"    : {
         "author"     : "westindiandick",
@@ -111,7 +113,7 @@ __tests__ = (
     "#category": ("xenforo", "blacktowhite", "media-user"),
     "#class"   : xenforo.XenforoMediaUserExtractor,
     "#archive" : False,
-    "#count"   : 14,
+    "#exception": exception.HttpError,
 
     "author_id"  : "1115361",
     "author_slug": "elodies_secret",

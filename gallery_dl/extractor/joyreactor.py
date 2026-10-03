@@ -112,7 +112,7 @@ class JoyreactorExtractor(Extractor):
                             "type"    : "video",
                             "format"  : fmt,
                         })
-            else:
+            elif "/pics/post/" in url:
                 lhs, _, rhs = url.rpartition("/")
                 url = f"{lhs}/full/{rhs}"
                 files.append({"file_url": url, "type": "image"})

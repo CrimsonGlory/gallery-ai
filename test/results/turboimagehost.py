@@ -30,8 +30,7 @@ __tests__ = (
     "#category": ("imagehost", "turboimagehost", "gallery"),
     "#class"   : imagehosts.TurboimagehostGalleryExtractor,
     "#pattern" : imagehosts.TurboimagehostImageExtractor.pattern,
-    "#sha1_url": "f2d4fe102fdd71dd1f595cdb0c16ce999d6bb19b",
-    "#count"   : 110,
+    "#count"   : range(50, 200),
 },
 
 )

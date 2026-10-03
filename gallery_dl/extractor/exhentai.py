@@ -248,7 +248,7 @@ class ExhentaiGalleryExtractor(ExhentaiExtractor):
         data["count"] = len(torrents)
         yield Message.Directory, "", data
 
-        base = (f"https://ehtracker.org/get/{data['gid']}/"
+        base = ("https://ehtracker.org/get/"
                 if self.root[9] == "-" else
                 f"{self.root}/torrent/")
 

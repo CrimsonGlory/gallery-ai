@@ -12,7 +12,7 @@ __tests__ = (
     "#url"     : "https://agn.ph/gallery/post/?search=azuu",
     "#category": ("booru", "agnph", "tag"),
     "#class"   : agnph.AgnphTagExtractor,
-    "#pattern" : r"http://agn\.ph/gallery/data/../../\w{32}\.jpg",
+    "#pattern" : r"http://agn\.ph/gallery/data/[0-9a-f]{2}/[0-9a-f]{2}/\w{32}\.\w+",
     "#count"   : ">= 50",
 },
 

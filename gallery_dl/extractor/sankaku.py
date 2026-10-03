@@ -84,7 +84,7 @@ class SankakuExtractor(BooruExtractor):
                 tags[tag["type"]].append(name.lower().replace(" ", "_"))
         types = self.TAG_TYPES
         for type, values in tags.items():
-            name = types[type]
+            name = types.get(type, "")
             post["tags_" + name] = values
             post["tag_string_" + name] = " ".join(values)
 
@@ -184,7 +184,12 @@ class SankakuPostExtractor(SankakuExtractor):
     example = "https://sankaku.app/post/show/12345"
 
     def posts(self):
-        return self.api.posts(self.groups[0])
+        data = self.api.posts(self.groups[0])
+        if isinstance(data, dict):
+            data = data.get("data") or data.get("posts") or ()
+        if not data:
+            raise self.exc.NotFoundError("post")
+        return data
 
 
 class SankakuBooksExtractor(SankakuExtractor):

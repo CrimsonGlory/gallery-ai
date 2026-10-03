@@ -436,9 +436,10 @@ class MangadexAPI():
             params = {}
 
         lang = self.extractor.config("lang")
-        if isinstance(lang, str) and "," in lang:
-            lang = lang.split(",")
-        params["translatedLanguage[]"] = lang
+        if lang:
+            if isinstance(lang, str) and "," in lang:
+                lang = lang.split(",")
+            params["translatedLanguage[]"] = lang
         params["includes[]"] = ("scanlation_group", "user")
 
         return self._pagination(endpoint, params, auth)
@@ -454,9 +455,11 @@ class MangadexAPI():
             params = {}
 
         lang = self.extractor.config("lang")
-        if isinstance(lang, str) and "," in lang:
-            lang = lang.split(",")
-        params["locales[]"] = lang
+        if lang:
+            if isinstance(lang, str) and "," in lang:
+                lang = lang.split(",")
+            params["locales[]"] = lang
+        # Sentinel: do not send a default contentRating[] on /cover
         params["contentRating"] = None
         params["order[volume]"] = \
             "desc" if self.extractor.config("chapter-reverse") else "asc"

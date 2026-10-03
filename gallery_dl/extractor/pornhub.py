@@ -85,11 +85,16 @@ class PornhubGalleryExtractor(PornhubExtractor):
         extr = text.extract_from(self.request(url).text)
 
         title = extr("<title>", "</title>")
-        self._token = extr('data-token="', '"')
+        album_js = extr("ALBUM_SHOW_ALBUM = ", ";")
+        self._token = text.extr(album_js, "show_album_json?token=", '"')
+        if not self._token:
+            self._token = extr('data-token="', '"')
         score = extr('<div id="albumGreenBar" style="width:', '"')
         views = extr('<div id="viewsPhotAlbumCounter">', '<')
         tags = extr('<div id="photoTagsBox"', '<script')
-        self._first = extr('<a href="/photo/', '"')
+        self._first = text.extr(album_js, '"firstPhoto":', ",").strip()
+        if not self._first:
+            self._first = extr('<a href="/photo/', '"')
         title, _, user = title.rpartition(" - ")
 
         return {

@@ -17,7 +17,7 @@ __tests__ = (
 
     "celeb"     : "Tifa_Quinn",
     "celebrity" : "Tifa Quinn",
-    "birthday"  : "",
+    "?birthday" : "type:datetime",
     "birthplace": "United States",
     "rating"    : float,
     "pid"       : int,

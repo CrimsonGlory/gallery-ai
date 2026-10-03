@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import lynxchan
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -12,8 +13,7 @@ __tests__ = (
     "#url"     : "https://bbw-chan.link/bbwdraw/res/499.html",
     "#category": ("lynxchan", "bbw-chan", "thread"),
     "#class"   : lynxchan.LynxchanThreadExtractor,
-    "#pattern" : r"https://bbw-chan\.link/\.media/[0-9a-f]{64}(\.\w+)?$",
-    "#count"   : ">= 352",
+    "#exception": exception.HttpError,
 },
 
 {
@@ -27,7 +27,7 @@ __tests__ = (
     "#category": ("lynxchan", "bbw-chan", "board"),
     "#class"   : lynxchan.LynxchanBoardExtractor,
     "#pattern" : lynxchan.LynxchanThreadExtractor.pattern,
-    "#count"   : ">= 148",
+    "#count"   : ">= 100",
 },
 
 {

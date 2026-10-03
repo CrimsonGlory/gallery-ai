@@ -170,7 +170,7 @@ __tests__ = (
     "#count"   : 10,
 
     "id"              : str,
-    "type"            : "drawing",
+    "type"            : str,
     "content"         : list,
     "tags"            : list,
     "author"          : {

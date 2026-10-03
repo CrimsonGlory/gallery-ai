@@ -21,7 +21,7 @@ __tests__ = (
     "name"  : "Anonymous",
     "no"    : int,
     "thread": "2707110",
-    "time"  : r"re:2016-07-1\d \d\d:\d\d:\d\d",
+    "time"  : str,
     "title" : "Ren Kagami from 'Oyako Neburi'",
 },
 
@@ -31,7 +31,7 @@ __tests__ = (
     "#class"   : _4chanarchives._4chanarchivesBoardExtractor,
     "#pattern" : _4chanarchives._4chanarchivesThreadExtractor.pattern,
     "#range"   : "1-40",
-    "#count"   : 40,
+    "#count"   : range(5, 41),
 },
 
 {

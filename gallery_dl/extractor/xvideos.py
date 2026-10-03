@@ -99,20 +99,32 @@ class XvideosUserExtractor(XvideosBase, Extractor):
         data = util.json_loads(text.extr(
             page, "xv.conf=", ";</script>"))["data"]
 
-        if not isinstance(data["galleries"], dict):
+        galleries_raw = data.get("galleries") or {}
+        if isinstance(galleries_raw, dict):
+            galleries_raw.pop("0", None)
+            gallery_items = galleries_raw.items()
+        elif isinstance(galleries_raw, list):
+            gallery_items = (
+                (g.get("id"), g) for g in galleries_raw if isinstance(g, dict)
+            )
+        else:
             return
-        if "0" in data["galleries"]:
-            del data["galleries"]["0"]
 
-        galleries = [
-            {
+        galleries = []
+        for gid, gdata in gallery_items:
+            if not isinstance(gdata, dict):
+                continue
+            gid = gdata.get("id", gid)
+            title = gdata.get("title") or ""
+            count = gdata.get("nb_pics")
+            if gid is None:
+                continue
+            galleries.append({
                 "id"   : text.parse_int(gid),
-                "title": text.unescape(gdata["title"]),
-                "count": gdata["nb_pics"],
+                "title": text.unescape(title),
+                "count": count,
                 "_extractor": XvideosGalleryExtractor,
-            }
-            for gid, gdata in data["galleries"].items()
-        ]
+            })
         galleries.sort(key=lambda x: x["id"])
 
         base = f"{self.root}/profiles/{self.user}/photos/"

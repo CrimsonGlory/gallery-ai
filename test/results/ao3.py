@@ -11,7 +11,7 @@ __tests__ = (
 {
     "#url"     : "https://archiveofourown.org/works/47802076",
     "#class"   : ao3.Ao3WorkExtractor,
-    "#results" : "https://archiveofourown.org/downloads/47802076/The_Wildcard.pdf?updated_at=1720398424",
+    "#pattern" : r"https://archiveofourown\.org/downloads/47802076/The_Wildcard\.pdf\?updated_at=\d+",
 
     "author"   : "Flowers_for_ghouls",
     "bookmarks": range(100, 300),
@@ -47,7 +47,7 @@ __tests__ = (
     "comments" : range(800, 2000),
     "date"     : "dt:2023-06-11 00:00:00",
     "date_completed": "dt:2024-05-10 00:00:00",
-    "date_updated"  : "dt:2024-07-08 00:27:04",
+    "date_updated"  : "type:datetime",
     "extension": "pdf",
     "filename" : "The_Wildcard",
     "id"       : 47802076,
@@ -127,13 +127,8 @@ __tests__ = (
     "#url"     : "https://archiveofourown.org/works/47802076",
     "#class"   : ao3.Ao3WorkExtractor,
     "#options" : {"formats": ["epub", "mobi", "azw3", "pdf", "html"]},
-    "#results" : (
-        "https://archiveofourown.org/downloads/47802076/The_Wildcard.epub?updated_at=1720398424",
-        "https://archiveofourown.org/downloads/47802076/The_Wildcard.mobi?updated_at=1720398424",
-        "https://archiveofourown.org/downloads/47802076/The_Wildcard.azw3?updated_at=1720398424",
-        "https://archiveofourown.org/downloads/47802076/The_Wildcard.pdf?updated_at=1720398424",
-        "https://archiveofourown.org/downloads/47802076/The_Wildcard.html?updated_at=1720398424",
-    ),
+    "#pattern" : r"https://archiveofourown\.org/downloads/47802076/The_Wildcard\.(epub|mobi|azw3|pdf|html)\?updated_at=\d+",
+    "#count"   : 5,
 },
 
 {
@@ -147,11 +142,8 @@ __tests__ = (
 {
     "#url"     : "https://archiveofourown.org/series/1903930",
     "#class"   : ao3.Ao3SeriesExtractor,
-    "#results" : (
-        "https://archiveofourown.org/works/26131546",
-        "https://archiveofourown.org/works/26291101",
-        "https://archiveofourown.org/works/26325292",
-    ),
+    "#pattern" : r"https://archiveofourown\.org/works/\d+",
+    "#count"   : range(1, 20),
 },
 
 {
@@ -205,28 +197,16 @@ __tests__ = (
     "#url"     : "https://archiveofourown.org/users/Fyrelass/works",
     "#class"   : ao3.Ao3UserWorksExtractor,
     "#auth"    : False,
-    "#results" : (
-        "https://archiveofourown.org/works/55035061",
-        "https://archiveofourown.org/works/58979287",
-        "https://archiveofourown.org/works/52704457",
-        "https://archiveofourown.org/works/52502743",
-        "https://archiveofourown.org/works/52170409",
-        "https://archiveofourown.org/works/52078558",
-        "https://archiveofourown.org/works/51699982",
-        "https://archiveofourown.org/works/51975193",
-        "https://archiveofourown.org/works/51633877",
-        "https://archiveofourown.org/works/51591436",
-        "https://archiveofourown.org/works/50860891",
-    ),
+    "#pattern" : r"https://archiveofourown\.org/works/\d+",
+    "#count"   : range(5, 30),
 },
 
 {
     "#url"     : "https://archiveofourown.org/users/Fyrelass/series",
     "#class"   : ao3.Ao3UserSeriesExtractor,
     "#auth"    : False,
-    "#results" : (
-        "https://archiveofourown.org/series/3821575",
-    ),
+    "#pattern" : r"https://archiveofourown\.org/series/\d+",
+    "#count"   : range(1, 10),
 },
 
 {

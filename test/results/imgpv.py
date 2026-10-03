@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import imagehosts
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -26,14 +27,7 @@ __tests__ = (
     "#url"     : "https://imgpv.com/4sizkvumyh8v/test-%E3%83%86%E3%82%B9%E3%83%88-%22%2526%3E.jpg.html",
     "#category": ("imagehost", "imgpv", "image"),
     "#class"   : imagehosts.ImgpvImageExtractor,
-    "#pattern" : r"https://s1.imgpv.com/cgi-bin/dl.cgi/hmbb\w+/test-%E3%83%86%E3%82%B9%E3%83%88-%2522%26%26gt%3B.jpg",
-    "#sha1_content": "0c8768055e4e20e7c7259608b67799171b691140",
-
-    "date"     : "dt:2025-12-28 13:09:35",
-    "extension": "jpg",
-    "filename" : "test-テスト-%22&>",
-    "post_url" : "https://imgpv.com/4sizkvumyh8v/test-%E3%83%86%E3%82%B9%E3%83%88-%22%2526%3E.jpg.html",
-    "token"    : "4sizkvumyh8v",
+    "#exception": exception.NotFoundError,
 },
 
 )

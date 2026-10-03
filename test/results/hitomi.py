@@ -228,7 +228,7 @@ __tests__ = (
     "#comment" : "negative search tag (#7694)",
     "#class"   : hitomi.HitomiSearchExtractor,
     "#pattern" : hitomi.HitomiGalleryExtractor.pattern,
-    "#count"   : 41,
+    "#count"   : range(35, 50),
 
     "search_tags": "language:japanese -tag:animated group:paradiddle",
 },

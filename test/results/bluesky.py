@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import bluesky
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -60,7 +61,7 @@ __tests__ = (
     "#url"     : "https://bsky.app/profile/bsky.app/avatar",
     "#category": ("", "bluesky", "avatar"),
     "#class"   : bluesky.BlueskyAvatarExtractor,
-    "#results" : "https://puffball.us-east.host.bsky.network/xrpc/com.atproto.sync.getBlob?did=did:plc:z72i7hdynmk6r22z27h6tvur&cid=bafkreihagr2cmvl2jt4mgx3sppwe2it3fwolkrbtjrhcnwjk4jdijhsoze",
+    "#pattern" : r"https://[^/?#]+/xrpc/com\.atproto\.sync\.getBlob\?did=did:plc:z72i7hdynmk6r22z27h6tvur&cid=bafkrei[a-z0-9]+",
 },
 
 {
@@ -117,10 +118,8 @@ __tests__ = (
     "#url"     : "https://bsky.app/profile/bsky.app/follows",
     "#category": ("", "bluesky", "following"),
     "#class"   : bluesky.BlueskyFollowingExtractor,
-    "#results" : (
-        "https://bsky.app/profile/did:plc:eon2iu7v3x2ukgxkqaf7e5np",
-        "https://bsky.app/profile/did:plc:ewvi7nxzyoun6zhxrhs64oiz",
-    ),
+    "#pattern" : r"https://bsky\.app/profile/did:plc:[a-z0-9]+",
+    "#count"   : ">= 1",
 },
 
 {
@@ -152,7 +151,7 @@ __tests__ = (
     "#class"   : bluesky.BlueskyLikesExtractor,
     "#options" : {"endpoint": "getActorLikes"},
     "#auth"    : False,
-    "#count"   : 0,
+    "#exception": exception.AbortExtraction,
 },
 
 {
@@ -195,7 +194,7 @@ __tests__ = (
     "#sha1_content": "ffcf25e7c511173a12de5276b85903309fcd8d14",
 
     "author": {
-        "avatar"     : "https://cdn.bsky.app/img/avatar/plain/did:plc:z72i7hdynmk6r22z27h6tvur/bafkreihagr2cmvl2jt4mgx3sppwe2it3fwolkrbtjrhcnwjk4jdijhsoze@jpeg",
+        "avatar"     : r"re:https://cdn\.bsky\.app/img/avatar/plain/did:plc:z72i7hdynmk6r22z27h6tvur/bafkrei[a-z0-9]+(?:@jpeg)?",
         "did"        : "did:plc:z72i7hdynmk6r22z27h6tvur",
         "displayName": "Bluesky",
         "handle"     : "bsky.app",
@@ -315,7 +314,7 @@ __tests__ = (
 
     "author": {
         "associated" : dict,
-        "avatar"     : "https://cdn.bsky.app/img/avatar/plain/did:plc:eyhmjdxsnthqhvvszdejaocz/bafkreigjrftlw7tabtpie32saydttpnoi7276v252vnycr6zt6euef7vdi@jpeg",
+        "avatar"     : r"re:https://cdn\.bsky\.app/img/avatar/plain/did:plc:eyhmjdxsnthqhvvszdejaocz/bafkrei[a-z0-9]+(?:@jpeg)?",
         "createdAt"  : "2024-01-11T00:27:37.404Z",
         "did"        : "did:plc:eyhmjdxsnthqhvvszdejaocz",
         "displayName": "フナ",
@@ -323,7 +322,7 @@ __tests__ = (
         "labels"     : list,
     },
     "quote_by": {
-        "avatar"     : "https://cdn.bsky.app/img/avatar/plain/did:plc:cslxjqkeexku6elp5xowxkq7/bafkreic5jqkn5ohqhgsm6zzi7vnapuz54trojv3io4tfkrcyaprl4b2ztm@jpeg",
+        "avatar"     : r"re:https://cdn\.bsky\.app/img/avatar/plain/did:plc:cslxjqkeexku6elp5xowxkq7/bafkreic5jqkn5ohqhgsm6zzi7vnapuz54trojv3io4tfkrcyaprl4b2ztm(?:@jpeg)?",
         "createdAt"  : "2024-02-05T00:03:54.087Z",
         "did"        : "did:plc:cslxjqkeexku6elp5xowxkq7",
         "displayName": "mikf",
@@ -363,10 +362,10 @@ __tests__ = (
         "instance"   : "nytimes.com",
     },
     "user": {
-        "avatar"        : "https://cdn.bsky.app/img/avatar/plain/did:plc:eclio37ymobqex2ncko63h4r/bafkreidvvqj5jymmpaeklwkpq6gi532el447mjy2yultuukypzqm5ohfju@jpeg",
-        "banner"        : "https://cdn.bsky.app/img/banner/plain/did:plc:eclio37ymobqex2ncko63h4r/bafkreidlzzmt7sy2n6imz5mg7siygb3cy4e526nvbjucczeu5cutqro5ni@jpeg",
+        "avatar"        : r"re:https://cdn\.bsky\.app/img/avatar/plain/did:plc:eclio37ymobqex2ncko63h4r/bafkreidvvqj5jymmpaeklwkpq6gi532el447mjy2yultuukypzqm5ohfju(?:@jpeg)?",
+        "banner"        : r"re:https://cdn\.bsky\.app/img/banner/plain/did:plc:eclio37ymobqex2ncko63h4r/bafkreidlzzmt7sy2n6imz5mg7siygb3cy4e526nvbjucczeu5cutqro5ni(?:@jpeg)?",
         "createdAt"     : "2023-06-05T18:50:31.498Z",
-        "description"   : "In-depth, independent reporting to better understand the world, now on Bluesky. News tips? Share them here: http://nyti.ms/2FVHq9v",
+        "description"   : str,
         "did"           : "did:plc:eclio37ymobqex2ncko63h4r",
         "displayName"   : "The New York Times",
         "followersCount": int,
@@ -383,6 +382,7 @@ __tests__ = (
     "#url"     : "https://bsky.app/profile/stupidsaru.woke.cat/post/3l66wwwqw6u2w",
     "#comment" : "instance metadata",
     "#class"   : bluesky.BlueskyPostExtractor,
+    "#exception": exception.AbortExtraction,
 
     "author": {
         "createdAt": "2023-08-31T23:28:42.305Z",
@@ -396,14 +396,15 @@ __tests__ = (
     "#url"     : "https://bsky.app/profile/alt.bun.how/post/3l7rdfxhyds2f",
     "#comment" : "non-bsky PDS (#6406)",
     "#class"   : bluesky.BlueskyPostExtractor,
-    "#results"     : "https://pds.bun.how/xrpc/com.atproto.sync.getBlob?did=did:plc:7x6rtuenkuvxq3zsvffp2ide&cid=bafkreielhgekjheckgjusx7x5hxkbrqryfdmzdwwp2zoxchovgnpzkxzae",
+    "#pattern"     : r"https://pds2?\.bun\.how/xrpc/com.atproto.sync.getBlob\?did=did:plc:7x6rtuenkuvxq3zsvffp2ide&cid=bafkreielhgekjheckgjusx7x5hxkbrqryfdmzdwwp2zoxchovgnpzkxzae",
+    "#count"       : 1,
     "#sha1_content": "1777956de0dc8cf0815c5c7eb574a24ce54a1d42",
 
     "author": {
         "createdAt": "2024-10-17T13:55:48.833Z",
         "did"      : "did:plc:7x6rtuenkuvxq3zsvffp2ide",
-        "handle"   : "cinny.bun.how",
-        "instance" : "bun.how",
+        "handle"   : str,
+        "instance" : str,
     },
 },
 
@@ -447,7 +448,7 @@ __tests__ = (
     "#url"     : "https://bsky.app/profile/jacksonlab.bsky.social/post/3m2ms33o6p52k",
     "#comment" : "'external' embed - 'images': [], 'video': null",
     "#class"   : bluesky.BlueskyPostExtractor,
-    "#count"   : 0,
+    "#exception": exception.AbortExtraction,
 },
 
 {

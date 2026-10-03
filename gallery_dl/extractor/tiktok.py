@@ -69,6 +69,8 @@ class TiktokExtractor(Extractor):
                 video_detail = data["webapp.video-detail"]
                 if not self._check_status_code(
                         video_detail, tiktok_url, "post"):
+                    if self.subcategory == "post":
+                        raise self.exc.NotFoundError("post")
                     continue
                 post = video_detail["itemInfo"]["itemStruct"]
 
@@ -148,6 +150,8 @@ class TiktokExtractor(Extractor):
                         "height"    : 0,
                     })
                     yield Message.Url, "ytdl:" + tiktok_url, post
+            except self.exc.ExtractionError:
+                raise
             except Exception as exc:
                 self.log.traceback(exc)
                 self.log.error("%s: Failed to extract post (%s: %s)",
@@ -206,7 +210,9 @@ class TiktokExtractor(Extractor):
                                  "(%s/%s)", url.rpartition("/")[2], tries + 1,
                                  self._retries)
                 if tries >= self._retries:
-                    raise
+                    raise self.exc.AbortExtraction(
+                        f"{url}: Failed to retrieve rehydration data "
+                        "(WAF/challenge)")
                 tries += 1
                 self.sleep(self._timeout, "retry")
                 challenge_attempt = False

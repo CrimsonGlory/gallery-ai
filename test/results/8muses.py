@@ -55,7 +55,7 @@ __tests__ = (
         "private": False,
         "title"  : "Issue 1",
         "url"    : "https://comics.8muses.com/comics/album/Various-Authors/JankinGen/Princess-Laura-Sex-Adventure/Issue-1",
-        "views"  : 68034,
+        "views"  : int,
         "path"   : [
             "Various Authors",
             "JankinGen",

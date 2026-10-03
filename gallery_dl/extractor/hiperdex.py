@@ -48,6 +48,9 @@ class HiperdexBase():
         }
 
     def request_api(self, endpoint, params):
+        if not self.cookies.get("__st", domain="hiperdex.com"):
+            self.request("https://hiperdex.com/", fatal=False)
+
         url = "https://hiperdex.com/api/trpc/" + endpoint
         params = {"input": util.json_dumps({"json": params})}
         headers = {"x-cfg-auth": "yceqt7qgu004"}

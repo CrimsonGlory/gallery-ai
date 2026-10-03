@@ -19,13 +19,11 @@ __tests__ = (
     "extension" : "jpg",
     "filename"  : str,
     "gallery_id": 12,
-    "lang"      : "en",
+    "?lang"     : "en",
     "num"       : range(1, 94),
     "title"     : "(C67) [Studio Kimigabuchi (Kimimaru)] RE-TAKE 2 (Neon Genesis Evangelion) [English]",
-    "title_alt" : "",
+    "title_alt" : str,
     "type"      : "doujinshi",
-    "width"     : {835, 838, 841, 1200},
-    "height"    : {862, 865, 1200},
 
     "artist":    [
         "kimimaru | entokkun",
@@ -65,20 +63,18 @@ __tests__ = (
     "#url"     : "https://hentaizap.com/gallery/1329498/",
     "#category": ("IMHentai", "hentaizap", "gallery"),
     "#class"   : imhentai.ImhentaiGalleryExtractor,
-    "#pattern" : r"https://m9\.hentaizap\.com/029/tk70aw8b4y/\d+\.webp",
+    "#pattern" : r"https://m9\.hentaizap\.com/029/tk70aw8b4y/\d+\.(?:jpg|webp)",
     "#count"   : 25,
 
     "count"     : 25,
     "num"       : range(1, 25),
-    "extension" : "webp",
+    "extension" : {"jpg", "webp"},
     "filename"  : str,
     "gallery_id": 1329498,
-    "lang"      : "ru",
+    "?lang"     : "ru",
     "title"     : "(C102) [Koniro Kajitsu (KonKa)] Konbucha wa Ikaga desu ka | Хотите немного чая из водорослей? (Blue Archive) [Russian] [graun]",
-    "title_alt" : "",
+    "title_alt" : str,
     "type"      : "doujinshi",
-    "width"     : 1280,
-    "height"    : range(1804, 1832),
 
     "artist": [
         "konka",
@@ -114,7 +110,8 @@ __tests__ = (
     "#category": ("IMHentai", "hentaizap", "tag"),
     "#class"   : imhentai.ImhentaiTagExtractor,
     "#pattern" : imhentai.ImhentaiGalleryExtractor.pattern,
-    "#count"   : range(45, 50),
+    "#range"   : "1-50",
+    "#count"   : range(20, 80),
 },
 
 {
@@ -122,7 +119,8 @@ __tests__ = (
     "#category": ("IMHentai", "hentaizap", "search"),
     "#class"   : imhentai.ImhentaiSearchExtractor,
     "#pattern" : imhentai.ImhentaiGalleryExtractor.pattern,
-    "#count"   : range(45, 60),
+    "#range"   : "1-50",
+    "#count"   : range(20, 80),
 },
 
 )

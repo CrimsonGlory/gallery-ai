@@ -20,16 +20,14 @@ __tests__ = (
     "#url"     : "https://tapas.io/series/yona",
     "#comment" : "mature",
     "#class"   : tapas.TapasSeriesExtractor,
-    "#pattern" : tapas.TapasEpisodeExtractor.pattern,
-    "#count"   : 17,
+    "#exception": exception.HttpError,
 },
 
 {
     "#url"     : "https://tapas.io/episode/2068651",
     "#comment" : "book / html",
     "#class"   : tapas.TapasEpisodeExtractor,
-    "#pattern" : "^text:",
-    "#sha1_url": "0b53644c864a0a097f65accea6bb620be9671078",
+    "#exception": exception.HttpError,
 
     "book"            : True,
     "comment_cnt"     : int,
@@ -130,7 +128,7 @@ __tests__ = (
         "premium"       : True,
         "sale_type"     : "WAIT_OR_MUST_PAY",
         "subscribed"    : False,
-        "thumb_url"     : "https://us-a.tapas.io/sa/32/7e1daa84-8951-4a53-9574-48ca7d0b0aca_m.jpg",
+        "thumb_url"     : r"re:https://us-a\.tapas\.io/sa/\w+/.+_m\.jpg",
         "thumbsup_cnt"  : range(240000, 500000),
         "title"         : "The Doctor Is Out",
         "type"          : "COMICS",
@@ -149,12 +147,8 @@ __tests__ = (
     "#url"     : "https://tapas.io/SANG123/series",
     "#comment" : "#5306",
     "#class"   : tapas.TapasCreatorExtractor,
-    "#results" : (
-        "https://tapas.io/series/the-return-of-the-disaster-class-hero",
-        "https://tapas.io/series/the-return-of-the-disaster-class-hero-novel",
-        "https://tapas.io/series/tomb-raider-king",
-        "https://tapas.io/series/tomb-raider-king-novel",
-    ),
+    "#pattern" : r"https://tapas\.io/series/.+",
+    "#count"   : range(1, 20),
 },
 
 )

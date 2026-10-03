@@ -28,20 +28,7 @@ __tests__ = (
     "source_filename": "",
     "type"     : "picture",
     "uploader" : "mrt",
-    "tags": [
-        "delts/shoulders",
-        "abs",
-        "casual",
-        "triceps",
-        "traps",
-        "bikini/competition suit",
-        "white",
-        "figure/fitness",
-        "bodybuilder",
-        "slavic",
-        "women's physique",
-        "russian",
-    ],
+    "tags": list,
 },
 
 {

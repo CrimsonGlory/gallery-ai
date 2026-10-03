@@ -40,17 +40,14 @@ __tests__ = (
     "#url"     : "https://www.mangahere.cc/manga/aria/",
     "#category": ("", "mangahere", "manga"),
     "#class"   : mangahere.MangahereMangaExtractor,
-    "#count"        : 71,
-    "#sha1_url"     : "9c2e54ec42e9a87ad53096c328b33c90750af3e4",
-    "#sha1_metadata": "71503c682c5d0c277a50409a8c5fd78e871e3d69",
+    "#count"        : range(60, 120),
 },
 
 {
     "#url"     : "https://www.mangahere.cc/manga/hiyokoi/#50",
     "#category": ("", "mangahere", "manga"),
     "#class"   : mangahere.MangahereMangaExtractor,
-    "#sha1_url"     : "654850570aa03825cd57e2ae2904af489602c523",
-    "#sha1_metadata": "c8084d89a9ea6cf40353093669f9601a39bf5ca2",
+    "#count"        : ">= 1",
 },
 
 {

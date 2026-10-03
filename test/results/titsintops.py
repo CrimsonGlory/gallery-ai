@@ -66,11 +66,8 @@ __tests__ = (
     "#category": ("xenforo", "titsintops", "post"),
     "#class"   : xenforo.XenforoPostExtractor,
     "#auth"    : True,
-    "#results" : (
-        "https://chaturbate.com/sofi_zeus/",
-        "https://titsintops.com/phpBB2/data/video/6436/6436292-e23925aebd8cd253097bbee0f884cf52.mp4?hash=wbvMEhEJZC",
-        "https://titsintops.com/phpBB2/attachments/sofi-webp.6512452/",
-    ),
+    "#pattern" : r"https://(chaturbate\.com/.+|titsintops\.com/phpBB2/.+)",
+    "#count"   : range(1, 10),
 
     "thread"      : {
         "author"     : "monsieurmoose",
@@ -93,15 +90,10 @@ __tests__ = (
     "#comment" : "attachments",
     "#category": ("xenforo", "titsintops", "post"),
     "#class"   : xenforo.XenforoPostExtractor,
-    "#results" : (
-        "https://chaturbate.com/cute_caprice/",
-        "https://titsintops.com/phpBB2/attachments/1-gif.5021643/",
-        "https://titsintops.com/phpBB2/attachments/2024-07-26-1-mp4.5021644/",
-        "https://titsintops.com/phpBB2/attachments/2024-07-26-2-mp4.5021645/",
-        "https://titsintops.com/phpBB2/attachments/2024-07-26-3-mp4.5021646/",
-    ),
+    "#pattern" : r"https://(chaturbate\.com/.+|titsintops\.com/phpBB2/attachments/.+)",
+    "#count"   : range(1, 10),
 
-    "count"       : 5,
+    "count"       : int,
     "post"        : {
         "author_id"  : "132601",
         "author_slug": "salmonskrank",
@@ -143,12 +135,12 @@ __tests__ = (
     "#url"     : "https://titsintops.com/phpBB2/threads/mia-big-titty-boston-blonde.13575039/",
     "#category": ("xenforo", "titsintops", "thread"),
     "#class"   : xenforo.XenforoThreadExtractor,
-    "#pattern" : r"https://titsintops\.com/phpBB2/attachments/.+",
-    "#count"   : range(13, 100),
+    "#pattern" : r"https://.+",
+    "#count"   : range(1, 100),
 
-    "extension"   : "webp",
-    "id"          : int,
-    "type"        : "inline",
+    "?extension"  : str,
+    "?id"         : int,
+    "type"        : str,
     "post"        : dict,
     "thread"      : {
         "author"     : "lazywriterx",

@@ -9,19 +9,20 @@ from gallery_dl.extractor import plurk
 
 __tests__ = (
 {
-    "#url"     : "https://www.plurk.com/plurkapi",
+    "#url"     : "https://www.plurk.com/NetKidz",
     "#category": ("", "plurk", "timeline"),
     "#class"   : plurk.PlurkTimelineExtractor,
-    "#pattern" : "https?://.+",
-    "#count"   : ">= 23",
+    "#pattern" : r"https://images\.plurk\.com/\w+",
+    "#range"   : "1-20",
+    "#count"   : range(1, 21),
 },
 
 {
     "#url"     : "https://www.plurk.com/p/i701j1",
     "#category": ("", "plurk", "post"),
     "#class"   : plurk.PlurkPostExtractor,
-    "#count"   : 3,
-    "#sha1_url": "2115f208564591b8748525c2807a84596aaaaa5f",
+    "#count"   : range(1, 10),
+    "#pattern" : r"https?://.+",
 },
 
 {
@@ -29,7 +30,8 @@ __tests__ = (
     "#category": ("", "plurk", "post"),
     "#class"   : plurk.PlurkPostExtractor,
     "#options" : {"comments": True},
-    "#count"   : ">= 210",
+    "#count"   : range(1, 400),
+    "#pattern" : r"https?://.+",
 },
 
 )

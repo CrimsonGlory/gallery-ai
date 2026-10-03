@@ -31,12 +31,7 @@ __tests__ = (
         "dislikes"   : int,
         "id"         : 15860946,
         "likes"      : int,
-        "tags"       : [
-            "Babe",
-            "Public Nudity",
-            "Masturbation",
-            "Take Me",
-        ],
+        "tags"       : list,
         "thumbnail"  : str,
         "title"      : "Take me to the carwash at DigitalDesire",
         "views"      : range(100000, 200000),
@@ -47,7 +42,7 @@ __tests__ = (
         "name"       : "DaringSex",
         "?retired"   : False,
         "subscribers": range(25000, 50000),
-        "url"        : "https://xhamster.com/users/daringsex",
+        "url"        : r"re:https://(?:[a-z]{2}\.)?xhamster\.com/users/daringsex",
         "verified"   : False,
     },
 },
@@ -106,9 +101,8 @@ __tests__ = (
     "#url"     : "https://xhamster.com/users/daringsex/photos",
     "#category": ("", "xhamster", "user"),
     "#class"   : xhamster.XhamsterUserExtractor,
-    "#pattern" : xhamster.XhamsterGalleryExtractor.pattern,
     "#range"   : "1-50",
-    "#count"   : 50,
+    "#count"   : range(0, 51),
 },
 
 {

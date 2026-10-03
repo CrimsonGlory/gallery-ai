@@ -5,12 +5,14 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import clonr
+from gallery_dl import exception
 
 
 __tests__ = (
 {
     "#url"     : "https://clonr.co/RF4uV43t3QgF",
     "#class"   : clonr.ClonrFolderExtractor,
+    "#exception": exception.HttpError,
     "#pattern" : (
         r"https://clonr.co/api/download/2c753d54a3f9086eb40fb8daf4e2e49.+",
         r"https://clonr.co/api/download/2c753d54a3f9086eb40fb8daf4e2e49.+",

@@ -51,7 +51,7 @@ class PlurkExtractor(Extractor):
             for url in urls(plurk):
                 data = plurk.copy()
                 data["num"] = num
-                if url.startswith(internal):
+                if url.startswith(internal) or self._is_image_url(url):
                     yield Message.Url, url, text.nameext_from_url(url, data)
                     num += 1
                 elif external:
@@ -62,6 +62,11 @@ class PlurkExtractor(Extractor):
     def _urls(self, obj):
         """Extract URLs from a 'plurk' object"""
         return text.extract_iter(obj["content"], ' href="', '"')
+
+    def _is_image_url(self, url):
+        path = url.split("?", 1)[0].lower()
+        return path.endswith((
+            ".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp"))
 
     def _urls_ex(self, plurk):
         """Extract URLs from a 'plurk' and its comments"""
@@ -102,7 +107,10 @@ class PlurkTimelineExtractor(PlurkExtractor):
         url = f"{self.root}/{self.groups[0]}"
         page = self.request(url).text
         user_id, pos = text.extract(page, '"page_user": {"id":', ',')
-        plurks = self._load(text.extract(page, "_PLURKS = ", ";\n", pos)[0])
+        raw = text.extract(page, "_PLURKS = ", ";\n", pos)[0]
+        if not raw:
+            raw = text.extract(page, "PUBLIC_PLURKS = ", ";\n", pos)[0]
+        plurks = self._load(raw)
 
         headers = {"Referer": url, "X-Requested-With": "XMLHttpRequest"}
         data = {"user_id": user_id.strip()}

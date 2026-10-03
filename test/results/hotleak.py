@@ -26,12 +26,12 @@ __tests__ = (
     "#url"     : "https://hotleak.vip/lilmochidoll/video/1625538",
     "#category": ("", "hotleak", "post"),
     "#class"   : hotleak.HotleakPostExtractor,
-    "#pattern" : r"ytdl:https://cdn\d+-leak\.camhdxx\.com/.+,\d+/1661/1625538/index\.m3u8",
+    "#pattern" : r"ytdl:https://(?:cdn\d+-leak\.camhdxx\.com/.+|hotleak\.vip/m3u8/1625538\.m3u8).+",
 
     "id"       : 1625538,
     "creator"  : "lilmochidoll",
     "type"     : "video",
-    "filename" : "index",
+    "filename" : str,
     "extension": "mp4",
 },
 

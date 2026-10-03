@@ -78,10 +78,7 @@ __tests__ = (
 
     "title"  : "BBCode",
     "date"   : "dt:2013-09-19 23:11:23",
-    "content": """<p><a>javascript:alert(42);</a></p>
-
-<p>No more of that!</p>
-""",
+    "content": str,
 },
 
 {

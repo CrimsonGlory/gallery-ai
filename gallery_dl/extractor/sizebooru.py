@@ -21,6 +21,7 @@ class SizebooruExtractor(BooruExtractor):
     filename_fmt = "{id}.{extension}"
     archive_fmt = "{id}"
     page_start = 1
+    per_page = 50
     request_interval = (0.5, 1.5)
 
     def _init(self):
@@ -80,16 +81,18 @@ class SizebooruExtractor(BooruExtractor):
             callback(page)
 
         while True:
-            thumb = None
-            for thumb in text.extract_iter(
-                    page, '<a href="/Details/', ';base64'):
-                yield {
-                    "id"       : thumb[:thumb.find('?')],
-                    "extension": thumb[thumb.rfind("/")+1:],
-                }
+            found = False
+            for href in text.extract_iter(page, '<a href="/Details/', '"'):
+                post_id = href.split("?", 1)[0]
+                if post_id.isdigit():
+                    found = True
+                    yield {
+                        "id"       : post_id,
+                        "extension": None,
+                    }
 
-            if "disabled" in text.extr(page, 'area-label="Next"', ">") or \
-                    thumb is None:
+            nxt = text.extr(page, 'area-label="Next"', "</li>")
+            if not found or "disabled" in nxt:
                 return
             params["pageNo"] += 1
             page = self.request(url, params=params).text

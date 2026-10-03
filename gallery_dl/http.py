@@ -22,7 +22,7 @@ from urllib.parse import urlsplit, urlunsplit, urlencode
 import curl_cffi.requests.cookies as _curl_cookies
 import curl_cffi.requests.models as _curl_models
 import curl_cffi.requests.session as _curl_session
-from curl_cffi import CurlOpt, CurlSslVersion
+from curl_cffi import CurlHttpVersion, CurlOpt, CurlSslVersion
 from curl_cffi.requests import Session as _CurlSession
 from curl_cffi.requests.exceptions import (
     ChunkedEncodingError,
@@ -175,6 +175,12 @@ def _load_set_cookies(cookies, headers):
 class Response(_curl_models.Response):
     """curl_cffi response plus the ``requests`` attributes extractors use."""
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.close()
+
     @property
     def links(self):
         cached = getattr(self, "_links", None)
@@ -210,7 +216,67 @@ def _header_value(value):
     return value
 
 
+def _omit_none_params(params):
+    """Drop ``None`` query values, matching ``requests`` encoding."""
+    if params is None or isinstance(params, (str, bytes)):
+        return params
+    if isinstance(params, dict):
+        out = {}
+        for key, value in params.items():
+            if value is None:
+                continue
+            if isinstance(value, (list, tuple)):
+                value = type(value)(item for item in value if item is not None)
+            out[key] = value
+        return out
+    if isinstance(params, (list, tuple)):
+        return [(key, value) for key, value in params if value is not None]
+    return params
+
+
+def _omit_none_mapping(mapping):
+    """Drop ``None`` values from a dict-like mapping."""
+    if mapping is None or isinstance(mapping, (str, bytes)):
+        return mapping
+    items = getattr(mapping, "items", None)
+    if items is None:
+        return mapping
+    if isinstance(mapping, dict):
+        return {key: value for key, value in mapping.items()
+                if value is not None}
+    try:
+        for key, value in list(items()):
+            if value is None:
+                del mapping[key]
+    except Exception:
+        pass
+    return mapping
+
+
+def _sanitize_request_kwargs(kwargs):
+    """Make curl_cffi accept the ``requests`` kwargs gallery-dl uses."""
+    if "params" in kwargs:
+        params = _omit_none_params(kwargs["params"])
+        if params:
+            kwargs["params"] = params
+        else:
+            kwargs.pop("params", None)
+    if "headers" in kwargs:
+        headers = _omit_none_mapping(kwargs["headers"])
+        if headers:
+            kwargs["headers"] = headers
+        else:
+            kwargs.pop("headers", None)
+    data = kwargs.get("data")
+    if isinstance(data, dict):
+        kwargs["data"] = _omit_none_mapping(data)
+    return kwargs
+
+
 def _url_with_params(url, params):
+    if not params:
+        return url
+    params = _omit_none_params(params)
     if not params:
         return url
     if isinstance(params, str):
@@ -252,12 +318,31 @@ class Session(_CurlSession):
             compat = Cookies()
             compat.jar = self._cookies.jar
             self._cookies = compat
+        # Default header encoding is inferred as ascii, which then rejects
+        # non-ASCII Referer / Location values (IDN tests, localized titles).
+        try:
+            self.headers.encoding = "utf-8"
+        except Exception:
+            pass
 
     def request(self, method, url, **kwargs):
+        kwargs = _sanitize_request_kwargs(kwargs)
         method, url, kwargs, saved_auth = _prepare_auth(
             self, method, url, kwargs)
         try:
-            response = super().request(method, url, **kwargs)
+            try:
+                response = super().request(method, url, **kwargs)
+            except RequestException as exc:
+                # HTTP/2 frames must not carry an HTTP/1 Upgrade header.
+                # Some hosts still send `upgrade: h2`; retry over 1.1.
+                if (
+                    kwargs.get("http_version") is None and
+                    "curl: (92)" in str(exc)
+                ):
+                    kwargs["http_version"] = CurlHttpVersion.V1_1
+                    response = super().request(method, url, **kwargs)
+                else:
+                    raise
         finally:
             if saved_auth is not _UNSET:
                 self.auth = saved_auth

@@ -6,12 +6,15 @@
 
 from gallery_dl.extractor import filester
 
+CDN = (r"https://(?:[\w.-]+\.filester\.\w+|[\w.-]+\.cdn\.cr)"
+       r"/v2/[^/?#]+(?:\?.*)?")
+
 
 __tests__ = (
 {
     "#url"     : "https://filester.me/d/aPc9D5g",
     "#class"   : filester.FilesterFileExtractor,
-    "#pattern" : r"https://\w+\.filester\.me/v2/7147825c-5216-4d2a-b126-0e98e0b58d13.png\?token=\w+\.\w{64}&download=true",
+    "#pattern" : CDN,
 
     "date"     : "dt:2026-03-06 00:00:00",
     "extension": "png",
@@ -26,25 +29,25 @@ __tests__ = (
 {
     "#url"     : "https://filester.sh/d/aPc9D5g",
     "#class"   : filester.FilesterFileExtractor,
-    "#pattern" : r"https://\w+\.filester\.me/v2/7147825c-5216-4d2a-b126-0e98e0b58d13.png\?token=\w+\.\w{64}&download=true",
+    "#pattern" : CDN,
 },
 
 {
     "#url"     : "https://filester.si/d/aPc9D5g",
     "#class"   : filester.FilesterFileExtractor,
-    "#pattern" : r"https://\w+\.filester\.me/v2/7147825c-5216-4d2a-b126-0e98e0b58d13.png\?token=\w+\.\w{64}&download=true",
+    "#pattern" : CDN,
 },
 
 {
     "#url"     : "https://filester.gg/d/aPc9D5g",
     "#class"   : filester.FilesterFileExtractor,
-    "#pattern" : r"https://\w+\.filester\.me/v2/7147825c-5216-4d2a-b126-0e98e0b58d13.png\?token=\w+\.\w{64}&download=true",
+    "#pattern" : CDN,
 },
 
 {
     "#url"     : "https://filester.me/f/1725bc5b793e8a4a",
     "#class"   : filester.FilesterFolderExtractor,
-    "#pattern" : r"https://\w+\.filester\.me/v2/[^/?#]+\?token=\w+\.\w{64}&download=true",
+    "#pattern" : CDN,
 
     "count"      : 6,
     "num"        : range(1, 6),

@@ -39,7 +39,8 @@ class SexcomExtractor(Extractor):
                     pin["date"] = d
             except Exception:
                 pass
-            pin["tags"] = [t[1:] if t[0] == "@" else t for t in pin["tags"]]
+            pin["tags"] = [
+                t[1:] if t[:1] in "@#" else t for t in pin["tags"]]
 
             yield Message.Url, url, pin
 
@@ -314,17 +315,31 @@ class SexcomSearchExtractor(SexcomExtractor):
         type = self.type
         gifs = self.config("gifs", True)
 
-        url = (f"{self.root}/portal/api/"
-               f"{'picture' if type == 'pic' else type}s/search")
         params = self.params
         params["page"] = text.parse_int(params.get("page"), 1)
         params["limit"] = 40
+        if type == "video":
+            url = f"{self.root}/portal/api/videos"
+            params.pop("order", None)
+        else:
+            url = (f"{self.root}/portal/api/"
+                   f"{'picture' if type == 'pic' else type}s/search")
 
         while True:
             data = self.request_json(url, params=params)
 
             for pin in data["data"]:
-                path = pin["uri"]
+                path = pin.get("uri")
+                if not path:
+                    url_media = pin.get("preview")
+                    if not url_media:
+                        continue
+                    pin["pin_id"] = pin.get("id")
+                    text.nameext_from_url(url_media, pin)
+                    pin["url"] = url_media
+                    yield Message.Directory, "", pin
+                    yield Message.Url, url_media, pin
+                    continue
                 pin["pin_id"] = pin.pop("id")
                 text.nameext_from_url(path, pin)
 

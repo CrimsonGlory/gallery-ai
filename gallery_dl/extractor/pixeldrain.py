@@ -192,6 +192,7 @@ class PixeldrainFolderExtractor(PixeldrainExtractor):
                 if recursive:
                     url = f"{self.root}/d{child['path']}"
                     child["_extractor"] = PixeldrainFolderExtractor
+                    child["id"] = folder["id"]
                     yield Message.Queue, url, child
 
             else:

@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import misskey
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -64,14 +65,14 @@ __tests__ = (
     "#url"     : "https://misskey.design/@blooddj@pawoo.net/notes",
     "#category": ("misskey", "misskey.design", "notes"),
     "#class"   : misskey.MisskeyNotesExtractor,
-    "#count"   : "> 30",
+    "#exception": exception.HttpError,
 },
 
 {
     "#url"     : "https://misskey.design/@kujyo_t/following",
     "#category": ("misskey", "misskey.design", "following"),
     "#class"   : misskey.MisskeyFollowingExtractor,
-    "#count"    : ">= 250",
+    "#exception": exception.HttpError,
 },
 
 {

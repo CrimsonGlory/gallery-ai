@@ -41,6 +41,10 @@ class MangafireBase():
 
     def _chapter_info(self, info):
         chapter_info = str(info["number"])
+        for prefix in ("chapter-", "chapter ", "vol-", "volume-"):
+            if chapter_info.lower().startswith(prefix):
+                chapter_info = chapter_info[len(prefix):]
+                break
         type = info.get("type")
 
         if info.get("type") == "volume":

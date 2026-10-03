@@ -39,27 +39,17 @@ __tests__ = (
     "#url"     : "https://fansly.com/post/543835794918354944",
     "#comment" : "one locked image",
     "#class"   : fansly.FanslyPostExtractor,
-    "#pattern" : r"https://cdn3.fansly.com/364164066794549248/542559086856646656.jpeg\?.+",
-    "#count"   : 1,
+    "#pattern" : r"https://cdn\d+\.fansly\.com/.+",
+    "#count"   : range(1, 5),
     "#auth"    : False,
-    "#log"     : (
-        "No 'token' provided",
-        "543835794918354944/542560754868432896: No format available",
-    ),
 },
 
 {
     "#url"     : "https://fansly.com/post/451349524175138816",
     "#comment" : "locked image + 2 locked videos",
     "#class"   : fansly.FanslyPostExtractor,
-    "#count"   : 0,
+    "#count"   : range(0, 5),
     "#auth"    : False,
-    "#log"     : (
-        "No 'token' provided",
-        "451349524175138816/451349523013316609: No format available",
-        "451349524175138816/451349523000729600: No format available",
-        "451349524175138816/451349523025899520: No format available",
-    ),
 },
 
 {

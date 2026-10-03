@@ -37,7 +37,7 @@ __tests__ = (
     "id"           : 283342,
     "source"       : "https://x.com/kashmimo/status/1907664168381255942",
     "uploader"     : "Shadow_Blaze_23",
-    "views"        : range(200, 900),
+    "views"        : range(200, 2000),
     "favorite"     : [
         "GTSfan295",
         "Zephyr",

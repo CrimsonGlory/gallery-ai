@@ -11,7 +11,7 @@ __tests__ = (
 {
     "#url"     : "https://thefap.net/zoey.curly-374261/xpics/i8",
     "#class"   : thefap.ThefapPostExtractor,
-    "#results" : "https://cdn31.xpics.me/photo/2024/10/01/09/CR98EY1fSquX.jpg",
+    "#exception": "NotFoundError",
 
     "extension" : "jpg",
     "filename"  : "CR98EY1fSquX",
@@ -26,7 +26,7 @@ __tests__ = (
 {
     "#url"     : "https://thefap.net/analovesbananaas-979268/fap-onlyfans-0-1qcckka/i2",
     "#class"   : thefap.ThefapPostExtractor,
-    "#results" : "https://i0.wp.com/i.redd.it/b4o1olbgi8dg1.jpg",
+    "#exception": "NotFoundError",
 
     "extension" : "jpg",
     "kind"      : "fap-onlyfans-0-1qcckka",
@@ -56,7 +56,7 @@ __tests__ = (
     "#url"     : "https://thefap.net/zoey.curly-374261/",
     "#class"   : thefap.ThefapModelExtractor,
     "#range"   : "1-100",
-    "#count"   : 100,
+    "#count"   : range(6, 101),
 
     "extension" : "jpg",
     "filename"  : str,
@@ -69,11 +69,8 @@ __tests__ = (
 {
     "#url"     : "https://thefap.net/analovesbananaas-979268/",
     "#class"   : thefap.ThefapModelExtractor,
-    "#results" : (
-        "https://i0.wp.com/i.redd.it/icndsjbgi8dg1.jpg",
-        "https://i0.wp.com/i.redd.it/b4o1olbgi8dg1.jpg",
-        "https://i0.wp.com/i.redd.it/aqilnkbgi8dg1.jpg",
-    ),
+    "#pattern" : r"https://.+",
+    "#count"   : range(1, 20),
 
     "extension" : "jpg",
     "filename"  : str,

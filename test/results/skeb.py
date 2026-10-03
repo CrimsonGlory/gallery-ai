@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import skeb
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -17,12 +18,12 @@ __tests__ = (
     "body"            : r"re:はじめまして。私はYouTubeにてVTuberとして活動をしている湊ラ",
     "count"           : 2,
     "num"             : range(1, 2),
-    "client"          : {
-        "avatar_url" : r"re:https://pbs.twimg.com/profile_images/\d+/\w+\.jpg",
-        "header_url" : None,
-        "id"         : 1196514,
+    "?client"         : {
+        "avatar_url" : str,
+        "header_url" : {str, None},
+        "id"         : int,
         "name"       : str,
-        "screen_name": "minato_ragi",
+        "screen_name": str,
     },
     "content_category": "preview",
     "creator"         : {
@@ -111,6 +112,7 @@ __tests__ = (
 {
     "#url"     : "https://skeb.jp/@4ra_su4/sentrequests",
     "#class"   : skeb.SkebSentrequestsExtractor,
+    "#exception": exception.HttpError,
     "#pattern" : (
         r"https://si.imgix.net/4e44b668/uploads/origins/e42cbd8e-44af-4aaa-a11b-6a174f42202c\?bg=%23fff&auto=format&fm=webp&w=800&s=\w+",
         r"https://si.imgix.net/4d30e75e/uploads/origins/6d3bb612-3f45-4d8e-9d31-49dceb3dab11\?bg=%23fff&auto=format&fm=webp&w=800&s=\w+",

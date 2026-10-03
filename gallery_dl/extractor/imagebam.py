@@ -22,12 +22,20 @@ class ImagebamExtractor(Extractor):
         self.path = match[1]
 
     def _init(self):
-        self.cookies.set("nsfw_inter", "1", domain="www.imagebam.com")
-        self.cookies.set("sfw_inter", "1", domain="www.imagebam.com")
+        for domain in (".imagebam.com", "www.imagebam.com", "imagebam.com"):
+            self.cookies.set("nsfw_inter", "1", domain=domain)
+            self.cookies.set("sfw_inter", "1", domain=domain)
 
     def _parse_image_page(self, path):
-        page = self.request(self.root + path).text
+        page = self.request(self.root + path, notfound="image").text
         url, pos = text.extract(page, '<img src="https://images', '"')
+        if not url:
+            url, pos = text.extract(
+                page, 'og:image" content="https://images', '"')
+        if not url:
+            url, pos = text.extract(page, '<img src="https://thumbs', '"')
+            if url:
+                url = url.replace("://thumbs", "://images", 1)
         if not url:
             raise self.exc.NotFoundError("image")
         filename = text.unescape(text.extract(page, 'alt="', '"', pos)[0])
@@ -59,21 +67,46 @@ class ImagebamGalleryExtractor(ImagebamExtractor):
         data["gallery_key"] = self.path.rpartition("/")[2]
 
         yield Message.Directory, "", data
-        for data["num"], path in enumerate(images, 1):
-            image = self._parse_image_page(path)
+        num = 0
+        for path in images:
+            if path.startswith("http"):
+                image = text.nameext_from_url(path, {
+                    "url"      : path,
+                    "image_key": path.rsplit("/", 1)[-1].split(".", 1)[0],
+                })
+            else:
+                try:
+                    image = self._parse_image_page(path)
+                except self.exc.NotFoundError as exc:
+                    self.log.warning("%s: %s", path, exc)
+                    continue
+            num += 1
+            data["num"] = num
             image.update(data)
             yield Message.Url, image["url"], image
+        data["count"] = num
 
     def metadata(self, page):
         return {"title": text.unescape(text.extr(
             page, 'id="gallery-name">', '<').strip())}
 
     def images(self, page):
-        findall = text.re(r'<a href="https://www\.imagebam\.com'
-                          r'(/(?:image/|view/M)[a-zA-Z0-9]+)').findall
         paths = []
         while True:
-            paths += findall(page)
+            thumbs = text.re(
+                r'https://thumbs\d+\.imagebam\.com/'
+                r'[A-Za-z0-9_./-]+\.(?:jpe?g|png|gif|webp)'
+                ).findall(page)
+            if thumbs:
+                found = [url.replace("://thumbs", "://images", 1)
+                         for url in thumbs]
+            else:
+                found = text.re(
+                    r'<a href="https://(?:www\.)?imagebam\.com'
+                    r'(/(?:image/|view/M)[a-zA-Z0-9]+)').findall(page)
+            for path in found:
+                if path not in paths:
+                    paths.append(path)
             pos = page.find('rel="next" aria-label="Next')
             if pos > 0:
                 if url := text.rextr(page, 'href="', '"', pos):

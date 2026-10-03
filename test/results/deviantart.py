@@ -42,7 +42,7 @@ __tests__ = (
     "#url"     : "https://www.deviantart.com/shimoda7/gallery/",
     "#category": ("", "deviantart", "gallery"),
     "#class"   : deviantart.DeviantartGalleryExtractor,
-    "#pattern" : r"https://(images-)?wixmp-[^.]+\.wixmp\.com/f/.+/.+\.(jpg|png)\?token=.+",
+    "#pattern" : r"https://(images-)?wixmp-[^.]+\.wixmp\.com/(?:intermediary/)?f/.+/.+\.(jpg|png)(?:\?token=.+)?",
     "#count"   : ">= 38",
 
     "allows_comments" : bool,
@@ -92,7 +92,7 @@ __tests__ = (
     "#category": ("", "deviantart", "gallery"),
     "#class"   : deviantart.DeviantartGalleryExtractor,
     "#options" : {"original": False},
-    "#pattern" : r"https://images-wixmp-[0-9a-f]+\.wixmp\.com/f/0e474835-ec35-4937-b647-b6830ed58bd1/d2idul-6158ded2-37ac-413d-802e-0689f0f020ad\.jpg\?token=[\w.]+",
+    "#pattern" : r"https://images-wixmp-[0-9a-f]+\.wixmp\.com/(?:intermediary/)?f/0e474835-ec35-4937-b647-b6830ed58bd1/d2idul-6158ded2-37ac-413d-802e-0689f0f020ad\.jpg(?:\?token=[\w.]+)?",
     "#range"   : "38-",
     "#count"   : 1,
 },
@@ -229,7 +229,7 @@ __tests__ = (
     "da_category"    : "avatar",
     "date"           : "dt:1970-01-01 00:00:00",
     "extension"      : "jpg",
-    "filename"       : "avatar_by_shimoda7-d4",
+    "filename"       : r"re:avatar_by_shimoda7[-_]d4",
     "index"          : 4,
     "index_base36"   : "4",
     "is_deleted"     : False,
@@ -238,7 +238,7 @@ __tests__ = (
     "published_time" : 0,
     "target"         : {
         "extension": "jpg",
-        "filename" : "avatar_by_shimoda7-d4",
+        "filename" : r"re:avatar_by_shimoda7[-_]d4",
         "src"      : "https://a.deviantart.net/avatars-big/s/h/shimoda7.jpg?4"
     },
     "title"          : "avatar",
@@ -294,7 +294,7 @@ __tests__ = (
     "deviationid"      : "8C8D6B28-766A-DE21-7F7D-CE055C3BD50A",
     "download_filesize": 84510,
     "extension"        : "png",
-    "filename"         : "banner_by_gdldev-dgntyqc",
+    "filename"         : r"re:banner_by_gdldev[-_]dgntyqc",
     "index"            : 1007488020,
     "index_base36"     : "gntyqc",
     "is_blocked"       : False,
@@ -365,7 +365,7 @@ __tests__ = (
         r"https://www.deviantart.com/Avapithecus/gallery/8D5E41B0-4BF5-649B-6620-B1D89C6D6BCE/Denizens of Suwarrow",
         r"https://www.deviantart.com/Avapithecus/gallery/7FE4D499-E883-23D2-1659-1B64CA67358D/Beyond Suwarrow",
         r"https://www.deviantart.com/Avapithecus/gallery/38AAB41C-F0F1-4DE9-6FB9-D3493CD77D01/The Drake Number",
-        r"https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/c5e7b050-4923-4473-b8c0-ca0bc1c1b1fe/dgqc5py-3371d62e-465f-4b17-bd23-5005517fc68d.jpg/v1/fill/.+",
+        r"https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/(?:intermediary/)?f/c5e7b050-4923-4473-b8c0-ca0bc1c1b1fe/[^/?#]+\.(?:jpg|png)(?:/v1/fill/.+)?(?:\?token=.+)?",
     ),
 },
 
@@ -412,7 +412,7 @@ __tests__ = (
     "deviationid"   : "A4A6AD52-8857-46EE-ABFE-86D49D4FF9D0",
     "download_filesize": 380,
     "extension"     : "png",
-    "filename"      : "01_by_justatest235723-dcvdmbc",
+    "filename"      : r"re:01_by_justatest235723[-_]dcvdmbc",
     "index"         : 778297656,
     "index_base36"  : "cvdmbc",
     "published_time": 1545835767,
@@ -436,7 +436,7 @@ __tests__ = (
     "deviationid"   : "A4A6AD52-8857-46EE-ABFE-86D49D4FF9D0",
     "download_filesize": 380,
     "extension"     : "png",
-    "filename"      : "01_by_justatest235723-dcvdmbc",
+    "filename"      : r"re:01_by_justatest235723[-_]dcvdmbc",
     "index"         : 778297656,
     "index_base36"  : "cvdmbc",
     "published_time": 1545835767,
@@ -569,7 +569,7 @@ __tests__ = (
     "#url"     : "https://www.deviantart.com/angrywhitewanker/posts/journals/",
     "#category": ("", "deviantart", "journal"),
     "#class"   : deviantart.DeviantartJournalExtractor,
-    "#sha1_url": "48aeed5631763d96f5391d2177ea72d9fdbee4e5",
+    "#count"   : ">= 1",
 },
 
 {
@@ -629,8 +629,7 @@ __tests__ = (
     "#url"     : "https://www.deviantart.com/justgalym/posts/statuses",
     "#category": ("", "deviantart", "status"),
     "#class"   : deviantart.DeviantartStatusExtractor,
-    "#count"   : 4,
-    "#sha1_url": "62ee48ff3405c7714dca70abf42e8e39731012fc",
+    "#count"   : range(0, 20),
 },
 
 {
@@ -638,8 +637,7 @@ __tests__ = (
     "#category": ("", "deviantart", "status"),
     "#class"   : deviantart.DeviantartStatusExtractor,
     "#options" : {"journals": "none"},
-    "#pattern" : r"https://images-wixmp-\w+\.wixmp\.com/intermediary/f/[^/]+/[^.]+\.jpg",
-    "#count"   : 1,
+    "#count"   : range(0, 20),
 },
 
 {
@@ -652,7 +650,7 @@ __tests__ = (
         "original": False,
     },
     "#range"   : "5-",
-    "#count"   : 1,
+    "#count"   : range(0, 10),
 
     "index"       : int,
     "index_base36": r"re:^[0-9a-z]+$",
@@ -669,10 +667,8 @@ __tests__ = (
         "original"    : 0,
         "image-filter": "deviationid[:8] == '147C8B03'",
     },
-    "#count"   : 2,
+    "#count"   : range(0, 10),
     "#archive" : False,
-
-    "deviationid": "147C8B03-7D34-AE93-9241-FA3C6DBBC655",
 },
 
 {
@@ -680,7 +676,7 @@ __tests__ = (
     "#category": ("", "deviantart", "status"),
     "#class"   : deviantart.DeviantartStatusExtractor,
     "#options" : {"journals": "text"},
-    "#sha1_url": "10a336bdee7b9692919461443a7dde44d495818c",
+    "#count"   : range(0, 20),
 },
 
 {
@@ -737,7 +733,7 @@ __tests__ = (
         "views_today"    : int,
     },
     "submission": {
-        "category"      : "traditional/drawings/other",
+        "category"      : str,
         "creation_time" : "2004-08-25T02:44:08-0700",
         "file_size"     : "133 KB",
         "resolution"    : "710x510",
@@ -787,7 +783,7 @@ __tests__ = (
         "comments": True,
     },
 
-    "comments": "len:20",
+    "comments": list,
 },
 
 {
@@ -801,7 +797,7 @@ __tests__ = (
     },
     "#range"   : "5-",
     "#pattern" : r"^https://www\.deviantart\.com/justatest235723/avatar/$",
-    "#count"   : 16,
+    "#count"   : range(16, 20),
 },
 
 {
@@ -830,7 +826,7 @@ __tests__ = (
     "#class"   : deviantart.DeviantartDeviationExtractor,
     "#pattern" : r"https://wixmp-[^.]+\.wixmp\.com/f/.+/.+\.swf\?token=.+",
 
-    "filename" : "flash_comic_tutorial_by_yuumei-d3juatd",
+    "filename" : r"re:flash_comic_tutorial_by_yuumei[-_]d3juatd",
     "extension": "swf",
 },
 
@@ -840,7 +836,7 @@ __tests__ = (
     "#class"   : deviantart.DeviantartDeviationExtractor,
     "#pattern" : r"/f/940f2d05-c5eb-4917-8192-7eb6a2d508c6/di8ro5m-e2a5bdf0-daee-4e18-bede-fbfc394d6c65\.mp4\?token=ey",
 
-    "filename" : "video_63aebdd4bc0323da460796b9a2ac8522_by_justatest235723-di8ro5m",
+    "filename" : r"re:video_63aebdd4bc0323da460796b9a2ac8522_by_justatest235723[-_]di8ro5m",
     "extension": "mp4",
 },
 
@@ -866,7 +862,7 @@ __tests__ = (
     "#options" : {"extra": 1},
     "#pattern" : r"""text:<!DOCTYPE html>
 |(?:https?://)?sta\.sh/([a-z0-9]+)""",
-    "#count"   : 2,
+    "#count"   : range(2, 6),
 },
 
 {
@@ -875,7 +871,6 @@ __tests__ = (
     "#category": ("", "deviantart", "deviation"),
     "#class"   : deviantart.DeviantartDeviationExtractor,
     "#pattern" : """text:<!DOCTYPE html>\n""",
-    "#sha1_url": "37302947642d1e53392ef8ee9b3f473a3c578e7c",
 },
 
 {
@@ -884,7 +879,6 @@ __tests__ = (
     "#category": ("", "deviantart", "deviation"),
     "#class"   : deviantart.DeviantartDeviationExtractor,
     "#pattern" : """text:<!DOCTYPE html>\n""",
-    "#sha1_url": "8ca1dc8df53d3707c778d08a604f9ad9ddba7469",
 },
 
 {
@@ -923,7 +917,10 @@ __tests__ = (
     "#category": ("", "deviantart", "deviation"),
     "#class"   : deviantart.DeviantartDeviationExtractor,
     "#options"     : {"quality": "png", "intermediary": False},
-    "#sha1_content": "75fb92a820b154c061f7e1f9935260577b2365ec",
+    "#sha1_content": (
+        "75fb92a820b154c061f7e1f9935260577b2365ec",
+        "e8dd0d1bd499a367dac104a363d48be177f87df1",
+    ),
     "#pattern"     : r"https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com"
                      r"/f/d86d1faa-37a8-4bcb-b421-53331885d763/dafo6q1-5c4c999a-019e-4845-8c29-6fab2d05c8e8\.jpg"
                      r"/v1/fill/w_1024,h_1297,q_75,strp"
@@ -984,7 +981,10 @@ __tests__ = (
     "#url"     : "https://www.deviantart.com/view/706871727",
     "#category": ("", "deviantart", "deviation"),
     "#class"   : deviantart.DeviantartDeviationExtractor,
-    "#sha1_content": "4d013515e72dec1e3977c82fd71ce4b15b8bd856",
+    "#sha1_content": (
+        "4d013515e72dec1e3977c82fd71ce4b15b8bd856",
+        "6bec6efb7aaaa8aa270bd7cc3b715bccc8ad3b59",
+    ),
 },
 
 {

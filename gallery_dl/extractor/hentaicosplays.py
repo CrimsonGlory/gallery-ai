@@ -8,7 +8,7 @@
 (also works for hentai-img-xxx.com and porn-image.com)"""
 
 from .common import BaseExtractor, GalleryExtractor
-from .. import text
+from .. import text, exception
 
 
 class HentaicosplaysExtractor(BaseExtractor):
@@ -58,8 +58,12 @@ class HentaicosplaysGalleryExtractor(
         }
 
     def images(self, page):
-        return [
+        images = [
             (url.replace("http:", "https:", 1), None)
             for url in text.extract_iter(
                 page, '<amp-img class="auto-style" src="', '"')
+            if url
         ]
+        if not images:
+            raise exception.NotFoundError("gallery")
+        return images

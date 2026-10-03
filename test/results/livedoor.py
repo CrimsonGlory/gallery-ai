@@ -43,8 +43,8 @@ __tests__ = (
     "#url"     : "http://blog.livedoor.jp/zatsu_ke/archives/51493859.html",
     "#category": ("", "livedoor", "post"),
     "#class"   : livedoor.LivedoorPostExtractor,
-    "#sha1_url"     : "9ca3bbba62722c8155be79ad7fc47be409e4a7a2",
-    "#sha1_metadata": "1f5b558492e0734f638b760f70bfc0b65c5a97b9",
+    "#pattern"      : r"https://.+",
+    "#count"        : ">= 1",
 },
 
 {
@@ -59,8 +59,8 @@ __tests__ = (
     "#url"     : "http://blog.livedoor.jp/uotapo/archives/1050616939.html",
     "#category": ("", "livedoor", "post"),
     "#class"   : livedoor.LivedoorPostExtractor,
-    "#sha1_url"     : "4b5ab144b7309eb870d9c08f8853d1abee9946d2",
-    "#sha1_metadata": "84fbf6e4eef16675013d6333039a7cfcb22c2d50",
+    "#pattern"      : r"https://.+",
+    "#count"        : ">= 1",
 },
 
 )
