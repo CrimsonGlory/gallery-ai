@@ -317,8 +317,8 @@ class InstagramExtractor(Extractor):
                     width = width_orig
                     height = height_orig
                 else:
-                    width = video["width"]
-                    height = video["height"]
+                    width = video.get("width") or width_orig
+                    height = video.get("height") or height_orig
 
                 if self._warn_video:
                     self._warn_video = False
