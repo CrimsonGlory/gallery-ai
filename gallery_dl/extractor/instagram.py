@@ -883,12 +883,11 @@ class InstagramAPI():
         user = self.user(handle)
         variables = {"user_id": str(user["id"])}
 
-        return self._pagination_graphql(
+        result = self._call_graphql(
             "PolarisProfileStoryHighlightsTrayContentQuery",
-            "highlights",
-            "",
-            "26970053832668570",
-            variables)
+            variables,
+            "26970053832668570")
+        return [edge["node"] for edge in result["highlights"]["edges"]]
 
     def highlights_tray_legacy(self, user_id):
         endpoint = f"/v1/highlights/{user_id}/highlights_tray/"
@@ -1260,8 +1259,6 @@ class InstagramAPI():
         url = extr.root + "/api/graphql"
 
         fb_lsd, fb_dtsg = self._extract_fb_tokens(path)
-        doc_id = extr.cache(self._extract_docid, path, opname,
-                            _key=1, _exp=86400, _mem=False) or doc_id
 
         kwargs["method"] = "POST"
         kwargs["headers"] = {
