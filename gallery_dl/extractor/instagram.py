@@ -925,6 +925,23 @@ class InstagramAPI():
             raise self.exc.AuthRequired("authenticated cookies")
 
     def reels_tray(self):
+        variables = {
+            "data": {
+                "is_following_feed": False,
+                "reason": "web_home",
+            },
+            "suggestedUsersData": {
+                "max_id": "",
+                "max_number_to_display": 0,
+                "module": "stories_tray",
+                "paginate": False,
+            },
+        }
+        return self._call_graphql(
+            "PolarisStoriesV3TrayContainerQuery", variables,
+            "27703822975903310")["xdt_api__v1__feed__reels_tray"]["tray"]
+
+    def reels_tray_legacy(self):
         endpoint = "/v1/feed/reels_tray/"
         return self._call(endpoint)["tray"]
 
