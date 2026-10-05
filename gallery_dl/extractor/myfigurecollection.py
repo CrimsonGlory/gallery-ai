@@ -97,7 +97,11 @@ class MyfigurecollectionItemExtractor(MyfigurecollectionExtractor):
             url = file["src"]
             item["width"] = file["w"]
             item["height"] = file["h"]
-            yield Message.Url, url, text.nameext_from_url(url, item)
+            text.nameext_from_url(url, item)
+            if not item["filename"]:
+                item["filename"] = item_id
+                item["extension"] = "jpg"
+            yield Message.Url, url, item
 
     def _parse_releases(self, html):
         items = html.split('<div class="data-value">')
@@ -149,7 +153,7 @@ class MyfigurecollectionPictureExtractor(MyfigurecollectionExtractor):
             "user"  : text.remove_html(extr("<section>", "</a><span")),
             "date"  : self.parse_datetime(extr(
                 '<span title="', '"'), "%m/%d/%Y, %H:%M:%S"),
-            "url"   : extr('class="the-picture"><a href="', '"'),
+            "url"   : extr('the-picture"><a href="', '"'),
             "width" : text.parse_int(extr(
                 '<a class="size', ">") and extr("", "&times;")),
             "height": text.parse_int(extr("", " ")),
