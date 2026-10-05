@@ -10,6 +10,7 @@
 
 from .common import Extractor, Message, Dispatch
 from .. import text, util
+import itertools
 
 BASE_PATTERN = r"(?:https?://)?(?:www\.)?myfigurecollection\.net"
 USER_PATTERN = BASE_PATTERN + r"/profile/([^/?#]+)"
@@ -278,12 +279,23 @@ class MyfigurecollectionUserPicturesExtractor(MyfigurecollectionExtractor):
                 "_tb"       : "user",
                 "page"      : 1,
             }
+
+            url = f"{self.root}/profile/{username}/pictures/"
+            page = self.request(url).text
+            categories = text.extr(page, 'class="object-categories', "</div>")
+
+            items = []
+            for cid in text.extract_iter(categories, 'picture-category-', '"'):
+                params["categoryId"] = cid
+                items.append(self._pagination(params.copy()))
+            items = itertools.chain(*items)
         else:
             params = text.parse_query(query)
+            items = self._pagination(params)
 
         data = {"_extractor": MyfigurecollectionPictureExtractor}
         base = self.root + "/picture/"
-        for item_id in self._pagination(params):
+        for item_id in items:
             yield Message.Queue, base + item_id, data
 
 
