@@ -1202,23 +1202,24 @@ class InstagramAPI():
             return doc_id
 
         extr.log.debug("Extracting '%s' doc_id value", opname)
-        needle = opname + "_instagramRelayOperation"
+        pattern = text.re(
+            fr'__d\("{opname}_instagramRelayOperation",\[\],'
+            fr'\(function\([^)]+\).+?\bexports="([^"]+)')
         doc_id = ""
         for path in util.unique(text.extract_iter(
                 extr.cache(self._webpage, path),
                 'href="https://static.cdninstagram.com/rsrc.php/', '"')):
-            if not path.endswith(".js"):
+            if not path.endswith(".js") or len(path) < 256:
                 continue
             url = "https://static.cdninstagram.com/rsrc.php/" + path
             script = extr.request(url, interval=False).text
-            if (pos := script.find(needle)) < 0:
-                continue
-            if match := text.re(
-                    r'exports\s*=\s*["\']?(\d{10,20})').search(
-                    script, pos, pos+1000):
+            if match := pattern.search(script):
                 doc_id = match[1]
+                extr.log.debug("Found 'doc_id=%s'", doc_id)
                 break
-        extr.log.debug("Found 'doc_id=%s'", doc_id)
+        else:
+            extr.log.warning("Failed to extract '%s' doc_id", opname)
+
         return doc_id
 
     def _webpage(self, path):
@@ -1259,6 +1260,8 @@ class InstagramAPI():
         url = extr.root + "/api/graphql"
 
         fb_lsd, fb_dtsg = self._extract_fb_tokens(path)
+        doc_id = extr.cache(self._extract_docid, path, opname,
+                            _key=1, _exp=86400, _mem=False) or doc_id
 
         kwargs["method"] = "POST"
         kwargs["headers"] = {
