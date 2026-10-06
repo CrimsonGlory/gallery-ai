@@ -21,27 +21,15 @@ class ToyhouseExtractor(Extractor):
     directory_fmt = ("{category}", "{user|artists!S}")
     archive_fmt = "{id}"
 
-    def __init__(self, match):
-        Extractor.__init__(self, match)
-        self.user = match[1]
+    def _init(self):
         self.offset = 0
 
     def items(self):
-        metadata = self.metadata()
-
         for post in util.advance(self.posts(), self.offset):
-            if metadata:
-                post.update(metadata)
             text.nameext_from_url(post["url"], post)
             post["id"], _, post["hash"] = post["filename"].partition("_")
             yield Message.Directory, "", post
             yield Message.Url, post["url"], post
-
-    def posts(self):
-        return ()
-
-    def metadata(self):
-        return None
 
     def skip_files(self, num):
         self.offset += num
@@ -116,22 +104,24 @@ class ToyhouseArtExtractor(ToyhouseExtractor):
     example = "https://www.toyhou.se/USER/art"
 
     def posts(self):
-        return self._pagination(f"/{self.user}/art")
-
-    def metadata(self):
-        return {"user": self.user}
+        user = self.groups[0]
+        self.kwdict["user"] = text.unquote(user)
+        return self._pagination(f"/{user}/art")
 
 
 class ToyhouseImageExtractor(ToyhouseExtractor):
     """Extractor for individual toyhouse images"""
     subcategory = "image"
     pattern = (r"(?:https?://)?(?:"
-               r"(?:www\.)?toyhou\.se/~images|"
+               r"(?:www\.)?toyhou\.se/(~images|\d+\.\w+)|"
                r"f\d+\.toyhou\.se/file/[^/?#]+/(?:image|watermark|thumbnail)s"
                r")/(\d+)")
     example = "https://toyhou.se/~images/12345"
 
     def posts(self):
-        url = f"{self.root}/~images/{self.user}"
+        path, image_id = self.groups
+        if path is None:
+            path = "~images"
+        url = f"{self.root}/{path}/{image_id}"
         return (self._parse_post(
             self.request(url).text, '<img class="mw-100" src="'),)

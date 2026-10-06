@@ -130,4 +130,9 @@ __tests__ = (
     "status"    : "thumbnail",
 },
 
+{
+    "#url"     : "https://toyhou.se/9867694.reed/93386749",
+    "#class"   : toyhouse.ToyhouseImageExtractor,
+},
+
 )
