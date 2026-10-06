@@ -61,9 +61,22 @@ class FapelloModelExtractor(FapelloPostExtractor):
     example = "https://fapello.com/MODEL/"
 
     def items(self):
+        model = self.groups[0]
+
+        url = f"{self.root}/{model}/"
+        page = self.request(url).text
+        name, pos = text.extract(page, "<h2", "<")
+        alias, pos = text.extract(page, '<p class="flex', "<", pos)
+
+        data = {
+            "_extractor": FapelloPostExtractor,
+            "model_name": text.unescape(name[name.rfind(">")+1:]),
+            "aliases": (text.unescape(alias[alias.rfind(">")+1:]).split(", ")
+                        if alias else ()),
+        }
+
         num = 1
-        data = {"_extractor": FapelloPostExtractor}
-        base = f"{self.root}/ajax/model/{self.groups[0]}/page-"
+        base = f"{self.root}/ajax/model/{model}/page-"
         while True:
             page = self.request(f"{base}{num}/").text
             if not page:
