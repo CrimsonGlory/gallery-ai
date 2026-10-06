@@ -1848,6 +1848,7 @@ Consider all listed sites to potentially be NSFW.
     <td>Toyhouse</td>
     <td>https://toyhou.se/</td>
     <td><span title="https://www.toyhou.se/USER/art">Art</span> |
+        <span title="https://www.toyhou.se/12345.CHARACTER/gallery">Character Galleries</span> |
         <span title="https://toyhou.se/~images/12345">individual Images</span></td>
     <td></td>
 </tr>

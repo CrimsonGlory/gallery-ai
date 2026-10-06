@@ -135,4 +135,17 @@ __tests__ = (
     "#class"   : toyhouse.ToyhouseImageExtractor,
 },
 
+{
+    "#url"     : "https://toyhou.se/1824619.apricot/gallery",
+    "#class"   : toyhouse.ToyhouseCharacterGalleryExtractor,
+    "#pattern" : r"https://(f2\.toyhou\.se/file/f2\-toyhou\-se|file\.toyhou\.se)/images/\d+_\w+\.(jpg|png|gif)",
+    "#count"   : 129,
+
+    "character"   : "apricot",
+    "character_id": "1824619",
+    "date"        : "type:datetime",
+    "extension"   : {"jpg", "png", "gif"},
+    "status"      : "original",
+},
+
 )

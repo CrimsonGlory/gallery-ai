@@ -111,6 +111,22 @@ class ToyhouseArtExtractor(ToyhouseExtractor):
         return self._pagination(f"/{user}/art")
 
 
+class ToyhouseCharacterGalleryExtractor(ToyhouseExtractor):
+    """Extractor for a toyhouse character's gallery"""
+    subcategory = "character-gallery"
+    directory_fmt = ("{category}", "Characters",
+                     "{character} ({character_id})")
+    pattern = BASE_PATTERN + r"/(\d+\.\w+)/gallery"
+    example = "https://www.toyhou.se/12345.CHARACTER/gallery"
+
+    def posts(self):
+        char = self.groups[0]
+        kw = self.kwdict
+        kw["character_id"], _, kw["character"] = text.unquote(
+            char).partition(".")
+        return self._pagination(f"/{char}/gallery")
+
+
 class ToyhouseImageExtractor(ToyhouseExtractor):
     """Extractor for individual toyhouse images"""
     subcategory = "image"
@@ -129,6 +145,3 @@ class ToyhouseImageExtractor(ToyhouseExtractor):
         if ">Content Warning<" in page and self._accept_content_warning(page):
             page = self.request(url).text
         return (self._parse_post(page, '<img class="mw-100" src="'),)
-
-
-9338679
