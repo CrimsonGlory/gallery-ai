@@ -85,13 +85,15 @@ class ToyhouseExtractor(Extractor):
             params["page"] += 1
 
     def _accept_content_warning(self, page):
-        pos = page.find(' name="_token"') + 1
-        token, pos = text.extract(page, ' value="', '"', pos)
-        user , pos = text.extract(page, ' value="', '"', pos)
-        if not token or not user:
-            return False
+        data = {
+            text.extr(input, 'name="', '"'): text.unescape(
+                text.extr(input, 'value="', '"'))
+            for input in text.extract_iter(page, "<input ", ">")
+        }
 
-        data = {"_token": token, "user": user}
+        if not data.get("_token"):
+            return False
+        self.log.info("Accepting 'Content Warning'")
         self.request(self.root + "/~account/warnings/accept",
                      method="POST", data=data, allow_redirects=False)
         return True
@@ -123,5 +125,7 @@ class ToyhouseImageExtractor(ToyhouseExtractor):
         if path is None:
             path = "~images"
         url = f"{self.root}/{path}/{image_id}"
-        return (self._parse_post(
-            self.request(url).text, '<img class="mw-100" src="'),)
+        page = self.request(url).text
+        if ">Content Warning<" in page and self._accept_content_warning(page):
+            page = self.request(url).text
+        return (self._parse_post(page, '<img class="mw-100" src="'),)
