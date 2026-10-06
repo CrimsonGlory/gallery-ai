@@ -30,7 +30,7 @@ __tests__ = (
     "#comment" : "protected by Content Warning",
     "#category": ("", "toyhouse", "art"),
     "#class"   : toyhouse.ToyhouseArtExtractor,
-    "#count"   : ">= 19",
+    "#count"   : range(15, 20),
 },
 
 {

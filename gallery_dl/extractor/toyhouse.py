@@ -35,7 +35,7 @@ class ToyhouseExtractor(Extractor):
         self.offset += num
         return num
 
-    def _parse_post(self, post, needle='<a href="'):
+    def _parse_post(self, post, needle=' href="'):
         extr = text.extract_from(post)
         data = {
             "url": extr(needle, '"'),
@@ -129,3 +129,6 @@ class ToyhouseImageExtractor(ToyhouseExtractor):
         if ">Content Warning<" in page and self._accept_content_warning(page):
             page = self.request(url).text
         return (self._parse_post(page, '<img class="mw-100" src="'),)
+
+
+9338679
