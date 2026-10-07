@@ -12,7 +12,7 @@ from .. import text
 BASE_PATTERN = r"(?:https?://)?(?:www\.)?fapello\.(?:com|su)"
 
 
-class FapelloPostExtractor(Extractor):
+class FapelloExtractor(Extractor):
     """Base class for fapello extractors"""
     category = "fapello"
     root = "https://fapello.com"
@@ -22,7 +22,7 @@ class FapelloPostExtractor(Extractor):
         Extractor.__init__(self, match)
 
 
-class FapelloPostExtractor(FapelloPostExtractor):
+class FapelloPostExtractor(FapelloExtractor):
     """Extractor for individual posts on fapello.com"""
     subcategory = "post"
     directory_fmt = ("{category}", "{model}")
@@ -52,7 +52,7 @@ class FapelloPostExtractor(FapelloPostExtractor):
         yield Message.Url, url, text.nameext_from_url(url, data)
 
 
-class FapelloModelExtractor(FapelloPostExtractor):
+class FapelloModelExtractor(FapelloExtractor):
     """Extractor for all posts from a fapello model"""
     subcategory = "model"
     pattern = (BASE_PATTERN + r"/(?!top-(?:likes|followers)|popular_videos"
@@ -91,7 +91,7 @@ class FapelloModelExtractor(FapelloPostExtractor):
             num += 1
 
 
-class FapelloPathExtractor(FapelloPostExtractor):
+class FapelloPathExtractor(FapelloExtractor):
     """Extractor for models and posts from fapello.com paths"""
     subcategory = "path"
     pattern = (BASE_PATTERN +
