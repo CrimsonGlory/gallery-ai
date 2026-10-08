@@ -574,7 +574,7 @@ Consider all listed sites to potentially be NSFW.
 <tr id="fapello" title="fapello">
     <td>Fapello</td>
     <td>https://fapello.com/</td>
-    <td><span title="https://fapello.com/model/">Models</span> |
+    <td><span title="https://fapello.com/MODEL/">Models</span> |
         <span title="https://fapello.com/trending/">Videos | Trending Posts | Popular Videos | Top Models</span> |
         <span title="https://fapello.com/MODEL/12345/">Posts</span></td>
     <td></td>
@@ -3454,8 +3454,8 @@ Consider all listed sites to potentially be NSFW.
 </tr>
 <tr id="imxtw" title="imxtw">
     <td>Imxtw</td>
-    <td>https://imx.tw/</td>
-    <td><span title="https://imx.tw/ID">individual Images</span></td>
+    <td>https://imx.bz/</td>
+    <td><span title="https://imx.bz/ID">individual Images</span></td>
     <td></td>
 </tr>
 <tr id="picstate" title="picstate">
