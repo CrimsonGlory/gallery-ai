@@ -220,7 +220,8 @@ class PawchiveExtractor(Extractor):
                         yield Message.Url, file["url"], post
                 else:
                     for post["num"], file in enumerate(files, 1):
-                        if not file.get("preview_only"):
+                        if not file.get("preview_only") or \
+                                file.get("deferred"):
                             url = file["url"]
                             file["original"] = True
                             if previews and file["extension"] in exts_thmb:
