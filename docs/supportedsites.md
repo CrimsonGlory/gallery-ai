@@ -3083,6 +3083,19 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://thirsthub.cc/threads/TITLE.12345/">Threads</span></td>
     <td></td>
 </tr>
+<tr id="darkwanderer" title="darkwanderer">
+    <td>Darkwanderer</td>
+    <td>https://darkwanderer.net/</td>
+    <td><span title="https://darkwanderer.net/forums/TITLE.123/">Forums</span> |
+        <span title="https://darkwanderer.net/media/albums/ALBUM.123/">Albums</span> |
+        <span title="https://darkwanderer.net/media/categories/CATEGORY.123/">Media Categories</span> |
+        <span title="https://darkwanderer.net/media/NAME.123/">Media Files</span> |
+        <span title="https://darkwanderer.net/media/users/USER.123/">User Media</span> |
+        <span title="https://darkwanderer.net/threads/TITLE.12345/post-54321">Posts</span> |
+        <span title="https://darkwanderer.net/members/USER.123/">Profiles</span> |
+        <span title="https://darkwanderer.net/threads/TITLE.12345/">Threads</span></td>
+    <td></td>
+</tr>
 
 <tr id="moebooru" title="moebooru">
     <td colspan="4"><strong>Moebooru and MyImouto</strong></td>
