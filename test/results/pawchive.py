@@ -393,7 +393,6 @@ __tests__ = (
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
     "#pattern" : (
-        r"https://file.pawchive.pw/data/23/a9/23a9101926f7cf5f33c921ca12a16dee1a83b360b3ee14c7194ac44795eaaa88.png",
         r"https://t1.pawchive.pw/f/7aa4e28efc630873/Social.png\?e=\d+&s=\w+",
         r"https://t1.pawchive.pw/f/7ddf023be45a419e/nsfwtext.png\?e=\d+&s=\w+",
         r"https://t1.pawchive.pw/f/81e2b73c969e93a1/nsfwtextless.png\?e=\d+&s=\w+",
@@ -402,7 +401,7 @@ __tests__ = (
         r"https://t1.pawchive.pw/f/f2dc19ed25c9a0c3/TL.mp4\?e=\d+&s=\w+",
     ),
 
-    "count"         : 7,
+    "count"         : 6,
     "date"          : "dt:2026-09-22 13:10:02",
     "deferred"      : True,
     "detail_fetched": True,

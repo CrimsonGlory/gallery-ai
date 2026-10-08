@@ -158,7 +158,9 @@ class PawchiveExtractor(Extractor):
                 if "\\" in path:
                     file["path"] = path = path.replace("\\", "/")
 
-                if path[0] == "/":
+                if "url" in file:
+                    pass
+                elif path[0] == "/":
                     file["url"] = f"{self.root_dl}/data{path}"
                 else:
                     file["url"] = path
@@ -270,10 +272,12 @@ class PawchiveExtractor(Extractor):
         elif url := file.get("temp_url"):
             post["deferred"] = True
             if text.ext_from_url(url) == "m3u8":
-                file["path"] = "ytdl:" + url
+                file["url"] = "ytdl:" + url
                 file["_ytdl_manifest"] = "hls"
                 file["_ytdl_manifest_headers"] = post["_http_headers"]
             else:
+                file["url"] = url
+            if "path" not in file:
                 file["path"] = url
         else:
             file["deferred"] = False
