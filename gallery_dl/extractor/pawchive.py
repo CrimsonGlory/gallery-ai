@@ -252,28 +252,33 @@ class PawchiveExtractor(Extractor):
         if not file or "path" not in file:
             return ()
         file["type"] = "file"
+        if file.get("deferred"):
+            self._extract_deferred(post, file)
         return (file,)
 
     def _extract_attachments(self, post):
-        for att in post["attachments"]:
-            att["type"] = "attachment"
-            if "deferred" in att and att["deferred"]:
-                if not self.deferred:
-                    if att.get("temp_url"):
-                        post["deferred"] = True
-                elif url := att.get("temp_url"):
-                    post["deferred"] = True
-                    if text.ext_from_url(url) == "m3u8":
-                        att["path"] = "ytdl:" + url
-                        att["_ytdl_manifest"] = "hls"
-                        att["_ytdl_manifest_headers"] = post["_http_headers"]
-                    else:
-                        att["path"] = url
-                else:
-                    att["deferred"] = False
-                    self.log.debug("%s: Missing 'deferred' file link (%s)",
-                                   post["id"], att["name"])
+        for file in post["attachments"]:
+            file["type"] = "attachment"
+            if file.get("deferred"):
+                self._extract_deferred(post, file)
         return post["attachments"]
+
+    def _extract_deferred(self, post, file):
+        if not self.deferred:
+            if file.get("temp_url"):
+                post["deferred"] = True
+        elif url := file.get("temp_url"):
+            post["deferred"] = True
+            if text.ext_from_url(url) == "m3u8":
+                file["path"] = "ytdl:" + url
+                file["_ytdl_manifest"] = "hls"
+                file["_ytdl_manifest_headers"] = post["_http_headers"]
+            else:
+                file["path"] = url
+        else:
+            file["deferred"] = False
+            self.log.debug("%s: Missing 'deferred' file link (%s)",
+                           post["id"], file["name"])
 
     def _extract_inline(self, post):
         for path in self._find_inline(post.get("content") or ""):
