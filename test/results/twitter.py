@@ -231,6 +231,12 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://x.com/i/history/likes",
+    "#category": ("", "twitter", "likes"),
+    "#class"   : twitter.TwitterLikesExtractor,
+},
+
+{
     "#url"     : "https://twitter.com/supernaturepics/likes",
     "#category": ("", "twitter", "likes"),
     "#class"   : twitter.TwitterLikesExtractor,

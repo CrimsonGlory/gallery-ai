@@ -1911,7 +1911,7 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://x.com/home">Home Feed</span> |
         <span title="https://pbs.twimg.com/media/ABCDE?format=jpg&name=orig">individual Images</span> |
         <span title="https://x.com/USER/info">User Profile Information</span> |
-        <span title="https://x.com/USER/likes">Likes</span> |
+        <span title="https://x.com/i/history/likes">Likes</span> |
         <span title="https://x.com/i/lists/12345">Lists</span> |
         <span title="https://x.com/i/lists/12345/members">List Members</span> |
         <span title="https://x.com/USER/media">Media Timelines</span> |
