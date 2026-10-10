@@ -1078,6 +1078,7 @@ class TwitterLikesExtractor(TwitterExtractor):
         return {"user_likes": self.user}
 
     def tweets(self):
+        self.replies = True if self.replies else False
         return self.api.user_likes(self.user)
 
 
@@ -1088,6 +1089,7 @@ class TwitterBookmarkExtractor(TwitterExtractor):
     example = "https://x.com/i/history"
 
     def tweets(self):
+        self.replies = True if self.replies else False
         return self.api.user_bookmarks()
 
     def _transform_tweet(self, tweet):
