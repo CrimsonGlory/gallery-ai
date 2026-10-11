@@ -1165,6 +1165,19 @@ class InstagramAPI():
         return extr.request(f"{extr.root}{path}/", headers=headers,
                             interval=False).text
 
+    def _prepare_graphql(self, opname):
+        extr = self.extractor
+
+        doc_id, path = QUERIES[opname]
+        if extr._user:
+            path = f"/{extr._user['username']}{path}"
+
+        fb_lsd, fb_dtsg = self._extract_fb_tokens(path)
+        doc_id = extr.cache(self._extract_docid, opname, path,
+                            _exp=86400, _mem=False) or doc_id
+
+        return path, doc_id, fb_lsd, fb_dtsg
+
     def _call(self, endpoint, **kwargs):
         extr = self.extractor
 
@@ -1186,13 +1199,7 @@ class InstagramAPI():
     def _call_graphql(self, opname, variables, **kwargs):
         extr = self.extractor
         url = extr.root + "/api/graphql"
-
-        doc_id, path = QUERIES[opname]
-        if path and extr._user:
-            path = f"/{extr._user['username']}/{path}"
-        fb_lsd, fb_dtsg = self._extract_fb_tokens(path)
-        doc_id = extr.cache(self._extract_docid, opname, path,
-                            _exp=86400, _mem=False) or doc_id
+        path, doc_id, fb_lsd, fb_dtsg = self._prepare_graphql(opname)
 
         kwargs["method"] = "POST"
         kwargs["headers"] = {
@@ -1282,13 +1289,7 @@ class InstagramAPI():
         extr = self.extractor
         root = extr.root
         url = root + "/graphql/query"
-
-        doc_id, path = QUERIES[opname]
-        if path and extr._user:
-            path = f"/{extr._user['username']}/{path}"
-        fb_lsd, fb_dtsg = self._extract_fb_tokens(path)
-        doc_id = extr.cache(self._extract_docid, opname, path,
-                            _exp=86400, _mem=False) or doc_id
+        path, doc_id, fb_lsd, fb_dtsg = self._prepare_graphql(opname)
 
         headers = {
             "Accept": "*/*",
@@ -1334,17 +1335,20 @@ class InstagramAPI():
             "doc_id"   : doc_id,
         }
 
-        extr.log.debug(opname)
         variables["after"] = extr._init_cursor()
         while True:
             headers["X-CSRFToken"] = extr.csrf_token
             body["variables"] = util.json_dumps(variables)
+            extr.log.debug(opname)
             response = extr.request(
                 url, method="POST", headers=headers, data=body)
 
             try:
                 data = util.json_loads(response.text)["data"][fieldname]
-            except (ValueError, KeyError):
+            except (ValueError, KeyError) as exc:
+                extr.log.error("Failed to load API data (%s: %s)",
+                               exc.__class__.__name__, exc)
+                extr.log.debug("Server response:\n%s", response.text)
                 break
 
             if "edges" not in data:
