@@ -10456,7 +10456,7 @@ ugoira.ffmpeg-args
 Type
     ``list`` of ``strings``
 Default
-    ``null``
+    ``["-pix_fmt", "yuv420p"]``
 Example
     ``["-c:v", "libvpx-vp9", "-an", "-b:v", "2M"]``
 Description
