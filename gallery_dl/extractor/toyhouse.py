@@ -44,23 +44,25 @@ class ToyhouseExtractor(Extractor):
             "date": (v := extr('', "</div")) and
             self.parse_datetime(
                 v[v.find('mb-1">')+6:], "%d %b %Y, %I:%M:%S %p"),
-            "artists": text.split_html(extr(
+            "artists": self._split(extr(
                 '<div class="artist-credit',
-                '<div class="image-character'))[1:],
-            "characters": text.split_html(
+                '<div class="image-character'), "</div>", " "),
+            "characters": self._split(
                 extr('', 'class="image-') or
-                extr('', 'id="footer"'))[2:-1],
+                extr('', 'id="footer"') or
+                extr('', '\n                </div>'), "</a>", ""),
         }
 
         url = data["url"]
-        if "/watermarks/" in url:
-            data["status"] = "watermark"
-        elif "/thumbnails/" in url:
-            data["status"] = "thumbnail"
-        else:
-            data["status"] = "original"
-
+        data["status"] = ("watermark" if "/watermarks/" in url else
+                          "thumbnail" if "/thumbnails/" in url else "original")
         return data
+
+    def _split(self, html, end, ws):
+        return [
+            text.unescape(text.remove_html(item[item.find(">")+1:], ws, ws))
+            for item in text.extract_iter(html, "<a", end)
+        ]
 
     def _pagination(self, url):
         params = {"page": 1}
@@ -69,8 +71,7 @@ class ToyhouseExtractor(Extractor):
             page = self.request(url, params=params).text
 
             if params["page"] == 1:
-                if ">Content Warning<" in page and \
-                        self._accept_content_warning(page):
+                if self._check_content_warning(page):
                     continue
                 self._extract_webpage(page)
 
@@ -84,7 +85,32 @@ class ToyhouseExtractor(Extractor):
                 break
             params["page"] += 1
 
-    def _accept_content_warning(self, page):
+    def _extract_webpage(self, page):
+        extr = text.extract_from(page)
+        kw = self.kwdict
+        if user := extr('class="user-name">', '</'):
+            kw["user"] = text.extr(user, 'href="https://toyhou.se/', '"')
+            kw["display_name"] = text.unescape(user[user.rfind(">")+1:])
+        if folder := extr('class="character-folder', '</a'):
+            kw["folder"] = text.unescape(folder[folder.rfind(">")+1:])
+            kw["folder_id"] = text.extr(folder, '/folder:', '"')
+        if char := extr('class="character-name">', '</'):
+            kw["character"] = text.unescape(char[char.rfind(">")+1:])
+            kw["character_id"], _, kw["character_slug"] = text.extr(
+                char, ' href="/', '"').partition(".")
+        if tab := self.groups[1]:
+            if tab[0] == "/":
+                kw["variant_id"] = tid = tab[1:tab.find(".")]
+                kw["variant_slug"] = extr(f"/{tid}.", '/')
+            else:
+                kw["tab_id"] = tid = tab[:tab.find(".")]
+                kw["tab_slug"] = extr(f"/{tid}.", '"')
+                kw["tab"] = text.unescape(extr("</i>", "<").strip())
+
+    def _check_content_warning(self, page):
+        if ">Content Warning<" not in page:
+            return False
+
         data = {
             text.extr(input, 'name="', '"'): text.unescape(
                 text.extr(input, 'value="', '"'))
@@ -133,40 +159,25 @@ class ToyhouseCharacterGalleryExtractor(ToyhouseExtractor):
             url = f"{self.root}/{cid}.{cname or 'name'}/{tab}/gallery"
         return self._pagination(url)
 
-    def _extract_webpage(self, page):
-        extr = text.extract_from(page)
-        kw = self.kwdict
-        if user := extr('class="user-name">', '</'):
-            kw["user"] = text.extr(user, 'href="https://toyhou.se/', '"')
-            kw["display_name"] = text.unescape(user[user.rfind(">")+1:])
-        if folder := extr('class="character-folder', '</a'):
-            kw["folder"] = text.unescape(folder[folder.rfind(">")+1:])
-            kw["folder_id"] = text.extr(folder, '/folder:', '"')
-        if char := extr('class="character-name">', '</'):
-            kw["character"] = text.unescape(char[char.rfind(">")+1:])
-            kw["character_id"], _, kw["character_slug"] = text.extr(
-                char, ' href="/', '"').partition(".")
-        if tab := self.groups[1]:
-            kw["tab_id"] = tid = tab.partition(".")[0]
-            kw["tab_slug"] = extr(f"/{tid}.", '"')
-            kw["tab"] = text.unescape(extr("</i>", "<").strip())
-
 
 class ToyhouseImageExtractor(ToyhouseExtractor):
     """Extractor for individual toyhouse images"""
     subcategory = "image"
     pattern = (r"(?:https?://)?(?:"
-               r"(?:www\.)?toyhou\.se/(~images|\d+\.\w+)|"
+               r"(?:www\.)?toyhou\.se/"
+               r"(~images|\d+\.[\w-]*(/\d+\.[\w-]*)?)|"
                r"f\d+\.toyhou\.se/file/[^/?#]+/(?:image|watermark|thumbnail)s"
                r")/(\d+)")
     example = "https://toyhou.se/~images/12345"
 
     def posts(self):
-        path, image_id = self.groups
+        path, tab, image_id = self.groups
         if path is None:
             path = "~images"
         url = f"{self.root}/{path}/{image_id}"
-        page = self.request(url).text
-        if ">Content Warning<" in page and self._accept_content_warning(page):
-            page = self.request(url).text
+        response = self.request(url)
+        page = response.text
+        if self._check_content_warning(page):
+            page = self.request(response.url).text
+        self._extract_webpage(page)
         return (self._parse_post(page, '<img class="mw-100" src="'),)
