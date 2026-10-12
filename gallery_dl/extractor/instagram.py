@@ -993,6 +993,7 @@ class InstagramAPI():
             raise
         except Exception as exc:
             self.extractor.log.traceback(exc)
+        self.extractor.log.debug("Server response:\n%s", page)
         raise self.exc.NotFoundError("user")
 
     def user(self, handle, check_private=True):
@@ -1198,7 +1199,8 @@ class InstagramAPI():
 
     def _call_graphql(self, opname, variables, **kwargs):
         extr = self.extractor
-        url = extr.root + "/api/graphql"
+        root = extr.root
+        url = root + "/api/graphql"
         path, doc_id, fb_lsd, fb_dtsg = self._prepare_graphql(opname)
 
         kwargs["method"] = "POST"
@@ -1211,7 +1213,14 @@ class InstagramAPI():
             "X-IG-Max-Touch-Points": "0",
             "X-FB-LSD"          : fb_lsd,
             "X-ASBD-ID"         : "359341",
-            "Referer"           : extr.root + path,
+            "Origin"            : root,
+            "Alt-Used"          : root[8:],
+            "Connection"        : "keep-alive",
+            "Referer"           : f"{root}{path}/",
+            "Cookie"            : None,
+            "Sec-Fetch-Dest"    : "empty",
+            "Sec-Fetch-Mode"    : "cors",
+            "Sec-Fetch-Site"    : "same-site",
         }
         kwargs["data"] = {
             "av"    : "17841415137994167",
@@ -1236,7 +1245,14 @@ class InstagramAPI():
         }
 
         extr.log.debug(opname)
-        return extr.request_json(url, **kwargs)["data"]
+        response = extr.request(url, **kwargs)
+        try:
+            return util.json_loads(response.text)["data"]
+        except (ValueError, KeyError) as exc:
+            extr.log.error("Failed to load API data (%s: %s)",
+                           exc.__class__.__name__, exc)
+            extr.log.debug("Server response:\n%s", response.text)
+            raise
 
     def _pagination(self, endpoint, params=None, media=False):
         if params is None:
