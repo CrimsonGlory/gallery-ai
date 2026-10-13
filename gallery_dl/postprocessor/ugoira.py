@@ -97,7 +97,7 @@ class UgoiraPP(PostProcessor):
             self.prevent_odd = False
 
         self.args_pp = args = []
-        if isinstance(self.output, str):
+        if self.output.__class__ is str:
             args += ("-hide_banner", "-loglevel", self.output)
         if self.prevent_odd:
             args += ("-vf", "crop=iw-mod(iw\\,2):ih-mod(ih\\,2)")
@@ -247,7 +247,7 @@ class UgoiraPP(PostProcessor):
         frames = self._frames
 
         if self.metadata:
-            if isinstance(self.metadata, str):
+            if self.metadata.__class__ is str:
                 metaname = self.metadata
             else:
                 metaname = "animation.json"

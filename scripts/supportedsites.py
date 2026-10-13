@@ -764,7 +764,7 @@ def subcategory_text(bc, c, sc):
         scm = SUBCATEGORY_MAP[c]
         if sc in scm:
             txt = scm[sc]
-            if not isinstance(txt, str):
+            if txt.__class__ is not str:
                 txt = " | ".join(txt)
             return txt
 
@@ -772,7 +772,7 @@ def subcategory_text(bc, c, sc):
         scm = SUBCATEGORY_MAP[bc]
         if sc in scm:
             txt = scm[sc]
-            if not isinstance(txt, str):
+            if txt.__class__ is not str:
                 txt = " | ".join(txt)
             return txt
 
@@ -926,7 +926,7 @@ def generate_row(category, extractors, domain):
     row.append(f"    <td>{category_text(category)}</td>")
 
     # URLs
-    if isinstance(domain, str):
+    if domain.__class__ is str:
         row.append(f"    <td>{domain}</td>")
     else:
         row.append(f"    <td>{'<br>'.join(domain)}</td>")

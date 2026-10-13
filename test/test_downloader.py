@@ -199,7 +199,7 @@ class TestDownloaderBase(unittest.TestCase):
         pathfmt.build_path()
 
         if content:
-            mode = "wb" if isinstance(content, bytes) else "w"
+            mode = "wb" if content.__class__ is bytes else "w"
             with pathfmt.open(mode) as fp:
                 fp.write(content)
 
@@ -214,7 +214,7 @@ class TestDownloaderBase(unittest.TestCase):
         self.assertTrue(success, f"downloading '{url}' failed")
 
         # test content
-        mode = "rb" if isinstance(output, bytes) else "r"
+        mode = "rb" if output.__class__ is bytes else "r"
         with pathfmt.open(mode) as fp:
             content = fp.read()
         self.assertEqual(content, output)

@@ -174,11 +174,11 @@ def generate_meta(args, data):
 def sort_key(key, value):
     if not value:
         return 0
-    if isinstance(value, str) and "\n" in value:
+    if value.__class__ is str and "\n" in value:
         return 7000
-    if isinstance(value, list) and not small(value):
+    if value.__class__ is list and not small(value):
         return 8000
-    if isinstance(value, dict) and not small(value):
+    if value.__class__ is dict and not small(value):
         return 9000
     return 0
 
@@ -186,9 +186,9 @@ def sort_key(key, value):
 def small(obj):
     if not obj:
         return True
-    if isinstance(obj, list):
+    if obj.__class__ is list:
         return False if len(obj) > 1 else small(obj[0])
-    if isinstance(obj, dict):
+    if obj.__class__ is dict:
         return False if len(obj) > 1 else small(next(iter(obj.values())))
     return True
 

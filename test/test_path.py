@@ -33,7 +33,7 @@ class TestPath(unittest.TestCase):
 
         if kwdict:
             pathfmt.set_directory({
-                **(kwdict if isinstance(kwdict, dict) else KWDICT),
+                **(kwdict if kwdict.__class__ is dict else KWDICT),
                 **data,
             })
 

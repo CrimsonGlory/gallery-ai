@@ -171,7 +171,7 @@ class ZerochanTagExtractor(ZerochanExtractor):
             self.posts = self.posts_api
 
         if exts := self.config("extensions"):
-            if isinstance(exts, str):
+            if exts.__class__ is str:
                 exts = exts.split(",")
             self.exts = exts
         else:

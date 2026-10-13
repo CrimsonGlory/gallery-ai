@@ -20,12 +20,12 @@ def connect(path, prefix, format, table=None, mode=None, reuse=False,
             pragma=None, pathfmt=None, cache_key=None):
     keygen = formatter.parse(prefix + format).format_map
 
-    if isinstance(path, str) and path.startswith(
+    if path.__class__ is str and path.startswith(
             ("postgres://", "postgresql://")):
         cls = (DownloadArchivePostgresqlMemory if mode == "memory" else
                DownloadArchivePostgresql)
     else:
-        if isinstance(path, list):
+        if path.__class__ is list:
             path = pathfmt.generate_path(path)
         else:
             if "{" in path:
