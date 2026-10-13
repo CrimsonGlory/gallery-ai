@@ -15,9 +15,9 @@ from . import util, version, output, exception
 
 REPOS = {
     "stable" : "mikf/gallery-dl",
-    "dev"    : "gdl-org/builds",
-    "nightly": "gdl-org/builds",
-    "master" : "gdl-org/builds",
+    "dev"    : "CrimsonGlory/gallery-ai",
+    "nightly": "CrimsonGlory/gallery-ai",
+    "master" : "CrimsonGlory/gallery-ai",
 }
 
 BINARIES_STABLE = {

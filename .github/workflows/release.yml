@@ -1,0 +1,182 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      tag: ${{ steps.vars.outputs.tag }}
+      prev_tag: ${{ steps.vars.outputs.prev_tag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Compute version
+        id: vars
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="$(date -u +%Y.%m.%d.%H%M%S)"
+          prev="$(gh release list --exclude-drafts --limit 1 --json tagName --jq '.[0].tagName // empty' || true)"
+          echo "tag=${tag}" >> "${GITHUB_OUTPUT}"
+          echo "prev_tag=${prev}" >> "${GITHUB_OUTPUT}"
+          echo "tag=${tag} prev_tag=${prev}"
+
+  build:
+    name: Build ${{ matrix.os }}
+    needs: [prepare]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            requirements: requirements/linux
+            python-arch: x64
+          - os: windows-latest
+            requirements: requirements/windows
+            python-arch: x64
+          - os: macos-latest
+            requirements: requirements/macos
+            python-arch: arm64
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        with:
+          python-version: "3.14"
+          architecture: ${{ matrix.python-arch }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --require-hashes -r requirements/pip
+          python -m pip install --require-hashes -r "${{ matrix.requirements }}"
+
+      - name: Executable label
+        id: label
+        run: |
+          echo "label=$(python ./scripts/pyinstaller.py --print --os '${{ matrix.os }}' --arch '${{ matrix.python-arch }}')" >> "${GITHUB_OUTPUT}"
+
+      - name: Stamp version.py
+        env:
+          TAG: ${{ needs.prepare.outputs.tag }}
+          LABEL: ${{ steps.label.outputs.label }}
+        shell: python
+        run: |
+          import os
+          import re
+
+          path = "./gallery_dl/version.py"
+          with open(path, encoding="utf-8") as fp:
+              content = fp.read()
+          content = re.sub(
+              r'\b(__version__ = "[^"]+)',
+              rf'\1:{os.environ["TAG"]}',
+              content,
+          )
+          content = re.sub(
+              r'\b(__variant__ =).+',
+              rf'\1 "dev/{os.environ["LABEL"]}"',
+              content,
+          )
+          with open(path, "w", encoding="utf-8", newline="\n") as fp:
+              fp.write(content)
+
+      - name: Build executable
+        run: python ./scripts/pyinstaller.py --label '${{ steps.label.outputs.label }}'
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: executable-${{ steps.label.outputs.label }}
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+
+  publish:
+    name: Publish GitHub release
+    needs: [prepare, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      TAG: ${{ needs.prepare.outputs.tag }}
+      PREV_TAG: ${{ needs.prepare.outputs.prev_tag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
+        with:
+          path: artifact
+          pattern: executable-*
+          merge-multiple: true
+
+      - name: Checksums
+        run: |
+          cd artifact
+          sha256sum -- * > SHA256SUMS
+          sha512sum -- * > SHA512SUMS
+
+      - name: Release notes
+        env:
+          REPOSITORY: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          {
+            printf '%s\n\n' "gallery-ai ${TAG}"
+            printf '%s\n\n' "Built from https://github.com/${REPOSITORY}/commit/${SHA}"
+            printf '%s\n\n' "Standalone executables include a Python interpreter. \`gallery-dl -U\` on these files updates from this repository (the \`dev\` channel)."
+            printf '%s\n' "### Files"
+            printf '%s\n' "- \`gallery-dl_linux\` — Linux x86_64"
+            printf '%s\n' "- \`gallery-dl_windows.exe\` — Windows x64"
+            printf '%s\n\n' "- \`gallery-dl_macos\` — macOS (Apple Silicon)"
+            printf '%s\n' "### Changes"
+            if [[ -n "${PREV_TAG}" ]]; then
+              git fetch --force origin "refs/tags/${PREV_TAG}:refs/tags/${PREV_TAG}" || true
+              printf '\n%s\n\n' "Commits since ${PREV_TAG}:"
+              if git rev-parse --verify "${PREV_TAG}^{}" >/dev/null 2>&1; then
+                git log --pretty=format:'- %s (`%h`)' "${PREV_TAG}..${SHA}"
+              else
+                git log --pretty=format:'- %s (`%h`)' -n 50 "${SHA}"
+              fi
+            else
+              printf '\n%s\n\n' "Recent commits:"
+              git log --pretty=format:'- %s (`%h`)' -n 50 "${SHA}"
+            fi
+            printf '\n'
+          } > RELEASE_NOTES
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${TAG}" \
+            --repo "${{ github.repository }}" \
+            --target "${{ github.sha }}" \
+            --title "gallery-ai ${TAG}" \
+            --notes-file RELEASE_NOTES \
+            artifact/*

@@ -21,3 +21,26 @@ docker run --rm --entrypoint python3 \
   -v "$PWD":/src -w /src -e PYTHONPATH=/src \
   gallery-dl:test scripts/run_tests.py
 ```
+
+## Releases
+
+Daily GitHub releases are dispatched by `./release.sh` (same pattern as yt-ai).
+It triggers the `Release` workflow when `master` has commits after the latest
+GitHub release.
+
+```bash
+./release.sh --dry-run
+./release.sh
+./release.sh --force
+```
+
+Crontab (once a day, e.g. 05:00 local time):
+
+```
+0 5 * * * /path/to/gallery-ai/release.sh
+```
+
+Requires `gh` authenticated with repo + workflow scope. The workflow
+`.github/workflows/release.yml` builds PyInstaller binaries (Linux, Windows,
+macOS) and publishes them on GitHub. `-U` on those executables uses the `dev`
+channel (`CrimsonGlory/gallery-ai`).

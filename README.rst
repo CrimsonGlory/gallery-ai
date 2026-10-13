@@ -13,6 +13,10 @@ with many
 options, as well as powerful
 `file-naming capabilities <https://gdl-org.github.io/docs/formatting.html>`__.
 
+This repository is *gallery-ai*. Daily executable builds are published at
+https://github.com/CrimsonGlory/gallery-ai/releases
+
+
 
 |pypi| |discord| |build|
 
@@ -92,6 +96,9 @@ Nightly Builds
 
 | Executables built from the latest commit can be found at
 | https://github.com/gdl-org/builds/releases
+
+gallery-ai daily builds of this fork are at
+https://github.com/CrimsonGlory/gallery-ai/releases
 
 
 Snap
