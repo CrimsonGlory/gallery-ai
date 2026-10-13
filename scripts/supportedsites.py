@@ -461,7 +461,9 @@ SUBCATEGORY_MAP = {
         "post": "Posts Images",
     },
     "pornhub": {
-        "gifs": "",
+        "asset": ("Avatars", "Banners"),
+        "gif"  : "GIFs",
+        "gifs" : "User GIFs",
     },
     "raddle": {
         "usersubmissions": "User Profiles",
@@ -496,6 +498,10 @@ SUBCATEGORY_MAP = {
     "snapchat": {
         "story": "",
         "spotlight": "",
+    },
+    "steamcommunity": {
+        "game": "Game Media",
+        "user": "User Media",
     },
     "steamgriddb": {
         "asset": "Individual Assets",

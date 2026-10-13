@@ -782,6 +782,8 @@ class Extractor():
         try:
             with open(path_tmp, "w", encoding="utf-8") as fp:
                 util.cookiestxt_store(fp, self.cookies)
+            if util.SYMLINKS and os.path.islink(path):
+                path = os.path.realpath(path)
             os.replace(path_tmp, path)
         except OSError as exc:
             self.log.error("cookies: Failed to write to '%s' "
@@ -842,6 +844,11 @@ class Extractor():
                         "cookies: %s/%s will expire in less than %s hour%s",
                         cookie.domain.lstrip("."), cookie.name,
                         hours + 1, "s" if hours else "")
+
+            if not cookie.value:
+                self.log.warning("cookies: %s/%s is empty",
+                                 cookie.domain.lstrip("."), cookie.name)
+                continue
 
             names.discard(cookie.name)
             if not names:
@@ -1110,10 +1117,13 @@ class Dispatch():
         pass
 
     def _dispatch_extractors(self, extractor_data, default=(), alt=None):
-        extractors = {
-            data[0].subcategory: data
-            for data in extractor_data
-        }
+        if isinstance(extractor_data, dict):
+            extractors = extractor_data
+        else:
+            extractors = {
+                data[0].subcategory: data
+                for data in extractor_data
+            }
 
         include = self.config("include", default) or ()
         if include == "all":

@@ -1,5 +1,121 @@
 # Changelog
 
+## 1.32.16 - 2026-10-09
+### Extractors
+- **Additions**
+  - [toyhouse] add extractor for character galleries ([`cb#493`](https://codeberg.org/mikf/gallery-dl/issues/493))
+  - [xenforo] support `darkwanderer.net` ([`gh#9805`](https://github.com/mikf/gallery-dl/issues/9805))
+- **bellazon**
+  - warn on files hidden for guests ([`cb#489`](https://codeberg.org/mikf/gallery-dl/issues/489))
+- **common**
+  - check for empty cookie values ([`cb#490`](https://codeberg.org/mikf/gallery-dl/issues/490))
+- **deviantart**
+  - support numeric `fav.me` links ([`cb#495`](https://codeberg.org/mikf/gallery-dl/issues/495))
+- **fapello**
+  - extract `model_name` & `aliases` metadata ([`pr#487`](https://codeberg.org/mikf/gallery-dl/pulls/487))
+- **imxtw**
+  - update domain to `imx.bz` ([`gh#9802`](https://github.com/mikf/gallery-dl/issues/9802))
+- **instagram**
+  - fix user lookups by ID ([`cb#465`](https://codeberg.org/mikf/gallery-dl/issues/465) [`cb#466`](https://codeberg.org/mikf/gallery-dl/issues/466) [`cb#484`](https://codeberg.org/mikf/gallery-dl/issues/484) [`gh#9773`](https://github.com/mikf/gallery-dl/issues/9773) [`gh#9787`](https://github.com/mikf/gallery-dl/issues/9787))
+  - fix `avatar` extractor ([`cb#466`](https://codeberg.org/mikf/gallery-dl/issues/466) [`cb#484`](https://codeberg.org/mikf/gallery-dl/issues/484) [`gh#9773`](https://github.com/mikf/gallery-dl/issues/9773))
+  - fix `highlights` extractor ([`cb#484`](https://codeberg.org/mikf/gallery-dl/issues/484) [`gh#9786`](https://github.com/mikf/gallery-dl/issues/9786) [`gh#9793`](https://github.com/mikf/gallery-dl/issues/9793))
+  - fix `KeyError: 'width'` ([`gh#9793`](https://github.com/mikf/gallery-dl/issues/9793))
+  - update `stories-tray` extractor
+  - improve `doc_id` extraction
+- **kemono**
+  - fix thumbnail check ([`gh#9792`](https://github.com/mikf/gallery-dl/issues/9792))
+- **myfigurecollection**
+  - fix items without `filename`
+  - improve user `pictures` extraction
+- **paheal**
+  - fix `file_url` & `date` extraction ([`gh#9791`](https://github.com/mikf/gallery-dl/issues/9791))
+- **pawchive**
+  - fix `deferred` files marked as `preview_only`
+  - handle `deferred` main post files
+- **tapas**
+  - improve username & password login cookie handling ([`cb#497`](https://codeberg.org/mikf/gallery-dl/issues/497))
+- **toyhouse**
+  - bypass `Content Warning` on image links
+  - fix `art` extractor
+- **xhamster**
+  - fix `gallery` extractor ([`pr#498`](https://codeberg.org/mikf/gallery-dl/pulls/498))
+
+## 1.32.15 - 2026-10-03
+### Extractors
+- **Additions**
+  - [mastodon] support `mastodon.art` ([`gh#5269`](https://github.com/mikf/gallery-dl/issues/5269))
+  - [mastodon] support `aethy.com` ([`gh#5311`](https://github.com/mikf/gallery-dl/issues/5311))
+  - [pornhub] add `asset` extractor for avatars & banners ([`gh#3323`](https://github.com/mikf/gallery-dl/issues/3323))
+  - [steamcommunity] add extractor for `game` screenshots & artworks ([`gh#2563`](https://github.com/mikf/gallery-dl/issues/2563) [`gh#7565`](https://github.com/mikf/gallery-dl/issues/7565))
+  - [steamcommunity] add extractor for `user` screenshots & artworks ([`gh#1079`](https://github.com/mikf/gallery-dl/issues/1079) [`gh#2563`](https://github.com/mikf/gallery-dl/issues/2563) [`gh#6978`](https://github.com/mikf/gallery-dl/issues/6978) [`gh#7565`](https://github.com/mikf/gallery-dl/issues/7565))
+- **ao3**
+  - fix `subscriptions` extractor ([`cb#477`](https://codeberg.org/mikf/gallery-dl/issues/477))
+- **dcinside**
+  - extract full-sized images ([`cb#478`](https://codeberg.org/mikf/gallery-dl/issues/478))
+- **filester**
+  - support password-protected *files* ([`cb#467`](https://codeberg.org/mikf/gallery-dl/issues/467))
+- **furaffinity**
+  - support non-default number of submissions per page ([`gh#9785`](https://github.com/mikf/gallery-dl/issues/9785))
+- **instagram**
+  - add `covers` option ([`gh#3010`](https://github.com/mikf/gallery-dl/issues/3010) [`gh#3761`](https://github.com/mikf/gallery-dl/issues/3761))
+- **iwara**
+  - fix handling network errors during login ([`gh#9278`](https://github.com/mikf/gallery-dl/issues/9278))
+  - rename `date` to `file_date` - use `date` value of post objects
+- **myfigurecollection**
+  - fix `pictures` marked as containing spoilers
+- **postype**
+  - support downloading attachments ([`gh#9788`](https://github.com/mikf/gallery-dl/issues/9788))
+- **steamcommunity**
+  - fix `Steam Artwork` & `Mature` items
+- **twitter**
+  - warn on login page redirect ([`gh#9783`](https://github.com/mikf/gallery-dl/issues/9783))
+- **ytdl**
+  - implement `websites` option ([`gh#4394`](https://github.com/mikf/gallery-dl/issues/4394))
+
+## 1.32.14 - 2026-09-27
+### Extractors
+- **Additions**
+  - [xasiat] add `video` extractor ([`cb#453`](https://codeberg.org/mikf/gallery-dl/issues/453) [`gh#8335`](https://github.com/mikf/gallery-dl/issues/8335))
+  - [steamcommunity] add support for screenshots & artwork ([`gh#7565`](https://github.com/mikf/gallery-dl/issues/7565) [`pr#126`](https://codeberg.org/mikf/gallery-dl/pulls/126))
+- **behance**
+  - fix `403 Forbidden` errors ([`gh#9779`](https://github.com/mikf/gallery-dl/issues/9779))
+- **civitai**
+  - support `followed` & `newCreators` query parameters ([`cb#462`](https://codeberg.org/mikf/gallery-dl/issues/462))
+- **eporner**
+  - extract `date` metadata ([`pr#459`](https://codeberg.org/mikf/gallery-dl/pulls/459))
+- **filester**
+  - support password-protected folders ([`cb#467`](https://codeberg.org/mikf/gallery-dl/issues/467))
+- **instagram**
+  - update & fix `story` & `highlight` extraction ([`cb#457`](https://codeberg.org/mikf/gallery-dl/issues/457) [`gh#9765`](https://github.com/mikf/gallery-dl/issues/9765) [`gh#9777`](https://github.com/mikf/gallery-dl/issues/9777))
+  - update & fix `highlights` extractor ([`gh#9777`](https://github.com/mikf/gallery-dl/issues/9777))
+  - update & fix `tagged` extractor ([`gh#9540`](https://github.com/mikf/gallery-dl/issues/9540) [`gh#9777`](https://github.com/mikf/gallery-dl/issues/9777))
+  - fix `TypeError: 'generator' object is not subscriptable` ([`cb#457`](https://codeberg.org/mikf/gallery-dl/issues/457))
+  - fix potential `TypeError` for previews ([`cb#458`](https://codeberg.org/mikf/gallery-dl/issues/458))
+  - include `username` in `user_by_web()` results
+  - simplify `info` extractor
+- **patreon**
+  - support `cta` content elements ([`cb#461`](https://codeberg.org/mikf/gallery-dl/issues/461))
+- **pawchive**
+  - ignore `deferred` files without download link ([`gh#9768`](https://github.com/mikf/gallery-dl/issues/9768))
+  - fix `"deferred": "only"` when all download links are missing ([`gh#9768`](https://github.com/mikf/gallery-dl/issues/9768))
+- **rawkuma**
+  - fix `chapter` extractor ([`cb#454`](https://codeberg.org/mikf/gallery-dl/issues/454))
+- **turbo**
+  - fix `album` extractor ([`gh#9778`](https://github.com/mikf/gallery-dl/issues/9778))
+- **twitter**
+  - fix `limitedActionResults` quotes ([`gh#9767`](https://github.com/mikf/gallery-dl/issues/9767))
+  - implement `quoted-expand` option ([`cb#460`](https://codeberg.org/mikf/gallery-dl/issues/460))
+- **xasiat**
+  - support `category`/`model`/`tag` videos ([`cb#453`](https://codeberg.org/mikf/gallery-dl/issues/453) [`gh#8335`](https://github.com/mikf/gallery-dl/issues/8335))
+  - add video `format` option
+### Post Processors
+- **python**
+  - implement `args` & `kwargs` options ([`pr#463`](https://codeberg.org/mikf/gallery-dl/pulls/463))
+### Miscellaneous
+- resolve symlink paths before updating file contents ([`gh#9772`](https://github.com/mikf/gallery-dl/issues/9772))
+- implement global `follow-symlinks` option ([`gh#9772`](https://github.com/mikf/gallery-dl/issues/9772))
+- prevent appending multiple `.part` on fallback downloads
+
 ## 1.32.13 - 2026-09-19
 ### Extractors
 - **Additions**

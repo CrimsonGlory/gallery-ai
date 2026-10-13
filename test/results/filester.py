@@ -45,6 +45,21 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://filester.me/d/CZugnSU",
+    "#comment" : "password-protected file - no password (#467)",
+    "#class"   : filester.FilesterFileExtractor,
+    "#exception": "AuthRequired",
+},
+
+{
+    "#url"     : "https://filester.me/d/CZugnSU",
+    "#comment" : "password-protected file - correct password (#467)",
+    "#class"   : filester.FilesterFileExtractor,
+    "#options" : {"password": "abc123#?^DEF"},
+    "#pattern" : CDN,
+},
+
+{
     "#url"     : "https://filester.me/f/1725bc5b793e8a4a",
     "#class"   : filester.FilesterFolderExtractor,
     "#pattern" : CDN,
@@ -62,6 +77,29 @@ __tests__ = (
     "id"         : r"re:\w+",
     "size"       : r"re:\d+",
     "uuid"       : "iso:uuid",
+},
+
+{
+    "#url"     : "https://filester.me/f/60b41cbbd900ca35",
+    "#comment" : "password-protected folder - no password (#467)",
+    "#class"   : filester.FilesterFolderExtractor,
+    "#exception": "AuthRequired",
+},
+
+{
+    "#url"     : "https://filester.me/f/60b41cbbd900ca35",
+    "#comment" : "password-protected folder - wrong password (#467)",
+    "#class"   : filester.FilesterFolderExtractor,
+    "#options"  : {"password": "foobar"},
+    "#exception": "AuthorizationError",
+},
+
+{
+    "#url"     : "https://filester.me/f/60b41cbbd900ca35",
+    "#comment" : "password-protected folder - correct password (#467)",
+    "#class"   : filester.FilesterFolderExtractor,
+    "#options" : {"password": "abc123#?^DEF"},
+    "#pattern" : CDN,
 },
 
 )

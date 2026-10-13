@@ -54,13 +54,22 @@ class TurboAlbumExtractor(LolisafeAlbumExtractor):
             return
 
         files_js = text.extr(body, "const FILES = [", "];")
-        if files_js:
-            for match in text.re(
-                    r'id\s*:\s*"([^"]+)"\s*,\s*name\s*:\s*"([^"]+)"'
-                    r'\s*,\s*size\s*:\s*(\d+)').finditer(files_js):
-                data_id, name, size = match.groups()
-                yield self._sign_file(
-                    data_id, headers, text.parse_int(size), name)
+        if not files_js:
+            return
+
+        id_re = text.re(r"""\bid\s*:\s*["']([^"']+)["']""")
+        name_re = text.re(r"""\bname\s*:\s*["']([^"']+)["']""")
+        size_re = text.re(r"""\bsize\s*:\s*(\d+)""")
+        for file in text.extract_iter(files_js, "{", "}"):
+            mid = id_re.search(file)
+            if not mid:
+                continue
+            mname = name_re.search(file)
+            msize = size_re.search(file)
+            yield self._sign_file(
+                mid.group(1), headers,
+                text.parse_int(msize.group(1) if msize else 0),
+                mname.group(1) if mname else None)
 
     def _sign_file(self, data_id, headers, size=0, name=None):
         url = f"{self.root}/api/sign?v={data_id}"
@@ -103,6 +112,8 @@ class TurboMediaExtractor(TurboAlbumExtractor):
         date = ""
         if match := text.re(r"<span>(\d{4}-\d{2}-\d{2})</span>").search(page):
             date = match.group(1)
+        elif (pos := page.find(">ID:")) >= 0:
+            date = text.extract(page, "<span>", "<", pos)[0] or ""
 
         url = f"{self.root}/api/sign?v={data_id}"
         data = self.request_json(url, headers=headers)

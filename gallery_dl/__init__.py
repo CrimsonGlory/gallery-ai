@@ -153,6 +153,10 @@ def main():
         if path := config.getg("globals"):
             util.GLOBALS.update(util.import_file(path).__dict__)
 
+        # symlinks
+        if config.getg("follow-symlinks"):
+            util.SYMLINKS = True
+
         # loglevels
         output.configure_logging(args.loglevel)
         if args.loglevel >= logging.WARNING:
@@ -674,6 +678,8 @@ class InputManager():
         try:
             with open(path_tmp, "w", encoding="utf-8") as fp:
                 fp.writelines(lines)
+            if util.SYMLINKS and os.path.islink(path):
+                path = os.path.realpath(path)
             os.replace(path_tmp, path)
         except Exception as exc:
             self.log.warning(

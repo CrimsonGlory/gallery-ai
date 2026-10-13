@@ -667,6 +667,7 @@ Default
         ``sizebooru``       |
         ``sofurry``         |
         ``soundgasm``       |
+        ``steamcommunity``  |
         ``thehentaiworld``  |
         ``urlgalleries``    |
         ``vk``              |
@@ -4149,6 +4150,18 @@ Description
         Do not download audio files
 
 
+extractor.instagram.covers
+--------------------------
+Type
+    ``bool``
+Default
+    ``false``
+Description
+    Download ``highlight`` cover images.
+Note
+    This option only affects ``highlights``.
+
+
 extractor.instagram.cursor
 --------------------------
 Type
@@ -4314,28 +4327,6 @@ Description
         Refresh cache entry after ``EXP`` seconds.
     ``false`` | ``"memory"``
         Cache user data in memory
-
-
-extractor.instagram.user-strategy
----------------------------------
-Type
-    * ``string``
-    * ``list`` of ``strings``
-Default
-    ``["search", "web"]``
-Example
-    * ``"web,info,search"``
-    * ``["web", "info", "search"]``
-Description
-    Selects how to retrieve user IDs and profile data.
-
-    ``"search"`` | ``"topsearch"``
-        Use `topsearch` API results
-    ``"info"`` | ``"web_profile_info"``
-        | Use `web_profile_info` API results
-        | (high liklyhood of ``429 Too Many Requests`` errors)
-    ``"web"`` | ``"webpage"``
-        Extract minimal user information from profile webpage
 
 
 extractor.instagram.videos
@@ -6114,6 +6105,25 @@ Description
     Process replurked posts in addition to original posts.
 
 
+extractor.pornhub.include
+-------------------------
+Type
+    * ``string``
+    * ``list`` of ``strings``
+Default
+    * ``["photos"]``
+Description
+    A (comma-separated) list of subcategories to include
+    when processing a user profile.
+Supported Values
+    * ``avatar``
+    * ``background``
+    * ``photos``
+    * ``gifs``
+Note
+    It is possible to use ``"all"`` instead of listing all values separately.
+
+
 extractor.[postmill].save-link-post-body
 ----------------------------------------
 Type
@@ -6135,8 +6145,6 @@ Description
 
     Use ``true`` to download animated images as gifs and ``false``
     to download as mp4 videos.
-
-
 
 
 extractor.reddit.api
@@ -6697,6 +6705,19 @@ Description
 
     Disabling this option will download files
     via their `display` URL in ``.webp`` format.
+
+
+extractor.steamcommunity.metadata
+---------------------------------
+Type
+    ``bool``
+Default
+    ``false``
+Description
+    Extract additional metadata.
+Note
+    This requires 1 additional HTTP request per item
+    and is likely to result in ``429 Too Many Requests`` errors.
 
 
 extractor.steamgriddb.animated
@@ -8575,6 +8596,17 @@ Description
     `youtube-dl's docstrings <https://github.com/ytdl-org/youtube-dl/blob/0153b387e57e0bb8e580f1869f85596d2767fb0d/youtube_dl/YoutubeDL.py#L157>`__
 
 
+extractor.ytdl.websites
+-----------------------
+Type
+    ``list`` of ``strings``
+Example
+    ``["youtube", "bitchute", "nebula"]``
+Description
+    When `enabled <extractor.ytdl.enabled_>`__,
+    only allow usage without `ytdl:` URL prefix for the specified websites.
+
+
 extractor.zerochan.extensions
 -----------------------------
 Type
@@ -10309,7 +10341,8 @@ Type
 Default
     ``"file"``
 Description
-    The event(s) for which `python.function`_ gets called.
+    The event(s) for which `python.function`_ is called
+    or `python.expression`_ is evaluated.
 
     See `metadata.event`_ for a list of available events.
 
@@ -10343,6 +10376,34 @@ Description
       ``<function name>`` is the name of the function in that module.
 
     It gets called with the current metadata dict as argument.
+
+
+python.args
+-----------
+Type
+    ``list`` of `Format Strings`_
+Example
+    ``["{username!c}", "\fE width*height", "\fF {site//(1024*1024)}MB"]``
+Description
+    List of additional positional arguments
+    that get passed to `python.function`_.
+
+
+python.kwargs
+-------------
+Type
+    ``object`` (`name` → `Format String`_)
+Example
+    .. code:: json
+
+        {
+            "user"  : "{username!c}",
+            "pixels": "\fE width*height",
+            "size"  : "\fF {size//(1024*1024)}MB"]`
+        }
+Description
+    Mapping of additional keyword arguments
+    that get passed to `python.function`_.
 
 
 python.mode
@@ -10407,7 +10468,7 @@ ugoira.ffmpeg-args
 Type
     ``list`` of ``strings``
 Default
-    ``null``
+    ``["-pix_fmt", "yuv420p"]``
 Example
     ``["-c:v", "libvpx-vp9", "-an", "-b:v", "2M"]``
 Description
@@ -11011,6 +11072,24 @@ Example
     ``["~/urls.txt", "$HOME/input"]``
 Description
     Additional input files.
+
+
+follow-symlinks
+---------------
+Type
+    ``bool``
+Default
+    ``false``
+Description
+    When updating the contents of
+
+    * ``--cookies``
+    * ``--input-file-comment``
+    * ``--input-file-delete``
+
+    files, follow symlinks and update their targets.
+
+    Otherwise, symlinks are replaced with regular files.
 
 
 signals-ignore

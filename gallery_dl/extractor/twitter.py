@@ -1071,23 +1071,27 @@ class TwitterMediaExtractor(TwitterExtractor):
 class TwitterLikesExtractor(TwitterExtractor):
     """Extractor for liked tweets"""
     subcategory = "likes"
-    pattern = USER_PATTERN + r"/likes(?!\w)"
-    example = "https://x.com/USER/likes"
-
-    def metadata(self):
-        return {"user_likes": self.user}
+    pattern = BASE_PATTERN + r"/(i/history|[^/?#]+)/likes(?!\w)"
+    example = "https://x.com/i/history/likes"
 
     def tweets(self):
+        if self.user == "i/history":
+            if twid := self.cookies.get("twid", domain=self.cookies_domain):
+                self.user = "id:" + twid.rpartition("%3D")[2]
+            else:
+                raise self.exc.AuthRequired("'twid' cookie")
+        self.replies = True if self.replies else False
         return self.api.user_likes(self.user)
 
 
 class TwitterBookmarkExtractor(TwitterExtractor):
     """Extractor for bookmarked tweets"""
     subcategory = "bookmark"
-    pattern = BASE_PATTERN + r"/i/(?:history|bookmarks)()"
+    pattern = BASE_PATTERN + r"/i/(?:history|bookmarks)/?$()"
     example = "https://x.com/i/history"
 
     def tweets(self):
+        self.replies = True if self.replies else False
         return self.api.user_bookmarks()
 
     def _transform_tweet(self, tweet):
