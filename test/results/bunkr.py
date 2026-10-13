@@ -363,6 +363,12 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://bunkr.by/f/EGRC1I2XGJZ7N",
+    "#category": ("lolisafe", "bunkr", "media"),
+    "#class"   : bunkr.BunkrMediaExtractor,
+},
+
+{
     "#url"     : "https://cdn123.bunkr.ru/image-sZrQUeOx.jpg",
     "#category": ("lolisafe", "bunkr", "direct-link"),
     "#class"   : bunkr.BunkrDirectLinkExtractor,
