@@ -1142,7 +1142,7 @@ class InstagramAPI():
             r'\(function\([^)]+\).+?\bexports="([^"]+)')
         for href in util.unique(text.extract_iter(
                 extr.cache(self._webpage, path), 'href="' + base, '"')):
-            if not href.endswith(".js") or len(href) < 180:
+            if not href.endswith(".js"):
                 continue
             url = base + text.unescape(href)
             script = extr.request(url, interval=False).text
