@@ -66,7 +66,7 @@ class HttpDownloader(DownloaderBase):
                 self.log.warning(
                     "Invalid maximum file size (%r)", self.maxsize)
             self.maxsize = maxsize
-        if isinstance(self.chunk_size, str):
+        if self.chunk_size.__class__ is str:
             chunk_size = text.parse_bytes(self.chunk_size)
             if not chunk_size:
                 self.log.warning(
@@ -223,7 +223,7 @@ class HttpDownloader(DownloaderBase):
                 except Exception:
                     self.release_conn(response)
                     raise
-                if isinstance(result, str):
+                if result.__class__ is str:
                     url = result
                     tries -= 1
                     continue

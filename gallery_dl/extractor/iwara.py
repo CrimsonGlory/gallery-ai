@@ -28,9 +28,9 @@ class IwaraExtractor(Extractor):
 
         self.embeds = self.config("embeds", False)
         if fmts := self.config("format"):
-            if isinstance(fmts, str):
+            if fmts.__class__ is str:
                 fmts = fmts.replace(" ", "").lower().split(",")
-            elif not isinstance(fmts, (list, tuple)):
+            elif fmts.__class__ is not list:
                 fmts = (str(fmts),)
             self.formats = fmts
             self.extract_video_source = self.extract_video_source_custom

@@ -39,6 +39,15 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://pt.erome.com/a/TdbZ4ogi",
+    "#comment" : "language subdomain",
+    "#category": ("", "erome", "album"),
+    "#class"   : erome.EromeAlbumExtractor,
+    "#pattern" : r"https://s\d+\.erome\.com/\d+/TdbZ4ogi/\w+",
+    "#count"   : 6,
+},
+
+{
     "#url"     : "https://www.erome.com/a/qlV5z90y",
     "#comment" : "deleted album (#8665)",
     "#class"   : erome.EromeAlbumExtractor,

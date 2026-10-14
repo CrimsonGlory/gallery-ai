@@ -81,7 +81,7 @@ class _500pxExtractor(Extractor):
         while True:
             data = self.request_graphql(opname, variables)
 
-            if isinstance(data, list):
+            if data.__class__ is list:
                 yield from data
             else:
                 for edge in data["edges"]:

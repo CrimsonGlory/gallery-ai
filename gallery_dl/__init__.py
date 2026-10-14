@@ -85,7 +85,7 @@ def main():
 
         # environment variables
         if env := config.getg("environment"):
-            if isinstance(env, dict):
+            if env.__class__ is dict:
                 env = env.dicts()
             environ = os.environ
             if config.getg("environment-expand", True):
@@ -101,7 +101,7 @@ def main():
         # signals
         if signals := config.getg("signals-ignore"):
             import signal
-            if isinstance(signals, str):
+            if signals.__class__ is str:
                 signals = signals.split(",")
             for signal_name in signals:
                 signal_num = getattr(signal, signal_name, None)
@@ -135,7 +135,7 @@ def main():
             pass
         elif not filterenv:
             util.compile_expression = util.compile_expression_raw
-        elif isinstance(filterenv, str):
+        elif filterenv.__class__ is str:
             if filterenv == "raw":
                 util.compile_expression = util.compile_expression_raw
             elif filterenv.startswith("default"):
@@ -302,7 +302,7 @@ Entries:
         # extractor modules
         modules = config.get(("extractor",), "modules")
         if modules is not None:
-            if isinstance(modules, str):
+            if modules.__class__ is str:
                 modules = modules.split(",")
             extractor.modules = modules
 
@@ -317,7 +317,7 @@ Entries:
             modules = []
 
             for source in sources:
-                if isinstance(source, str):
+                if source.__class__ is str:
                     path = util.expand_path(source)
                     try:
                         files = [name[:-3] for name in os.listdir(path)
@@ -326,7 +326,7 @@ Entries:
                     except Exception as exc:
                         log.warning("Unable to load modules from %s (%s: %s)",
                                     path, exc.__class__.__name__, exc)
-                elif isinstance(source, dict):
+                elif source.__class__ is dict:
                     path = util.expand_path(source["from"])
                     files = source["import"]
                     try:
@@ -372,7 +372,7 @@ Entries:
         else:
             if input_files := config.getg("input-files"):
                 for input_file in input_files:
-                    if isinstance(input_file, str):
+                    if input_file.__class__ is str:
                         input_file = (input_file, None)
                     args.input_files.append(input_file)
 
@@ -436,7 +436,7 @@ Entries:
 
             if args.server and not nourls and input_manager.urls:
                 return server.send([
-                    url[0] if isinstance(url, tuple) else url
+                    url[0] if url.__class__ is tuple else url
                     for url in input_manager.urls
                 ])
 
@@ -470,7 +470,7 @@ Entries:
                 try:
                     log.debug("Starting %s for '%s'", jobtype.__name__, url)
 
-                    if isinstance(url, ExtendedUrl):
+                    if url.__class__ is ExtendedUrl:
                         for opts in url.gconfig:
                             config.set(*opts)
                         with config.apply(url.lconfig):
@@ -704,7 +704,7 @@ class InputManager():
         except IndexError:
             raise StopIteration
 
-        if isinstance(url, tuple):
+        if url.__class__ is tuple:
             self._item = url
             url = url[0]
         else:

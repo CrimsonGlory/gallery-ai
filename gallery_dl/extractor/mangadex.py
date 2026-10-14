@@ -437,7 +437,7 @@ class MangadexAPI():
 
         lang = self.extractor.config("lang")
         if lang:
-            if isinstance(lang, str) and "," in lang:
+            if lang.__class__ is str and "," in lang:
                 lang = lang.split(",")
             params["translatedLanguage[]"] = lang
         params["includes[]"] = ("scanlation_group", "user")
@@ -456,7 +456,7 @@ class MangadexAPI():
 
         lang = self.extractor.config("lang")
         if lang:
-            if isinstance(lang, str) and "," in lang:
+            if lang.__class__ is str and "," in lang:
                 lang = lang.split(",")
             params["locales[]"] = lang
         # Sentinel: do not send a default contentRating[] on /cover
@@ -473,7 +473,7 @@ class MangadexAPI():
             ratings = config("ratings")
             if ratings is None:
                 ratings = ("safe", "suggestive", "erotica", "pornographic")
-            elif isinstance(ratings, str):
+            elif ratings.__class__ is str:
                 ratings = ratings.split(",")
             params["contentRating[]"] = ratings
         params["offset"] = 0

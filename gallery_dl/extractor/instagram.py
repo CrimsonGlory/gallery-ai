@@ -64,7 +64,7 @@ class InstagramExtractor(Extractor):
 
         if not (wd := self.config("wd", False)):
             self.cookies.set("wd", None, domain=self.cookies_domain)
-        elif isinstance(wd, str):
+        elif wd.__class__ is str:
             self.cookies.set("wd", wd, domain=self.cookies_domain)
 
         self.api = InstagramAPI(self)
@@ -95,9 +95,9 @@ class InstagramExtractor(Extractor):
             audio_dash = False
 
         if previews := self.config("previews", False):
-            if isinstance(previews, str):
+            if previews.__class__ is str:
                 previews = previews.split(",")
-            elif not isinstance(previews, (list, tuple)):
+            elif previews.__class__ is not list:
                 previews = {"video", "audio"}
             previews_video = ("video" in previews)
             previews_audio = ("audio" in previews)
@@ -885,7 +885,7 @@ class InstagramAPI():
         else:
             self._user_cache_mem = False
             self._user_cache_exp = (text.parse_int(_cache.partition(":")[2])
-                                    if isinstance(_cache, str) else 0)
+                                    if _cache.__class__ is str else 0)
 
     def highlights_tray(self, handle):
         variables = {"user_id": str(self.user(handle)["id"])}
@@ -1369,7 +1369,7 @@ class InstagramAPI():
 
             if "edges" not in data:
                 for value in data.values():
-                    if isinstance(value, dict) and "edges" in value:
+                    if value.__class__ is dict and "edges" in value:
                         data = value
                         break
                 else:

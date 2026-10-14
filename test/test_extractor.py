@@ -285,7 +285,7 @@ class TestExtractorWait(unittest.TestCase):
             self._assert_isotime(calls[0][1][2], until_local)
 
     def _assert_isotime(self, output, until):
-        if not isinstance(until, dt.datetime):
+        if until.__class__ is not dt.datetime:
             until = dt.datetime.fromtimestamp(until)
         o = self._isotime_to_seconds(output)
         u = self._isotime_to_seconds(until.time().isoformat()[:8])

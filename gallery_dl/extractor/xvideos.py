@@ -100,19 +100,19 @@ class XvideosUserExtractor(XvideosBase, Extractor):
             page, "xv.conf=", ";</script>"))["data"]
 
         galleries_raw = data.get("galleries") or {}
-        if isinstance(galleries_raw, dict):
+        if galleries_raw.__class__ is dict:
             galleries_raw.pop("0", None)
             gallery_items = galleries_raw.items()
-        elif isinstance(galleries_raw, list):
+        elif galleries_raw.__class__ is list:
             gallery_items = (
-                (g.get("id"), g) for g in galleries_raw if isinstance(g, dict)
+                (g.get("id"), g) for g in galleries_raw if g.__class__ is dict
             )
         else:
             return
 
         galleries = []
         for gid, gdata in gallery_items:
-            if not isinstance(gdata, dict):
+            if gdata.__class__ is not dict:
                 continue
             gid = gdata.get("id", gid)
             title = gdata.get("title") or ""
