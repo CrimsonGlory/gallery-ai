@@ -261,7 +261,7 @@ class BehanceUserExtractor(BehanceExtractor):
             info = items["pageInfo"]
             if not info["hasNextPage"]:
                 break
-            variables["afterItem"] = info["endCursor"]
+            variables["after"] = info["endCursor"]
 
 
 class BehanceCollectionExtractor(BehanceExtractor):
