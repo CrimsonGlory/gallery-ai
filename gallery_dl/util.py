@@ -411,10 +411,6 @@ def expand_path(path):
     """Expand environment variables and tildes (~)"""
     if not path:
         return path
-    if path.__class__ is not str:
-        import logging
-        logging.getLogger("gallery-dl").error(
-            "Non-string paths are no longer supported.")
     return os.path.expandvars(os.path.expanduser(path))
 
 
