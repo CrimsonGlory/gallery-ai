@@ -9,7 +9,7 @@
 """Extractors for https://www.imagepond.net/"""
 
 from .common import Extractor, Message
-from .. import text
+from .. import text, util, dt
 
 BASE_PATTERN = r"(?:https?://)?(?:www\.)?imagepond\.net"
 
@@ -57,6 +57,9 @@ class ImagepondFileExtractor(ImagepondExtractor):
     def items(self):
         url = self.root + self.groups[0]
         response = self.request(url)
+        if 'property="og:type"' not in response.text:
+            yield from self._items_expired(response)
+            return
         extr = text.extract_from(response.text)
 
         title = text.unescape(extr('property="og:title" content="', '"'))
@@ -104,6 +107,39 @@ class ImagepondFileExtractor(ImagepondExtractor):
             file["mime"] = f"{file['type']}/{file['extension']}"
         yield Message.Directory, "", file
         yield Message.Url, file["url"], file
+
+    def _items_expired(self, response):
+        # 'Content Expired' pages have no metadata,
+        # but their thumbnail URL still redirects to the original file
+        file_id = response.url.rpartition("/")[2]
+        url = self.request_location(
+            f"{self.root}/i/{file_id}/thumb/300", interval=True)
+
+        name = text.filename_from_url(url)
+        if ("_thumb." in name or text.re(r"thumb_\d+_").match(name) or
+                not text.re(r"https://media\d*\.imagepond\.net/").match(url)):
+            msg = text.unescape(text.extr(response.text, "<title>", "<"))
+            raise self.exc.AbortExtraction(
+                f"{file_id}: {msg or 'Unable to find media'}")
+
+        file = {
+            "url"     : url,
+            "id"      : file_id,
+            "title"   : "",
+            "date"    : dt.NONE,
+            "user"    : "",
+            "album"   : "",
+            "album_id": "",
+        }
+        text.nameext_from_url(url, file)
+        ext = file["extension"]
+        if "/videos/" in url or ext in util.EXTS_VIDEO:
+            file["type"] = "video"
+        else:
+            file["type"] = "image"
+        file["mime"] = f"{file['type']}/{ext}"
+        yield Message.Directory, "", file
+        yield Message.Url, url, file
 
 
 class ImagepondAlbumExtractor(ImagepondExtractor):
