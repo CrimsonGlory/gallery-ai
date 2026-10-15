@@ -431,7 +431,7 @@ class TestExtractorResults(unittest.TestCase):
                 else:
                     self.fail(f"Unsupported ISO test '{test}'")
             else:
-                if "\r" in value:
+                if value.__class__ is str and "\r" in value:
                     value = value.replace("\r", "")
                 self.assertEqual(test, value, msg=path)
         else:
