@@ -18,7 +18,7 @@ USER_PATTERN = BASE_PATTERN + r"/(?!(?:p|tv|reel|explore|stories)/)([^/?#]+)"
 
 QUERIES = {
     "PolarisProfilePostsTabContentQuery_connection":
-        ("28142289515441884", ""),
+        ("39229011733413759", ""),
     "PolarisProfileReelsTabContentQuery_connection":
         ("28989741540630190", "/reels"),
     "PolarisProfileTaggedTabContentQuery_connection":
@@ -30,7 +30,7 @@ QUERIES = {
     "PolarisStoriesV3TrayContainerQuery":
         ("27703822975903310", ""),
     "PolarisProfilePageContentQuery":
-        ("28036671149327607", ""),
+        ("28649589871350527", ""),
 }
 
 
@@ -965,6 +965,8 @@ class InstagramAPI():
             "__relay_internal__pv__"
             "PolarisWebSchoolsEnabledrelayprovider": False,
             "__relay_internal__pv__"
+            "PolarisProfileRingsGradientEnabledrelayprovider": False,
+            "__relay_internal__pv__"
             "PolarisRepostsConsumptionEnabledrelayprovider": True,
             "__relay_internal__pv__"
             "PolarisShortDramaEnabledrelayprovider": True,
@@ -1021,26 +1023,26 @@ class InstagramAPI():
         return self._pagination(endpoint, params, media=True)
 
     def user_feed(self, handle):
-        username = self.user(handle)["username"]
-
         variables = {
-            "after" : None,
-            "before": None,
-            "data": {
+            "after"   : None,
+            "before"  : None,
+            "data"    : {
                 "count": 12,
                 "include_reel_media_seen_timestamp": True,
                 "include_relationship_info": True,
                 "latest_besties_reel_media": True,
                 "latest_reel_media": True,
             },
-            "first": 12,
+            "first"   : 12,
             "include_multi_captions": True,
-            "last": None,
-            "username": username,
+            "last"    : None,
+            "username": self.user(handle)["username"],
             "__relay_internal__pv__"
             "PolarisMultiCaptionCarouselEnabledrelayprovider": True,
             "__relay_internal__pv__"
-            "PolarisShortDramaEnabledrelayprovider": False,
+            "PolarisShortDramaEnabledrelayprovider": True,
+            "__relay_internal__pv__"
+            "PolarisThreadsStyleCommentsEnabledrelayprovider": False,
             "__relay_internal__pv__"
             "PolarisReelsRecoDebugOverlayEnabledrelayprovider": False,
         }
@@ -1050,8 +1052,7 @@ class InstagramAPI():
             "xdt_api__v1__feed__user_timeline_graphql_connection")
 
     def user_reels(self, handle):
-        user = self.user(handle)
-        user_id = str(user["id"])
+        user_id = str(self.user(handle)["id"])
 
         variables = {
             "after": "",
