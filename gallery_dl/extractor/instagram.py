@@ -1168,8 +1168,9 @@ class InstagramAPI():
         return extr.request(f"{extr.root}{path}/", headers=headers,
                             interval=False).text
 
-    def _prepare_graphql(self, opname):
+    def _prepare_graphql(self, opname, fieldname=None):
         extr = self.extractor
+        root = extr.root
 
         doc_id, path = QUERIES[opname]
         if extr._user:
@@ -1179,7 +1180,48 @@ class InstagramAPI():
         doc_id = extr.cache(self._extract_docid, opname, path,
                             _exp=86400, _mem=False) or doc_id
 
-        return path, doc_id, fb_lsd, fb_dtsg
+        headers = {
+            "Accept"            : "*/*",
+            "Content-Type"      : "application/x-www-form-urlencoded",
+            "X-FB-Friendly-Name": opname,
+            "X-CSRFToken"       : extr.csrf_token,
+            "X-IG-App-ID"       : "936619743392459",
+            "X-IG-Max-Touch-Points": "0",
+            "X-Root-Field-Name" : fieldname,
+            "X-FB-LSD"          : fb_lsd,
+            "X-ASBD-ID"         : "359341",
+            "Origin"            : root,
+            "Alt-Used"          : root[8:],
+            "Connection"        : "keep-alive",
+            "Referer"           : f"{root}{path}/",
+            "Cookie"            : None,
+            "Sec-Fetch-Dest"    : "empty",
+            "Sec-Fetch-Mode"    : "cors",
+            "Sec-Fetch-Site"    : "same-site",
+        }
+        body = {
+            "av"    : "17841415137994167",
+            "__d"   : "www",
+            "__user": "0",
+            "__a"   : "1",
+            "__req" : "0",
+            "__hs"  : "20731.HYP%3Ainstagram_web_pkg.2.1...0",
+            "dpr"   : "1",
+            "__ccg" : "EXCELLENT",
+            "__rev" : "1049285836",
+            "__hsi" : "7693193318680449885",
+            "__comet_req": "7",
+            "fb_dtsg"  : fb_dtsg,
+            "jazoest"  : "26461",
+            "lsd"      : fb_lsd,
+            "fb_api_caller_class": "RelayModern",
+            "fb_api_req_friendly_name": opname,
+            "server_timestamps": "true",
+            "variables": None,
+            "doc_id"   : doc_id,
+        }
+
+        return headers, body
 
     def _call(self, endpoint, **kwargs):
         extr = self.extractor
@@ -1201,53 +1243,16 @@ class InstagramAPI():
 
     def _call_graphql(self, opname, variables, **kwargs):
         extr = self.extractor
-        root = extr.root
-        url = root + "/api/graphql"
-        path, doc_id, fb_lsd, fb_dtsg = self._prepare_graphql(opname)
 
         kwargs["method"] = "POST"
-        kwargs["headers"] = {
-            "Accept"            : "*/*",
-            "Content-Type"      : "application/x-www-form-urlencoded",
-            "X-FB-Friendly-Name": opname,
-            "X-CSRFToken"       : extr.csrf_token,
-            "X-IG-App-ID"       : "936619743392459",
-            "X-IG-Max-Touch-Points": "0",
-            "X-FB-LSD"          : fb_lsd,
-            "X-ASBD-ID"         : "359341",
-            "Origin"            : root,
-            "Alt-Used"          : root[8:],
-            "Connection"        : "keep-alive",
-            "Referer"           : f"{root}{path}/",
-            "Cookie"            : None,
-            "Sec-Fetch-Dest"    : "empty",
-            "Sec-Fetch-Mode"    : "cors",
-            "Sec-Fetch-Site"    : "same-site",
-        }
-        kwargs["data"] = {
-            "av"    : "17841415137994167",
-            "__d"   : "www",
-            "__user": "0",
-            "__a"   : "1",
-            "__req" : "0",
-            "__hs"  : "20731.HYP%3Ainstagram_web_pkg.2.1...0",
-            "dpr"   : "1",
-            "__ccg" : "EXCELLENT",
-            "__rev" : "1049285836",
-            "__hsi" : "7693193318680449885",
-            "__comet_req": "7",
-            "fb_dtsg"  : fb_dtsg,
-            "jazoest"  : "26461",
-            "lsd"      : fb_lsd,
-            "fb_api_caller_class": "RelayModern",
-            "fb_api_req_friendly_name": opname,
-            "server_timestamps": "true",
-            "variables": util.json_dumps(variables),
-            "doc_id"   : doc_id,
-        }
+        kwargs["headers"], body = self._prepare_graphql(opname)
+        kwargs["data"] = body
+        body["variables"] = util.json_dumps(variables)
 
-        extr.log.debug(opname)
-        response = extr.request(url, **kwargs)
+        extr.log.debug("%s (%s)", opname, body["doc_id"])
+        extr.log.debug(body["variables"])
+        response = extr.request(extr.root + "/api/graphql", **kwargs)
+
         try:
             return util.json_loads(response.text)["data"]
         except (ValueError, KeyError) as exc:
@@ -1305,59 +1310,16 @@ class InstagramAPI():
 
     def _pagination_graphql(self, opname, variables, fieldname, route=None):
         extr = self.extractor
-        root = extr.root
-        url = root + "/graphql/query"
-        path, doc_id, fb_lsd, fb_dtsg = self._prepare_graphql(opname)
+        url = extr.root + "/graphql/query"
 
-        headers = {
-            "Accept": "*/*",
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-FB-Friendly-Name": opname,
-            "X-CSRFToken": None,
-            "X-IG-App-ID": "936619743392459",
-            "X-IG-Max-Touch-Points": "0",
-            "X-BLOKS-VERSION-ID": "62077fc559de123afe03ebeb18194a88"
-                                  "ba5d4e6874d9a07873752f3792adb8a0",
-            "X-Root-Field-Name": fieldname,
-            "X-FB-LSD": fb_lsd,
-            "X-ASBD-ID": "359341",
-            "Origin" : root,
-            "Alt-Used": root[8:],
-            "Connection": "keep-alive",
-            "Referer": f"{root}{path}/",
-            "Cookie": None,
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-site",
-        }
-        body = {
-            "av"    : "17841415137994167",
-            "__d"   : "www",
-            "__user": "0",
-            "__a"   : "1",
-            "__req" : "0",
-            "__hs"  : "20731.HYP%3Ainstagram_web_pkg.2.1...0",
-            "dpr"   : "1",
-            "__ccg" : "EXCELLENT",
-            "__rev" : "1049285836",
-            "__hsi" : "7693193318680449885",
-            "__comet_req": "7",
-            "fb_dtsg"  : fb_dtsg,
-            "jazoest"  : "26461",
-            "lsd"      : fb_lsd,
-            "__crn"    : route,
-            "fb_api_caller_class": "RelayModern",
-            "fb_api_req_friendly_name": opname,
-            "server_timestamps": "true",
-            "variables": None,
-            "doc_id"   : doc_id,
-        }
-
+        headers, body = self._prepare_graphql(opname, fieldname)
         variables["after"] = extr._init_cursor()
         while True:
             headers["X-CSRFToken"] = extr.csrf_token
             body["variables"] = util.json_dumps(variables)
-            extr.log.debug(opname)
+
+            extr.log.debug("%s (%s)", opname, body["doc_id"])
+            extr.log.debug(body["variables"])
             response = extr.request(
                 url, method="POST", headers=headers, data=body)
 
