@@ -318,9 +318,11 @@ class InstagramExtractor(Extractor):
                 continue
 
             if not self._static_video and \
-                    (type_orig := item.get("original_media_type")) and \
-                    type_orig == 1 and type_orig != item.get("media_type"):
-                if item.pop("video_versions", None):
+                    (manifest := item.get("video_dash_manifest")) and \
+                    (framerate := text.extr(manifest, 'frameRate="', '"')):
+                num, _, den = framerate.partition("/")
+                if num == den:
+                    item.pop("video_versions", None)
                     item["original_width"] = image["width"]
                     item["original_height"] = image["height"]
 
