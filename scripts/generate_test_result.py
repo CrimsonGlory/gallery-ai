@@ -68,10 +68,10 @@ def generate_test_result(args):
                 except ValueError:
                     pass
                 options[key] = value
-                config.set((), key, value)
+                config.setg(key, value)
         if args.range:
-            config.set((), "image-range"  , args.range)
-            config.set((), "chapter-range", args.range)
+            config.setg("image-range"  , args.range)
+            config.setg("chapter-range", args.range)
 
         djob = job.DataJob(args.extr, file=None)
         djob.filter = dict.copy

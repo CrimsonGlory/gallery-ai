@@ -143,9 +143,9 @@ class TestDownloaderConfig(unittest.TestCase):
         self.assertIs(dl.verify, extr._verify)
 
     def test_config_http(self):
-        config.set((), "rate", 42)
-        config.set((), "mtime", False)
-        config.set((), "headers", {"foo": "bar"})
+        config.setg("rate", 42)
+        config.setg("mtime", False)
+        config.setg("headers", {"foo": "bar"})
         config.set(("downloader",), "retries", -1)
         config.set(("downloader", "http"), "filesize-min", "10k")
         config.set(("extractor", "generic"), "verify", False)
@@ -173,7 +173,7 @@ class TestDownloaderBase(unittest.TestCase):
     def setUpClass(cls):
         cls.dir = tempfile.TemporaryDirectory()
         cls.fnum = 0
-        config.set((), "base-directory", cls.dir.name)
+        config.setg("base-directory", cls.dir.name)
         cls.job = FakeJob()
 
     @classmethod

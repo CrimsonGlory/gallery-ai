@@ -48,7 +48,7 @@ def main():
             config.load(args.configs_toml, strict=True, loads=toml.loads)
         if not args.colors:
             output.ANSI = False
-            config.set((), "colors", False)
+            config.setg("colors", False)
             if util.WINDOWS:
                 config.set(("output",), "ansi", False)
         if args.filename:
@@ -57,16 +57,16 @@ def main():
                 filename = "{filename}.{extension}"
             elif filename.startswith("\\f"):
                 filename = f"\f{filename[2:]}"
-            config.set((), "filename", filename)
+            config.setg("filename", filename)
         if args.directory is not None:
-            config.set((), "base-directory", args.directory)
-            config.set((), "directory", ())
+            config.setg("base-directory", args.directory)
+            config.setg("directory", ())
         if args.postprocessors:
-            config.set((), "postprocessors", args.postprocessors)
+            config.setg("postprocessors", args.postprocessors)
         if args.abort:
-            config.set((), "skip", "abort:" + args.abort)
+            config.setg("skip", "abort:" + args.abort)
         if args.terminate:
-            config.set((), "skip", "terminate:" + args.terminate)
+            config.setg("skip", "terminate:" + args.terminate)
         if args.cookies_from_browser:
             browser, _, profile = args.cookies_from_browser.partition(":")
             browser, _, keyring = browser.partition("+")
@@ -76,10 +76,10 @@ def main():
                 profile = None
             else:
                 profile, _, container = profile.partition("::")
-            config.set((), "cookies", (
-                browser, profile, keyring, container, domain))
+            config.setg("cookies", [
+                browser, profile, keyring, container, domain])
         if args.options_pp:
-            config.set((), "postprocessor-options", args.options_pp)
+            config.setg("postprocessor-options", args.options_pp)
         for opts in args.options:
             config.set(*opts)
 
