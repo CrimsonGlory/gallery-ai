@@ -24,6 +24,7 @@ class _500pxExtractor(Extractor):
     archive_fmt = "{id}"
     root = "https://500px.com"
     cookies_domain = ".500px.com"
+    _warning = True
 
     def _init(self):
         self.headers = {"x-500px-platform": "Web"}
@@ -41,6 +42,12 @@ class _500pxExtractor(Extractor):
         else:
             self.headers[name] = value = util.generate_token(43)
             self.cookies.set(name, value, domain=self.cookies_domain)
+
+        if self._warning:
+            if not self.cookies_check(("x-500px-access-token-prod",)):
+                self.log.warning("no 'x-500px-access-token-prod' cookie set")
+                self.log.warning("image dimensions restricted to 1024px")
+            _500pxExtractor._warning = False
 
     def items(self):
         seen = set()
