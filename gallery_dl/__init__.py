@@ -76,8 +76,8 @@ def main():
                 profile = None
             else:
                 profile, _, container = profile.partition("::")
-            config.set((), "cookies", (
-                browser, profile, keyring, container, domain))
+            config.set((), "cookies", [
+                browser, profile, keyring, container, domain])
         if args.options_pp:
             config.set((), "postprocessor-options", args.options_pp)
         for opts in args.options:
