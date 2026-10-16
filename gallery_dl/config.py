@@ -254,6 +254,7 @@ def clear():
 
 
 getg = _config.get
+setg = _config.__setitem__
 
 
 def get(path, key, default=None, conf=_config):

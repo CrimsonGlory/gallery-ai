@@ -162,7 +162,7 @@ class TestExtractorResults(unittest.TestCase):
         elif not auth:
             # auth explicitly disabled
             for key in AUTH_KEYS:
-                config.set((), key, None)
+                config.setg(key, None)
 
         if auth and not self._has_auth(extr, auth):
             self._skipped.append((result["#url"], "no auth"))
@@ -173,8 +173,8 @@ class TestExtractorResults(unittest.TestCase):
                 key = key.split(".")
                 config.set(key[:-1], key[-1], value)
         if "#range" in result:
-            config.set((), "file-range" , result["#range"])
-            config.set((), "child-range", result["#range"])
+            config.setg("file-range" , result["#range"])
+            config.setg("child-range", result["#range"])
 
         tjob = ResultJob(extr,
                          content=("#sha1_content" in result),
