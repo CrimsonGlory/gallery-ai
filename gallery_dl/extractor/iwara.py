@@ -48,6 +48,8 @@ class IwaraExtractor(Extractor):
                 group_info = self.extract_media_info(image, "file", False)
                 group_info["user"] = (self.extract_user_info(image)
                                       if user is None else user)
+            except self.exc.ControlException:
+                raise
             except Exception as exc:
                 self.status |= 1
                 self.log.error("Failed to process image %s (%s: %s)",
@@ -91,6 +93,8 @@ class IwaraExtractor(Extractor):
                 info["count"] = info["num"] = 1
                 info["user"] = (self.extract_user_info(video)
                                 if user is None else user)
+            except self.exc.ControlException:
+                raise
             except Exception as exc:
                 self.status |= 1
                 self.log.traceback(exc)
