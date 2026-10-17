@@ -1258,6 +1258,7 @@ class InstagramAPI():
         try:
             return util.json_loads(response.text)["data"]
         except (ValueError, KeyError) as exc:
+            extr.status |= 1
             extr.log.debug("Server response:\n%s", response.text)
             extr.log.error("Failed to load API data (%s: %s)",
                            exc.__class__.__name__, exc)
@@ -1328,10 +1329,11 @@ class InstagramAPI():
             try:
                 data = util.json_loads(response.text)["data"][fieldname]
             except (ValueError, KeyError) as exc:
+                extr.status |= 1
                 extr.log.debug("Server response:\n%s", response.text)
                 extr.log.error("Failed to load API data (%s: %s)",
                                exc.__class__.__name__, exc)
-                break
+                raise
 
             if "edges" not in data:
                 for value in data.values():
