@@ -1008,12 +1008,13 @@ class InstagramAPI():
             user_id = self.extractor._assign_user(user)["id"]
         user = self.user_by_id(user_id)
 
-        if check_private and user.get("is_private") and (
-                not user.get("followed_by_viewer", True) or
-                not user.get("friendship_status", {}).get("following", True)):
-            name = user["username"]
-            s = "" if name.endswith("s") else "s"
-            self.extractor.log.warning("%s'%s posts are private", name, s)
+        if check_private and user.get("is_private"):
+            fs = user.get("friendship_status")
+            if fs and not fs.get("following", True) or \
+                    not user.get("followed_by_viewer", True):
+                name = user["username"]
+                s = "" if name.endswith("s") else "s"
+                self.extractor.log.warning("%s'%s posts are private", name, s)
 
         return self.extractor._assign_user(user)
 
