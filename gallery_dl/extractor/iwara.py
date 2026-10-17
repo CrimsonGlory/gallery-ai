@@ -427,7 +427,7 @@ class IwaraAPI():
         sha_postfix = "mSvL05GfEmeEmsEYfGCnVpEjYgTJraJN"
         sha_key = f"{file_id}_{expires}_{sha_postfix}"
         hash = hashlib.sha1(sha_key.encode()).hexdigest()
-        headers = {"X-Version": hash, **self.headers}
+        headers = {**self.headers, "X-Version": hash}
         return self.extractor.request_json(file_url, headers=headers)
 
     def authenticate(self):
@@ -458,7 +458,7 @@ class IwaraAPI():
         self.extractor.log.info("Refreshing access token for %s", username)
 
         url = self.root + "/user/token"
-        headers = {"Authorization": "Bearer " + refresh_token, **self.headers}
+        headers = {**self.headers, "Authorization": "Bearer " + refresh_token}
         data = self.extractor.request_json(
             url, method="POST", headers=headers, fatal=False)
 
