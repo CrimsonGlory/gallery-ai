@@ -69,7 +69,7 @@ Consider all listed sites to potentially be NSFW.
 <tr id="8muses" title="8muses">
     <td>8muses</td>
     <td>https://comics.8muses.com/</td>
-    <td><span title="https://comics.8muses.com/comics/album/PATH/TITLE">Albums</span></td>
+    <td><span title="https://comics.8muses.com/porn/album/PATH/TITLE">Albums</span></td>
     <td></td>
 </tr>
 <tr id="myportfolio" title="myportfolio">
