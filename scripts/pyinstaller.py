@@ -32,7 +32,8 @@ def main():
     if args.print:
         return print(label)
 
-    name = "gallery-dl"
+    # GitHub release assets: gallery-ai_linux, gallery-ai_windows.exe, gallery-ai_macos
+    name = "gallery-ai"
     if label:
         name = "{}_{}".format(name, label)
     if args.extension:

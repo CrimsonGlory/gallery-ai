@@ -50,6 +50,7 @@ jobs:
           - os: ubuntu-latest
             requirements: requirements/linux
             python-arch: x64
+            linux_docker: true
           - os: windows-latest
             requirements: requirements/windows
             python-arch: x64
@@ -62,12 +63,14 @@ jobs:
           persist-credentials: false
 
       - name: Set up Python 3.14
+        if: ${{ !matrix.linux_docker }}
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
           python-version: "3.14"
           architecture: ${{ matrix.python-arch }}
 
       - name: Install dependencies
+        if: ${{ !matrix.linux_docker }}
         run: |
           python -m pip install --require-hashes -r requirements/pip
           python -m pip install --require-hashes -r "${{ matrix.requirements }}"
@@ -75,7 +78,11 @@ jobs:
       - name: Executable label
         id: label
         run: |
-          echo "label=$(python ./scripts/pyinstaller.py --print --os '${{ matrix.os }}' --arch '${{ matrix.python-arch }}')" >> "${GITHUB_OUTPUT}"
+          if [ "${{ matrix.linux_docker }}" = "true" ]; then
+            echo "label=linux" >> "${GITHUB_OUTPUT}"
+          else
+            echo "label=$(python ./scripts/pyinstaller.py --print --os '${{ matrix.os }}' --arch '${{ matrix.python-arch }}')" >> "${GITHUB_OUTPUT}"
+          fi
 
       - name: Stamp version.py
         env:
@@ -103,7 +110,12 @@ jobs:
               fp.write(content)
 
       - name: Build executable
+        if: ${{ !matrix.linux_docker }}
         run: python ./scripts/pyinstaller.py --label '${{ steps.label.outputs.label }}'
+
+      - name: Build Linux executable (glibc 2.17)
+        if: ${{ matrix.linux_docker }}
+        run: ./scripts/build_linux_exe.sh
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
@@ -149,11 +161,11 @@ jobs:
           {
             printf '%s\n\n' "gallery-ai ${TAG}"
             printf '%s\n\n' "Built from https://github.com/${REPOSITORY}/commit/${SHA}"
-            printf '%s\n\n' "Standalone executables include a Python interpreter. \`gallery-dl -U\` on these files updates from this repository (the \`dev\` channel)."
+            printf '%s\n\n' "Standalone executables include a Python interpreter. \`gallery-ai -U\` on these files updates from this repository (the \`dev\` channel)."
             printf '%s\n' "### Files"
-            printf '%s\n' "- \`gallery-dl_linux\` — Linux x86_64"
-            printf '%s\n' "- \`gallery-dl_windows.exe\` — Windows x64"
-            printf '%s\n\n' "- \`gallery-dl_macos\` — macOS (Apple Silicon)"
+            printf '%s\n' "- \`gallery-ai_linux\` — Linux x86_64 (glibc 2.17+; Debian 12, Ubuntu 22.04)"
+            printf '%s\n' "- \`gallery-ai_windows.exe\` — Windows x64"
+            printf '%s\n\n' "- \`gallery-ai_macos\` — macOS (Apple Silicon)"
             printf '%s\n' "### Changes"
             if [[ -n "${PREV_TAG}" ]]; then
               git fetch --force origin "refs/tags/${PREV_TAG}:refs/tags/${PREV_TAG}" || true

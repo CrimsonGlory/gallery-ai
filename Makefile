@@ -24,6 +24,9 @@ test:
 executable:
 	scripts/pyinstaller.py
 
+executable-linux:
+	scripts/build_linux_exe.sh
+
 completion: data/completion/gallery-dl data/completion/_gallery-dl data/completion/gallery-dl.fish
 
 requirements: requirements/docker requirements/windows requirements/linux requirements/macos
@@ -34,7 +37,7 @@ supportedsites: docs/supportedsites.md
 
 options: docs/options.md
 
-.PHONY: all clean install release test executable requirements completion man supportedsites options
+.PHONY: all clean install release test executable executable-linux requirements completion man supportedsites options
 
 docs/supportedsites.md: gallery_dl/*/*.py scripts/supportedsites.py
 	$(PYTHON) scripts/supportedsites.py

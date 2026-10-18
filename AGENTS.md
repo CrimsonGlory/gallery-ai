@@ -42,5 +42,10 @@ Crontab (once a day, e.g. 05:00 local time):
 
 Requires `gh` authenticated with repo + workflow scope. The workflow
 `.github/workflows/release.yml` builds PyInstaller binaries (Linux, Windows,
-macOS) and publishes them on GitHub. `-U` on those executables uses the `dev`
-channel (`CrimsonGlory/gallery-ai`).
+macOS) named `gallery-ai_linux`, `gallery-ai_windows.exe`, and
+`gallery-ai_macos`, and publishes them on GitHub. `-U` on those executables
+uses the `dev` channel (`CrimsonGlory/gallery-ai`).
+
+`gallery-ai_linux` is built in Docker with `scripts/build_linux_exe.sh` on a
+manylinux2014 shared-CPython image (glibc 2.17) so it runs on Debian 12.
+Do not build it with `actions/setup-python` on `ubuntu-latest` (glibc 2.38+).

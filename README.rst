@@ -97,8 +97,10 @@ Nightly Builds
 | Executables built from the latest commit can be found at
 | https://github.com/gdl-org/builds/releases
 
-gallery-ai daily builds of this fork are at
+gallery-ai daily standalone executables of this fork are at
 https://github.com/CrimsonGlory/gallery-ai/releases
+(``gallery-ai_linux`` (glibc 2.17+; Debian 12 / Ubuntu 22.04),
+``gallery-ai_windows.exe``, ``gallery-ai_macos``).
 
 
 Snap

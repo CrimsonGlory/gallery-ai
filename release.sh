@@ -81,12 +81,10 @@ latest_release_tag() {
         printf '%s' "${tag}"
         return 0
     fi
-    gh release list \
-        --repo "${REPO}" \
-        --exclude-drafts \
-        --limit 1 \
-        --json tagName \
-        --jq '.[0].tagName // empty'
+    # Fallback when there is no "latest" (only prereleases, or none). Uses the
+    # REST API so this works on gh 2.4, which has no `release list --exclude-drafts`.
+    gh api "repos/${REPO}/releases?per_page=20" \
+        --jq '([.[] | select(.draft == false) | .tag_name] | .[0]) // empty'
 }
 
 commits_ahead() {

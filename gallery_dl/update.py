@@ -27,11 +27,11 @@ BINARIES_STABLE = {
     "linux"      : "gallery-dl.bin",
 }
 BINARIES_DEV = {
-    "windows"    : "gallery-dl_windows.exe",
-    "windows_x64": "gallery-dl_windows.exe",
-    "windows_x86": "gallery-dl_windows_x86.exe",
-    "linux"      : "gallery-dl_linux",
-    "macos"      : "gallery-dl_macos",
+    "windows"    : "gallery-ai_windows.exe",
+    "windows_x64": "gallery-ai_windows.exe",
+    "windows_x86": "gallery-ai_windows_x86.exe",
+    "linux"      : "gallery-ai_linux",
+    "macos"      : "gallery-ai_macos",
 }
 BINARIES = {
     "stable" : BINARIES_STABLE,

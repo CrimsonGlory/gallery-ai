@@ -19,10 +19,10 @@ class TestUpdateChannels(unittest.TestCase):
 
     def test_dev_binaries(self):
         binaries = update.BINARIES["dev"]
-        self.assertEqual(binaries["linux"], "gallery-dl_linux")
-        self.assertEqual(binaries["windows"], "gallery-dl_windows.exe")
-        self.assertEqual(binaries["windows_x64"], "gallery-dl_windows.exe")
-        self.assertEqual(binaries["macos"], "gallery-dl_macos")
+        self.assertEqual(binaries["linux"], "gallery-ai_linux")
+        self.assertEqual(binaries["windows"], "gallery-ai_windows.exe")
+        self.assertEqual(binaries["windows_x64"], "gallery-ai_windows.exe")
+        self.assertEqual(binaries["macos"], "gallery-ai_macos")
 
 
 if __name__ == "__main__":
