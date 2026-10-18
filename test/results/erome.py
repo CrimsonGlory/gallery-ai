@@ -37,6 +37,9 @@ __tests__ = (
     "num"     : int,
     "title"   : "82e78cfbb461ad87198f927fcb1fda9a1efac9ff.",
     "user"    : "yYgWBZw8o8qsMzM",
+    "_http_headers": {
+        "Referer": "https://www.erome.com/a/TdbZ4ogi",
+    },
 },
 
 {
