@@ -2122,7 +2122,7 @@ class TwitterAPI():
         stop_tweets_max = stop_tweets
         api_retries = None
 
-        if count := variables.get("count").__class__ is list:
+        if (count := variables.get("count")) and count.__class__ is list:
             count = count.copy()
             count.reverse()
             self.log.debug("Using 'count: %s'", count[-1])
