@@ -616,6 +616,12 @@ URL_MAP = {
         "https://joyreactor.com/",
         "https://joyreactor.cc/",
     ),
+    "kagane": (
+        "https://kagane.si/",
+        "https://kagane.cx/",
+        "https://kagane.moe/",
+        "https://kagane.net/",
+    ),
     "konachan": (
         "https://konachan.com/",
         "https://konachan.net/",

@@ -703,7 +703,8 @@ Consider all listed sites to potentially be NSFW.
     <td>GoonBox</td>
     <td>https://goonbox.cr/</td>
     <td><span title="https://goonbox.cr/a/ID">Albums</span> |
-        <span title="https://goonbox.cr/img/ID">individual Images</span></td>
+        <span title="https://goonbox.cr/img/ID">individual Images</span> |
+        <span title="https://goonbox.cr/u/USER">User Profiles</span></td>
     <td></td>
 </tr>
 <tr id="harvardlawnuremberg" title="harvardlawnuremberg">
@@ -975,9 +976,9 @@ Consider all listed sites to potentially be NSFW.
 </tr>
 <tr id="kagane" title="kagane">
     <td>Kagane</td>
-    <td>https://kagane.to/</td>
-    <td><span title="https://kagane.to/series/MANGA_ID/reader/CHAPTER_ID">Chapters</span> |
-        <span title="https://kagane.to/series/MANGA_ID">Manga</span></td>
+    <td>https://kagane.si/<br>https://kagane.cx/<br>https://kagane.moe/<br>https://kagane.net/</td>
+    <td><span title="https://kagane.si/series/MANGA_ID/reader/CHAPTER_ID">Chapters</span> |
+        <span title="https://kagane.si/series/MANGA_ID">Manga</span></td>
     <td></td>
 </tr>
 <tr id="kaliscan" title="kaliscan">
