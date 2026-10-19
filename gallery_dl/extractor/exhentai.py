@@ -336,11 +336,11 @@ class ExhentaiGalleryExtractor(ExhentaiExtractor):
             comments[idx] = {
                 "date" : self.parse_datetime(extr(
                     ">Posted on ", " by: "), "%d %B %Y, %H:%M"),
-                "user" : extr("/uploader/", '"'),
-                "id"   : extr('id="comment_score_', '"'),
-                "score": text.parse_int(extr(">", "<"), None),
+                "user" : text.unquote(extr("/uploader/", '"')),
+                "id"   : text.parse_int(extr('id="comment_score_', '"'), 0),
+                "score": text.parse_int(extr(">", "<"), 0),
                 "text" : extr('id="comment_', "") or text.unescape(extr(
-                    ">", '</div><div class="c7"')),
+                    ">", '</div><div class="c')),
             }
 
         return data
