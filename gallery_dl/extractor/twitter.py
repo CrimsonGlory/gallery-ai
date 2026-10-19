@@ -1229,6 +1229,9 @@ class TwitterTweetExtractor(TwitterExtractor):
             if not tweet_id:
                 break
             tweet = self.api.tweet_result_by_rest_id(tweet_id)
+            if "legacy" not in tweet:
+                self.log.debug("%s: %s", tweet_id, tweet)
+                break
             tweet["legacy"]["quoted_by_id_str"] = parent_id
             yield tweet
 

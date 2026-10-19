@@ -779,6 +779,18 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 },
 
 {
+    "#url"     : "https://x.com/MyLordBebo/status/2025698661116588160",
+    "#comment" : "'Age-restricted adult content' in quote chain (gh#9822)",
+    "#class"   : twitter.TwitterTweetExtractor,
+    "#auth"    : False,
+    "#options" : {"quoted": True},
+    "#results" : (
+        "https://video.twimg.com/amplify_video/2025698604300578816/vid/avc1/888x500/cnnvdQc8X5mRfr3Z.mp4?tag=21",
+        "https://video.twimg.com/amplify_video/2025696139027111936/vid/avc1/356x640/LRnp6ru2qDCWwYTo.mp4?tag=21",
+    ),
+},
+
+{
     "#url"     : "https://twitter.com/playpokemon/status/1263832915173048321/quotes",
     "#category": ("", "twitter", "quotes"),
     "#class"   : twitter.TwitterQuotesExtractor,
