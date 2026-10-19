@@ -22,6 +22,28 @@ docker run --rm --entrypoint python3 \
   gallery-dl:test scripts/run_tests.py
 ```
 
+Live extractor results (`test/test_results.py`). Hits the network. One results module: `test/test_results.py <module>` (filename stem under `test/results/`).
+
+```bash
+docker run --rm --entrypoint python3 \
+  -v "$PWD":/src -w /src -e PYTHONPATH=/src \
+  gallery-ai:latest test/test_results.py
+```
+
+Daily cron (`./daily_test.sh`, same pattern as yt-ai): unit suite, then the live suite, Grok-fix failures, commit, push. Holds the `pull_upstream` lock so the hourly merge cannot start mid-run. Live suite is ~3 hours.
+
+```bash
+./daily_test.sh --dry-run
+./daily_test.sh --no-grok
+./daily_test.sh --no-push
+```
+
+```
+0 2 * * * /path/to/gallery-ai/daily_test.sh
+```
+
+Optional: `GALLERY_AI_TEST_IMAGE` (default `gallery-ai:latest`), `GROK_BIN`, `GROK_MODEL`.
+
 ## Releases
 
 Daily GitHub releases are dispatched by `./release.sh` (same pattern as yt-ai).
