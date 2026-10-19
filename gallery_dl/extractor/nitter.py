@@ -311,9 +311,14 @@ class NitterTweetExtractor(NitterExtractor):
 
     def tweets(self):
         url = f"{self.root}/i/status/{self.user}"
-        html = text.extr(self.request(url).text, 'class="main-tweet', '''\
+        page = self.request(url).text
+        html = text.extr(page, 'class="main-tweet', '''\
                 </div>
               </div></div></div>''')
+        if not html:
+            if "is offline" in page.lower():
+                raise self.exc.AbortExtraction("Instance is offline")
+            raise self.exc.NotFoundError("tweet")
         html, quote = self._extract_quote(html)
         tweet = self._tweet_from_html(html)
         if quote and self.config("quoted", False):

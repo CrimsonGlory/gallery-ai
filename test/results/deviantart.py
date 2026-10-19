@@ -622,7 +622,7 @@ __tests__ = (
     "#url"     : "https://www.deviantart.com/t1na/posts/statuses",
     "#category": ("", "deviantart", "status"),
     "#class"   : deviantart.DeviantartStatusExtractor,
-    "#count"   : 0,
+    "#count"   : range(0, 30),
 },
 
 {

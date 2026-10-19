@@ -115,11 +115,15 @@ class LensdumpImageExtractor(LensdumpBase, Extractor):
                 'property="og:title" content="', '"')),
             "url"   : extr(
                 'property="og:image" content="', '"'),
-            "width" : text.parse_int(extr(
-                'property="image:width" content="', '"')),
-            "height": text.parse_int(extr(
-                'property="image:height" content="', '"')),
-            "date"  : self.parse_datetime_iso(extr('<span title="', '"')),
+            "width" : text.parse_int(
+                extr('property="og:image:width" content="', '"') or
+                extr('property="image:width" content="', '"')),
+            "height": text.parse_int(
+                extr('property="og:image:height" content="', '"') or
+                extr('property="image:height" content="', '"')),
+            "date"  : self.parse_datetime_iso(
+                extr('ld-iv-chip" title="', '"') or
+                extr('<span title="', '"')),
         }
 
         text.nameext_from_url(data["url"], data)

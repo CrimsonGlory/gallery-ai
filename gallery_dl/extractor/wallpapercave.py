@@ -22,11 +22,13 @@ class WallpapercaveImageExtractor(Extractor):
     example = "https://wallpapercave.com/w/wp12345"
 
     def items(self):
-        page = self.request(text.ensure_http_scheme(self.url)).text
+        page_url = text.ensure_http_scheme(self.url)
+        page = self.request(page_url).text
+        headers = {"Referer": page_url}
 
         path = None
         for path in text.extract_iter(page, 'class="download" href="', '"'):
-            image = text.nameext_from_url(path)
+            image = text.nameext_from_url(path, {"_http_headers": headers})
             yield Message.Directory, "", image
             yield Message.Url, self.root + path, image
 
@@ -37,7 +39,7 @@ class WallpapercaveImageExtractor(Extractor):
             except Exception:
                 pass
             else:
-                image = text.nameext_from_url(path)
+                image = text.nameext_from_url(path, {"_http_headers": headers})
                 yield Message.Directory, "", image
                 yield Message.Url, self.root + path, image
 
@@ -45,6 +47,7 @@ class WallpapercaveImageExtractor(Extractor):
             for wp in text.extract_iter(
                     page, 'class="wallpaper" id="wp', '</picture>'):
                 if path := text.rextr(wp, ' src="', '"'):
-                    image = text.nameext_from_url(path)
+                    image = text.nameext_from_url(
+                        path, {"_http_headers": headers})
                     yield Message.Directory, "", image
                     yield Message.Url, self.root + path, image

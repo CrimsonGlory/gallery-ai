@@ -70,7 +70,7 @@ __tests__ = (
     "title"     : "Volume 1 Extras",
     "artist"    : "Sonoguchi Naka",
     "author"    : "Sonoguchi Naka",
-    "description": "<a href=\"https://twitter.com/2525_25_25_25_\"><img src=\"https://i.imgur.com/dQCXZkU.png\" alt=\"twitter\"/>Artist's Twitter</a>\r\n<a href=\"https://www.pixiv.net/en/users/67164428\"><img src=\"https://i.imgur.com/oiVINmy.png\" alt=\"pixiv\"/>Artist's Pixiv</a>",
+    "description": "<a href=\"https://twitter.com/2525_25_25_25_\"><img src=\"https://i.imgur.com/dQCXZkU.png\" alt=\"twitter\"/>Artist's Twitter</a>\n<a href=\"https://www.pixiv.net/en/users/67164428\"><img src=\"https://i.imgur.com/oiVINmy.png\" alt=\"pixiv\"/>Artist's Pixiv</a>",
 },
 
 {

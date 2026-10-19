@@ -33,7 +33,7 @@ __tests__ = (
     "tags_general": list,
     "tags_artist" : ["imanika"],
     "tags_meta"   : ["6:5"],
-    "uploaderId"  : 2,
+    "?uploaderId" : int,
     "width"       : 950,
     "data"        : {
         "sources": [

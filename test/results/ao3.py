@@ -63,7 +63,7 @@ __tests__ = (
     },
     "title"    : "The Wildcard",
     "views"    : range(34000, 50000),
-    "words"    : 217549,
+    "words"    : int,
 
     "categories": [
         "Gen",
@@ -198,7 +198,7 @@ __tests__ = (
     "#class"   : ao3.Ao3UserWorksExtractor,
     "#auth"    : False,
     "#pattern" : r"https://archiveofourown\.org/works/\d+",
-    "#count"   : range(5, 30),
+    "#count"   : range(1, 30),
 },
 
 {

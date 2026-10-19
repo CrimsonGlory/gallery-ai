@@ -178,7 +178,7 @@ __tests__ = (
     "#url"     : "https://joyreactor.cc/tag/Touhou Project",
     "#category": ("reactor", "joyreactor", "tag"),
     "#class"   : joyreactor.JoyreactorTagExtractor,
-    "#pattern" : r"https://img\d+\.joyreactor\.cc/pics/post/full/\w+",
+    "#pattern" : r"https://img\d+\.joyreactor\.cc/pics/post/(full|webm)/.+",
     "#range"   : "1-50",
     "#count"   : range(8, 50),
 

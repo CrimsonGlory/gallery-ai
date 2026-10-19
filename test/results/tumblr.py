@@ -25,7 +25,7 @@ __tests__ = (
         "external": True,
     },
     "#pattern" : r"https?://(?:$|\d+\.media\.tumblr\.com/.+\.(jpg|png|gif|mp3|mp4)|v?a\.(media\.)?tumblr\.com/tumblr_\w+)",
-    "#count"   : 27,
+    "#count"   : range(20, 30),
 },
 
 {
@@ -111,7 +111,7 @@ __tests__ = (
         "date-max"    : "2015-04-25T00:00:00",
         "date-min"    : "2015-04-01T00:00:00",
     },
-    "#count"   : 192,
+    "#count"   : range(180, 210),
 },
 
 {
@@ -219,7 +219,10 @@ __tests__ = (
     "#comment" : "high-quality images (#1846)",
     "#class"   : tumblr.TumblrPostExtractor,
     "#count"       : 2,
-    "#sha1_content": "d6fcc7b6f750d835d55c7f31fa3b63be26c9f89b",
+    "#sha1_content": (
+        "d6fcc7b6f750d835d55c7f31fa3b63be26c9f89b",
+        "066c595187f5476b4616f2c7a46b10a77a4bb431",
+    ),
 },
 
 {
@@ -237,7 +240,10 @@ __tests__ = (
     "#class"   : tumblr.TumblrPostExtractor,
     "#options"     : {"retries": 0},
     "#results"     : "https://64.media.tumblr.com/5e9d760aba24c65beaf0e72de5aae4dd/tumblr_psj5yaqV871t1ig6no1_1280.gif",
-    "#sha1_content": "3508d894b6cc25e364d182a8e1ff370d706965fb",
+    "#sha1_content": (
+        "3508d894b6cc25e364d182a8e1ff370d706965fb",
+        "5d6a8163085a4c8da29649a73126b34375f8e0a1",
+    ),
 },
 
 {

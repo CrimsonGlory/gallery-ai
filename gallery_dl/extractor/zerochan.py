@@ -114,8 +114,8 @@ class ZerochanExtractor(BooruExtractor):
         data = {
             "id"      : item["id"],
             "file_url": item["full"],
-            "width"   : item["width"],
-            "height"  : item["height"],
+            "width"   : text.parse_int(item["width"]),
+            "height"  : text.parse_int(item["height"]),
             "size"    : item["size"],
             "name"    : item["primary"],
             "md5"     : item["hash"],
@@ -273,6 +273,9 @@ class ZerochanTagExtractor(ZerochanExtractor):
                     yield post
             else:
                 for post in posts:
+                    post["id"] = text.parse_int(post.get("id"))
+                    post["width"] = text.parse_int(post.get("width"))
+                    post["height"] = text.parse_int(post.get("height"))
                     urls = self._urls(post)
                     post["file_url"] = next(urls)
                     post["_fallback"] = urls

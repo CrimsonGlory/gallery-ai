@@ -104,7 +104,7 @@ __tests__ = (
     "#category" : ("", "tiktok", "post"),
     "#class"    : tiktok.TiktokPostExtractor,
     "#options"  : {"videos": False, "audio": False},
-    "#count"    : 0,
+    "#exception": exception.NotFoundError,
 },
 
 {

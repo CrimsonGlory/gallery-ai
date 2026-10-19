@@ -130,6 +130,8 @@ class CivitaiExtractor(Extractor):
                 file["date"] = self.parse_datetime_iso(file["createdAt"])
 
                 data["url"] = url = self._url(file)
+                if not url:
+                    continue
                 text.nameext_from_url(url, data)
                 if not data["extension"]:
                     data["extension"] = (
@@ -151,7 +153,14 @@ class CivitaiExtractor(Extractor):
         return ()
 
     def _url(self, image):
-        url = image["url"]
+        url = image.get("url")
+        if not url:
+            url = self._resolve_uuid(image)
+            if not url:
+                self.log.warning(
+                    "Skipping image %s (missing url)", image.get("id"))
+                return None
+            image["url"] = url
         video = image.get("type") == "video"
         quality = self._video_quality if video else self._image_quality
 
@@ -177,12 +186,40 @@ class CivitaiExtractor(Extractor):
         return (f"https://image-b2.civitai.com/file/civitai-media-cache"
                 f"/{url}/{quality}")
 
+    def _resolve_uuid(self, image):
+        """Restore media UUID when tRPC omits 'url'."""
+        image_id = image.get("id")
+        if not image_id:
+            return None
+        cache = self.__dict__.setdefault("_uuid_cache", {})
+        if image_id in cache:
+            return cache[image_id]
+
+        uuid = None
+        try:
+            data = self.request_json(
+                self.root + "/api/v1/images",
+                params={"imageId": image_id, "nsfw": "X"})
+            rest_url = data["items"][0]["url"]
+            if rest_url and "/" in rest_url:
+                uuid = rest_url.rsplit("/", 3)[1]
+            else:
+                uuid = rest_url
+        except Exception as exc:
+            self.log.debug("Unable to resolve URL for image %s (%s: %s)",
+                           image_id, exc.__class__.__name__, exc)
+        cache[image_id] = uuid
+        return uuid
+
     def _image_results(self, images):
         for num, file in enumerate(images, 1):
-            data = text.nameext_from_url(file["url"], {
+            url = self._url(file)
+            if not url:
+                continue
+            data = text.nameext_from_url(file.get("url") or "", {
                 "num" : num,
                 "file": file,
-                "url" : self._url(file),
+                "url" : url,
             })
             if not data["extension"]:
                 data["extension"] = (

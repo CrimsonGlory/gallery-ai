@@ -7,6 +7,7 @@
 """Extractors for general-purpose URL shorteners"""
 
 from .common import BaseExtractor, Message
+from .. import text
 
 
 class UrlshortenerExtractor(BaseExtractor):
@@ -21,7 +22,8 @@ BASE_PATTERN = UrlshortenerExtractor.update({
     },
     "tco": {
         # t.co sends 'http-equiv="refresh"' (200) when using browser UA
-        "headers": {"User-Agent": None},
+        # Empty UA (not None: curl_cffi drops None) gets a 301 Location.
+        "headers": {"User-Agent": ""},
         "root": "https://t.co",
         "pattern": r"t\.co",
     },
@@ -36,8 +38,13 @@ class UrlshortenerLinkExtractor(UrlshortenerExtractor):
 
     def items(self):
         url = self.root + self.groups[-1]
+        headers = self.config_instance("headers")
         location = self.request_location(
-            url, headers=self.config_instance("headers"), notfound="URL")
+            url, headers=headers, notfound="URL")
+        if not location:
+            # t.co returns 200 + meta refresh for browser-like User-Agents
+            location = text.extr(
+                self.request(url, headers=headers).text, "URL=", '"')
         if not location:
             raise self.exc.AbortExtraction("Unable to resolve short URL")
         yield Message.Queue, location, {}

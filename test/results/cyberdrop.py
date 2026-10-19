@@ -27,7 +27,7 @@ __tests__ = (
     "#comment" : "two of three album files removed",
     "#category": ("lolisafe", "cyberdrop", "album"),
     "#class"   : cyberdrop.CyberdropAlbumExtractor,
-    "#pattern" : r"https://k1-cd\.cdn\.gigachad-cdn\.ru/api/file/d/urLPkBXGuNfEg\?token=ey.+",
+    "#pattern" : r"https://(?:k1-cd\.cdn\.gigachad-cdn\.ru|cdn\.cyberdrop\.cr)/api/file/d/urLPkBXGuNfEg\?token=ey.+",
     "#count"   : 1,
 
     "album_id"     : "HriMgbuf",

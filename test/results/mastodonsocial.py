@@ -22,7 +22,7 @@ __tests__ = (
     "#url"     : "https://mastodon.social/@ponapalt@ukadon.shillest.net",
     "#category": ("mastodon", "mastodon.social", "user"),
     "#class"   : mastodon.MastodonUserExtractor,
-    "#pattern" : r"https://files\.mastodon\.social/cache/media_attachments/files/.+/original/\w{16}\.\w+$",
+    "#pattern" : r"https://(?:files\.mastodon\.social/cache/media_attachments/files/.+/original/\w{16}\.\w+|mastodon\.social/media_proxy/\d+/original)$",
     "#range"   : "1-10",
     "#count"   : 10,
 },

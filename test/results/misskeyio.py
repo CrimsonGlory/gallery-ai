@@ -25,7 +25,7 @@ __tests__ = (
     "#url"     : "https://misskey.io/@lithla/notes",
     "#category": ("misskey", "misskey.io", "notes"),
     "#class"   : misskey.MisskeyNotesExtractor,
-    "#pattern" : r"https://(media.misskeyusercontent.(jp|com)|s\d+\.arkjp\.net)/(misskey|io)/[\w-]+\.\w+",
+    "#pattern" : r"https://(media.misskeyusercontent.(jp|com)|s\d+\.arkjp\.net)/(misskey|io)/[\w-]+(?:\.\w+)?",
     "#range"   : "1-50",
     "#count"   : 50,
 },

@@ -89,7 +89,7 @@ __tests__ = (
     "pool": {
         "category"   : "series",
         "created_at" : "2013-11-08T21:44:54.588-05:00",
-        "description": "A comic by [[ken (koala)]] about a girl. Seems to be somewhat melancholy.\r\n\r\n(Also, this will probably be renamed if it gets translated, since the title doesn't make much sense as-is)",
+        "description": "A comic by [[ken (koala)]] about a girl. Seems to be somewhat melancholy.\n\n(Also, this will probably be renamed if it gets translated, since the title doesn't make much sense as-is)",
         "id"         : 7659,
         "is_active"  : False,
         "is_deleted" : False,

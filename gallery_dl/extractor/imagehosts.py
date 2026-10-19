@@ -293,6 +293,15 @@ class ImgadultImageExtractor(ImagehostImageExtractor):
         url , pos = text.extract(page, "' src='", "'")
         name, pos = text.extract(page, "alt='", "'", pos)
 
+        if not url:
+            url , pos = text.extract(page, '" src="', '"')
+            name, pos = text.extract(page, 'alt="', '"', pos)
+        if not url:
+            url = text.extr(page, 'property="og:image" content="', '"')
+
+        if not url:
+            self.not_found()
+
         if name:
             name, _, rhs = name.rpartition(" image hosted at ImgAdult.com")
             if not name:
@@ -543,7 +552,10 @@ class ImgdriveImageExtractor(ImagehostImageExtractor):
             page, 'property="og:title" content="', '"')
         image, pos = text.extract(
             page, 'property="og:image" content="', '"', pos)
-        return image.replace("/small/", "/big/"), title.rsplit(" | ", 2)[0]
+        if not image:
+            self.not_found()
+        return image.replace("/small/", "/big/"), (title or "").rsplit(
+            " | ", 2)[0]
 
 
 class SilverpicImageExtractor(ImagehostImageExtractor):

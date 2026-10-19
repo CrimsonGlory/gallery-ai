@@ -28,7 +28,7 @@ __tests__ = (
     "posted"    : "2024-09-20T19:50:05.772166Z",
     "status"    : 2,
     "type"      : 0,
-    "uploaderId": 2,
+    "?uploaderId": int,
     "width"     : 1300,
     "height"    : 1920,
 

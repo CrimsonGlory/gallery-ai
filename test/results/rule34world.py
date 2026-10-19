@@ -32,7 +32,7 @@ __tests__ = (
     "tags_character": list,
     "?tags_meta"    : list,
     "type"          : 0,
-    "uploaderId"    : int,
+    "?uploaderId"   : int,
     "width"         : 2047,
     "tags"          : list,
     "tags_copyright": list,
@@ -57,12 +57,12 @@ __tests__ = (
     "width"      : int,
     "height"     : int,
     "id"         : int,
-    "likes"      : int,
+    "?likes"     : int,
     "posted"     : "iso:8601",
     "search_tags": "zenless zone zero",
     "status"     : 2,
     "type"       : {0, 1},
-    "uploaderId" : int,
+    "?uploaderId": int,
 },
 
 {

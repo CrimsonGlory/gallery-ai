@@ -5,18 +5,15 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import imagehosts
+from gallery_dl import exception
 
 
 __tests__ = (
 {
     "#url"     : "https://imgadult.com/img-686b4f451af05.html",
+    "#comment" : "missing image (empty 200)",
     "#class"   : imagehosts.ImgadultImageExtractor,
-    "#results"      : "https://imgadult.com/upload/big/2025/07/07/686b4f451af04.jpg",
-    "#sha1_content" : "6df0034ce96ad2347926037abe2dd0085ebc8d66",
-
-    "extension": "jpg",
-    "filename" : "1612",
-    "token"    : "686b4f451af05",
+    "#exception": exception.NotFoundError,
 },
 
 )

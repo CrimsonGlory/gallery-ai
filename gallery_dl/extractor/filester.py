@@ -31,10 +31,14 @@ class FilesterExtractor(Extractor):
         return (f"{data['server']}/v2/{data['file']}"
                 f"?token={data['token']}&download=true")
 
+    def _password_page(self, page):
+        return "<title>Password Required" in page
+
     def _submit_password(self, page, password):
         extr = text.extract_from(page)
         path = text.unescape(extr('action="', '"'))
-        nonce = text.unescape(extr('="nonce" value="', '"'))
+        nonce = text.unescape(extr('name="nonce" value="', '"') or
+                               extr('="nonce" value="', '"'))
         payload = f"{password}|{int(util.time.time()*1000)}|{nonce}"
 
         body = {
@@ -46,6 +50,8 @@ class FilesterExtractor(Extractor):
             self.root + path, method="POST", data=body, allow_redirects=False)
         if response.status_code != 303:
             msg = text.extr(response.text, 'class="error">', '<')
+            if not msg and "Incorrect password" in response.text:
+                msg = "Incorrect password. Please try again."
             raise self.exc.AuthorizationError(f"'{text.unescape(msg)}'")
 
 
@@ -61,7 +67,7 @@ class FilesterFileExtractor(FilesterExtractor):
         url = f"{self.root}/d/{file_slug}"
         page = self.request(url).text
 
-        if page.find("<title>Password Required</title>", 0, 100) >= 0:
+        if self._password_page(page):
             if password := self.config("password"):
                 self._submit_password(page, password)
                 page = self.request(url).text
@@ -103,7 +109,7 @@ class FilesterFolderExtractor(FilesterExtractor):
             page = self.request(url, params=params).text
 
             if num is None:
-                if page.find("<title>Password Required</title>", 0, 100) >= 0:
+                if self._password_page(page):
                     if password := self.config("password"):
                         self._submit_password(page, password)
                         continue
@@ -119,8 +125,10 @@ class FilesterFolderExtractor(FilesterExtractor):
                 kw["folder_uuid"] = extr('/t/', '"')
                 kw["folder_date"] = self.parse_datetime(extr(
                     "<span>Created ", "<"), "%b %d, %Y")
-                kw["count"] = num = text.parse_int(extr("<span>", " "))
-                kw["folder_size"] = text.parse_bytes(extr("<span>", "B<"))
+                kw["count"] = num = text.parse_int(extr(
+                    'class="tnum">', " ") or extr("<span>", " "))
+                kw["folder_size"] = text.parse_bytes(extr(
+                    'class="tnum">', "B") or extr("<span>", "B<"))
                 del extr
                 yield Message.Directory, "", {}
 
@@ -131,7 +139,8 @@ class FilesterFolderExtractor(FilesterExtractor):
                 file = text.nameext_from_name(name, {
                     "size": extr('data-size="', '"'),
                     "date": self.parse_datetime_iso(extr('data-date="', '"')),
-                    "id"  : extr("href='/d/", "'"),
+                    "id"  : (extr("href='/d/", "'") or
+                             extr("downloadFile('", "'")),
                     "uuid": extr('src="/t/', '"'),
                     "num" : num,
                 })

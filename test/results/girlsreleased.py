@@ -26,7 +26,7 @@ __tests__ = (
     "#url"     : "https://girlsreleased.com/set/124943",
     "#category": ("", "girlsreleased", "set"),
     "#class"   : girlsreleased.GirlsreleasedSetExtractor,
-    "#pattern" : r"https://imx\.to/i/\w+",
+    "#pattern" : r"https://(?:imx\.to/i/\w+|pixhost\.cc/show/\d+/.+)",
     "#count"   : 79,
 
     "id"        : "124943",

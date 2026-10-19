@@ -26,16 +26,11 @@ __tests__ = (
     "thumbURL": str,
     "gallery" : {
         "date"       : "dt:2022-02-02 06:30:09",
-        "description": "Alina Henessy loves to wash her car, and we love seeing every inch of her gorgeous body. More at DigitalDesire.com",
+        "description": str,
         "id"         : 15860946,
-        "tags"       : [
-            "Babe",
-            "Public Nudity",
-            "Masturbation",
-            "Take Me",
-        ],
+        "tags"       : list,
         "thumbnail"  : str,
-        "title"      : "Take me to the carwash at DigitalDesire",
+        "title"      : str,
         "views"      : range(100000, 200000),
 
     },

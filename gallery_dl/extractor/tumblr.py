@@ -592,6 +592,9 @@ class TumblrAPI(oauth.OAuth1API):
             strategy = "api"
         self.log.debug("Pagination strategy '%s'", strategy or "offset")
 
+        # 'before' uses last_timestamp+1, which re-includes the last post
+        seen_ids = set() if strategy == "before" else None
+
         while True:
             data = self._call(endpoint, params)
 
@@ -604,6 +607,12 @@ class TumblrAPI(oauth.OAuth1API):
                     self.BLOG_CACHE[blog] = data["blog"]
                     cache = False
                 posts = data[key]
+
+            if seen_ids is not None:
+                if seen_ids:
+                    posts = [post for post in posts
+                             if post["id"] not in seen_ids]
+                seen_ids.update(post["id"] for post in posts)
 
             yield from posts
 

@@ -37,7 +37,7 @@ __tests__ = (
         "lastNameFirst"     : "Cole Thomas",
         "periodsOfWork"     : "",
         "relatedArtistsIds" : [],
-        "series"            : "The Cross and the World\r\nThe Course of Empire\r\nThe Voyage of Life",
+        "series"            : "The Cross and the World\nThe Course of Empire\nThe Voyage of Life",
         "story"             : "http://en.wikipedia.org/wiki/Thomas_Cole",
         "themes"            : "",
         "url"               : "thomas-cole",

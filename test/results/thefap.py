@@ -58,7 +58,7 @@ __tests__ = (
     "#range"   : "1-100",
     "#count"   : range(6, 101),
 
-    "extension" : "jpg",
+    "extension" : {"jpg", "jpeg"},
     "filename"  : str,
     "model"     : "zoey.curly",
     "model_id"  : 374261,

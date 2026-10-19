@@ -211,7 +211,7 @@ class PawchiveExtractor(Extractor):
             post["count"] = len(files)
             yield Message.Directory, "", post
             if original:
-                if post.get("deferred") and self.deferred_only:
+                if self.deferred_only:
                     num = 0
                     for file in files:
                         if not file.get("deferred"):

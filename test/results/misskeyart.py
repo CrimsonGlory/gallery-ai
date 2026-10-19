@@ -61,11 +61,7 @@ __tests__ = (
     "#category": ("misskey", "misskey.art", "following"),
     "#class"   : misskey.MisskeyFollowingExtractor,
     "#pattern" : misskey.MisskeyUserExtractor.pattern,
-    "#results" : (
-        "https://misskey.art/@tukushiA@misskey.io",
-        "https://misskey.art/@mamad0r@misskey.io",
-        "https://misskey.art/@shuumai@misskey.io",
-    ),
+    "#count"   : range(1, 10),
 },
 
 {

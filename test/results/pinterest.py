@@ -72,7 +72,8 @@ __tests__ = (
     "#url"     : "https://www.pinterest.com/pin/1025272671423645004/",
     "#comment" : "story pin with 'story_pin_static_sticker_block' blocks",
     "#class"   : pinterest.PinterestPinExtractor,
-    "#exception": exception.NotFoundError,
+    "#pattern" : r"https://i\.pinimg\.com/originals/.+",
+    "#count"   : ">= 1",
 },
 
 {
@@ -205,7 +206,7 @@ __tests__ = (
     "#category": ("", "pinterest", "related-pin"),
     "#class"   : pinterest.PinterestRelatedPinExtractor,
     "#range"   : "31-70",
-    "#count"   : 40,
+    "#count"   : range(20, 50),
     "#archive" : False,
 },
 

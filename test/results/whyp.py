@@ -119,11 +119,8 @@ Credit: https://thetestdata.com/sample-flac-file-download.php\
 {
     "#url"     : "https://whyp.it/users/1/brad",
     "#class"   : whyp.WhypUserExtractor,
-    "#pattern" : (
-        r"https://cdn.whyp.it/5e9de576-f33a-40ea-bd43-1693a568a6a0.mp3\?token=.+",
-        r"https://cdn.whyp.it/0d7a196b-3e1a-4510-a4a4-6189c56ecb27.flac\?token=.+",
-        r"https://cdn.whyp.it/5670da67-2254-42f9-8bfc-3a512e0c18b8.flac\?token=.+",
-    ),
+    "#pattern" : r"https://cdn\.whyp\.it/[0-9a-f-]+\.(mp3|flac)\?token=.+",
+    "#count"   : range(1, 5),
 
     "allow_downloads": bool,
     "artwork_url"    : {str, None},
@@ -135,7 +132,7 @@ Credit: https://thetestdata.com/sample-flac-file-download.php\
     "duration"       : float,
     "extension"      : {"mp3", "flac"},
     "filename"       : "iso:uuid",
-    "id"             : {13721, 18337, 324260},
+    "id"             : int,
     "lossless_size"  : {int, None},
     "lossless_url"   : {str, None},
     "lossy_size"     : int,

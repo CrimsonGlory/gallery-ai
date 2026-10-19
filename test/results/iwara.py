@@ -244,7 +244,7 @@ Twitter : https://x.com/croove_nsfw\
     "comments"    : int,
     "count"       : 1,
     "num"         : 1,
-    "date"        : "dt:2026-03-13 12:38:30",
+    "date"        : "type:datetime",
     "date_updated": "type:datetime",
     "duration"    : 148,
     "extension"   : "mp4",
