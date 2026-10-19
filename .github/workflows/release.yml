@@ -153,34 +153,22 @@ jobs:
           sha256sum -- * > SHA256SUMS
           sha512sum -- * > SHA512SUMS
 
+      # First-parent commits since PREV_TAG only. A plain git log walks into
+      # [upstream] Merge commits and reprints earlier gallery-dl versions.
       - name: Release notes
         env:
           REPOSITORY: ${{ github.repository }}
           SHA: ${{ github.sha }}
         run: |
-          {
-            printf '%s\n\n' "gallery-ai ${TAG}"
-            printf '%s\n\n' "Built from https://github.com/${REPOSITORY}/commit/${SHA}"
-            printf '%s\n\n' "Standalone executables include a Python interpreter. \`gallery-ai -U\` on these files updates from this repository (the \`dev\` channel)."
-            printf '%s\n' "### Files"
-            printf '%s\n' "- \`gallery-ai_linux\` — Linux x86_64 (glibc 2.17+; Debian 12, Ubuntu 22.04)"
-            printf '%s\n' "- \`gallery-ai_windows.exe\` — Windows x64"
-            printf '%s\n\n' "- \`gallery-ai_macos\` — macOS (Apple Silicon)"
-            printf '%s\n' "### Changes"
-            if [[ -n "${PREV_TAG}" ]]; then
-              git fetch --force origin "refs/tags/${PREV_TAG}:refs/tags/${PREV_TAG}" || true
-              printf '\n%s\n\n' "Commits since ${PREV_TAG}:"
-              if git rev-parse --verify "${PREV_TAG}^{}" >/dev/null 2>&1; then
-                git log --pretty=format:'- %s (`%h`)' "${PREV_TAG}..${SHA}"
-              else
-                git log --pretty=format:'- %s (`%h`)' -n 50 "${SHA}"
-              fi
-            else
-              printf '\n%s\n\n' "Recent commits:"
-              git log --pretty=format:'- %s (`%h`)' -n 50 "${SHA}"
-            fi
-            printf '\n'
-          } > RELEASE_NOTES
+          if [[ -n "${PREV_TAG}" ]]; then
+            git fetch --force origin "refs/tags/${PREV_TAG}:refs/tags/${PREV_TAG}" || true
+          fi
+          python3 scripts/release_notes.py \
+            --tag "${TAG}" \
+            --sha "${SHA}" \
+            --prev-tag "${PREV_TAG}" \
+            --repo "${REPOSITORY}" \
+            > RELEASE_NOTES
 
       - name: Publish release
         env:
