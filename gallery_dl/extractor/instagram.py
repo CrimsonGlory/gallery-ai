@@ -963,6 +963,8 @@ class InstagramAPI():
             "__relay_internal__pv__"
             "PolarisCASB976ProfileEnabledrelayprovider": False,
             "__relay_internal__pv__"
+            "PolarisProfileInformTreatmentBannerEnabledrelayprovider": False,
+            "__relay_internal__pv__"
             "PolarisWebSchoolsEnabledrelayprovider": False,
             "__relay_internal__pv__"
             "PolarisProfileRingsGradientEnabledrelayprovider": False,
