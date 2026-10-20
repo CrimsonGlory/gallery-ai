@@ -38,14 +38,21 @@ class RedgifsExtractor(Extractor):
 
     def items(self):
         metadata = self.metadata()
+        seen = set()
+        seen_galleries = set()
 
         for gif in self.gifs():
 
             if gallery := gif.get("gallery"):
+                if gallery in seen_galleries:
+                    continue
+                seen_galleries.add(gallery)
                 gifs = self.api.gallery(gallery)["gifs"]
                 enum = 1
                 cnt = len(gifs)
             else:
+                if gif.get("id") in seen:
+                    continue
                 gifs = (gif,)
                 enum = 0
                 cnt = 1
@@ -56,12 +63,17 @@ class RedgifsExtractor(Extractor):
             yield Message.Directory, "", gif
 
             for num, gif in enumerate(gifs, enum):
+                gif_id = gif["id"]
+                if gif_id in seen:
+                    continue
+                seen.add(gif_id)
+
                 gif["_fallback"] = formats = self._formats(gif)
                 url = next(formats, None)
 
                 if not url:
                     self.log.warning(
-                        "Skipping '%s' (format not available)", gif["id"])
+                        "Skipping '%s' (format not available)", gif_id)
                     continue
 
                 gif["num"] = num

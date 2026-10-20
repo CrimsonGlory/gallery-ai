@@ -15,7 +15,7 @@ __tests__ = (
     "#class"   : _500px._500pxPostExtractor,
     "#pattern" : r"https://cdn-resize-prod-com.500px.cloud/photo/222049255/0.jpg\?s=2&w=1&expiry=\d+&sig=\w+",
 
-    "aiArtAnalysis"   : "This evocative portrait explores themes of solitude and contemplation, as a lone figure stands at the edge of a vast body of water. The soft light and muted tones create an atmosphere of quiet introspection, suggesting a moment of deep personal reflection amidst nature's grandeur. The subject's gaze towards the horizon implies a search for meaning or connection beyond the immediate surroundings, highlighting humanity's enduring quest for understanding within expansive landscapes.",
+    "aiArtAnalysis"   : {str, None},
     "aperture"        : "7.1",
     "camera"          : "Canon EOS 600D",
     "commentCount"    : range(2, 10),

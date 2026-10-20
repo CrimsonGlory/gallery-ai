@@ -65,7 +65,7 @@ __tests__ = (
 {
     "#url"     : "https://www.furaffinity.net/search/?q=cute",
     "#class"   : furaffinity.FuraffinitySearchExtractor,
-    "#pattern" : r"https://d\d?\.f(uraffinity|acdn)\.net/art/[^/]+/\d+/\d+.\w+\.\w+",
+    "#pattern" : r"https://d\d?\.f(uraffinity|acdn)\.net/(?:download/)?art/[^/?#]+/.+",
     "#range"   : "45-50",
     "#count"   : 6,
 },

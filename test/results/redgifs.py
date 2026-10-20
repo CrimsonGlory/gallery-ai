@@ -34,7 +34,8 @@ __tests__ = (
     "#comment" : "'v3' subdomain (#3588, #3589)",
     "#class"   : redgifs.RedgifsUserExtractor,
     "#pattern" : r"https://\w+\.redgifs\.com/[\w-]+\.(mp4|jpg)",
-    "#count"   : ">= 100",
+    "#range"   : "1-150",
+    "#count"   : range(100, 151),
 },
 
 {

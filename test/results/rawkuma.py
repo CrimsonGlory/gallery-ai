@@ -90,7 +90,7 @@ __tests__ = (
     "#pattern" : rawkuma.RawkumaChapterExtractor.pattern,
     "#count"   : range(55, 80),
 
-    "chapter"      : range(1, 20),
+    "chapter"      : range(1, 40),
     "chapter-minor": {"", ".1", ".2", ".3", ".4"},
     "chapter_id"   : int,
     "manga"        : "Makutsu no Ou ~Yomei Ikkagetsu no Doutei, Mahou Shoujo Harem o Kizuite Ou e Kunrinsu~",

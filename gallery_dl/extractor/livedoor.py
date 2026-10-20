@@ -59,7 +59,7 @@ class LivedoorExtractor(Extractor):
             src = text.extr(img, 'src="', '"')
             alt = text.extr(img, 'alt="', '"')
 
-            if not src:
+            if not src or "parts.blog.livedoor.jp" in src:
                 continue
             if "://livedoor.blogimg.jp/" in src:
                 url = src.replace("http:", "https:", 1).replace("-s.", ".")
