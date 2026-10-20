@@ -1523,7 +1523,12 @@ class TwitterAPI():
             "features"    : self._json_dumps(features),
             "fieldToggles": self._json_dumps(field_toggles),
         }
-        tweet = self._call(endpoint, params)["data"]["tweetResult"]["result"]
+        data = self._call(endpoint, params)
+        try:
+            tweet = data["data"]["tweetResult"]["result"]
+        except KeyError:
+            return data
+
         if "tweet" in tweet:
             tweet = tweet["tweet"]
 
