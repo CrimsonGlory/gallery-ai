@@ -41,7 +41,12 @@ __tests__ = (
 {
     "#url"     : "https://www.imagebam.com/image/94d56c502511890",
     "#class"   : imagebam.ImagebamImageExtractor,
-    "#exception": "NotFoundError",
+    "#results" : "https://images3.imagebam.com/1d/8c/44/94d56c502511890.png",
+
+    "extension": "png",
+    "filename" : 'test-???-"&>',
+    "image_key": "94d56c502511890",
+    "url"      : "https://images3.imagebam.com/1d/8c/44/94d56c502511890.png",
 },
 
 {
@@ -53,7 +58,12 @@ __tests__ = (
     "#url"     : "https://www.imagebam.com/image/0850951366904951",
     "#comment" : "NSFW (#1534)",
     "#class"   : imagebam.ImagebamImageExtractor,
-    "#exception": "NotFoundError",
+    "#results" : "https://images2.imagebam.com/ac/83/68/0850951366904951.jpg",
+
+    "extension": "jpg",
+    "filename" : "5884006",
+    "image_key": "0850951366904951",
+    "url"      : "https://images2.imagebam.com/ac/83/68/0850951366904951.jpg",
 },
 
 {
@@ -67,7 +77,12 @@ __tests__ = (
     "#url"     : "https://www.imagebam.com/image/b728aa119132443",
     "#comment" : "filename without extension (#8476)",
     "#class"   : imagebam.ImagebamImageExtractor,
-    "#exception": "NotFoundError",
+    "#results" : "https://images3.imagebam.com/d2/7a/d9/b728aa119132443.jpg",
+
+    "extension": "",
+    "filename" : "34415_AlessandraAmbrosio_PhotoshootforVictoriasSecretwearingbikinislingerieonthebeachinMalibuCalifor",
+    "image_key": "b728aa119132443",
+    "url"      : "https://images3.imagebam.com/d2/7a/d9/b728aa119132443.jpg",
 },
 
 {

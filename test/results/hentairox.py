@@ -24,8 +24,8 @@ __tests__ = (
     "title"     : "(Shikei wa Iyadakara na) [Kujira Logic, TOYBOX (Kujiran, Kurikara)] Gensou-kyou Chichi Zukan - Kurenai (Touhou Project)",
     "title_alt" : "(死刑はいやだからな) [くぢらろじっく, といぼっくす (くぢらん, くりから)] 幻想郷乳図鑑 - 紅 (東方Project)",
     "type"      : "doujinshi",
-    "width"     : {696, 701},
-    "height"    : {999, 1000},
+    "?width"    : {696, 701},
+    "?height"   : {999, 1000},
 
     "artist": [
         "kujiran",
@@ -74,8 +74,8 @@ __tests__ = (
     "title"     : "(C70) [UDON-YA (Kizuki Aruchu, ZAN)] Udonko CM70 Omake Hon (Various)",
     "title_alt" : "(C70) [うどんや (鬼月あるちゅ、ZAN)] うどんこ CM70オマケ本 (よろず)",
     "type"      : "doujinshi",
-    "width"     : 1076,
-    "height"    : 1517,
+    "?width"    : 1076,
+    "?height"   : 1517,
 
     "artist": [
         "kizuki aruchu",

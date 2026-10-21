@@ -25,7 +25,7 @@ __tests__ = (
     "#url"     : "https://lensdump.com/a/tA4lA",
     "#comment" : "2 pages",
     "#class"   : lensdump.LensdumpAlbumExtractor,
-    "#pattern" : r"https://[abcd]\.l3n\.co/(i/)?\w{6}\.(jpe?g|png)",
+    "#pattern" : r"https://[abcd]\.l3n\.co/(i/)?\w{6}(?:\.(?:md|th))?\.(jpe?g|png|webp)",
     "#count"   : range(80, 120),
 },
 

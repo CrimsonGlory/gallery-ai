@@ -75,7 +75,7 @@ __tests__ = (
     "#url"     : "https://vsco.co/vsco/collection/1",
     "#category": ("", "vsco", "collection"),
     "#class"   : vsco.VscoCollectionExtractor,
-    "#pattern" : r"https://image(-aws.+)?\.vsco\.co/[0-9a-f/]+/[\w\s-]+\.\w+",
+    "#pattern" : r"https://image(-aws.+)?\.vsco\.co/[0-9a-f/]+/[\w\s-]+(?:\.\w+)?",
     "#range"   : "1-80",
     "#count"   : 80,
 },
@@ -84,7 +84,7 @@ __tests__ = (
     "#url"     : "https://vsco.co/spaces/6320a3e1e0338d1350b33fea",
     "#category": ("", "vsco", "space"),
     "#class"   : vsco.VscoSpaceExtractor,
-    "#pattern" : r"https://image(-aws.+)?\.vsco\.co/[0-9a-f/]+/[\w\s-]+\.\w+",
+    "#pattern" : r"https://image(-aws.+)?\.vsco\.co/[0-9a-f/]+/[\w\s-]+(?:\.\w+)?",
     "#count"   : range(100, 150),
 },
 

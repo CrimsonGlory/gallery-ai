@@ -40,11 +40,16 @@ class ImgboxExtractor(Extractor):
 
     def get_image_metadata(self, page):
         """Collect metadata for a downloadable file"""
-        return text.extract_all(page, (
+        data = text.extract_all(page, (
             ("num"      , '</a> &nbsp; ', ' of '),
             (None       , 'class="image-container"', ''),
             ("filename" , ' title="', '"'),
         ))[0]
+        if not data.get("filename"):
+            url = self.get_image_url(page)
+            if url:
+                data["filename"] = url.rpartition("/")[2].partition("?")[0]
+        return data
 
     def get_image_url(self, page):
         """Extract download-url"""

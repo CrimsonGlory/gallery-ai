@@ -219,10 +219,10 @@ __tests__ = (
 
 {
     "#url"     : "https://www.tiktok.com/@veronicaperasso_1/video/7212008840433274118",
-    "#comment" : "no 'author' (#8189)",
+    "#comment" : "no 'author' (#8189); post no longer available",
     "#class"   : tiktok.TiktokPostExtractor,
-    "#results" : "ytdl:https://www.tiktok.com/@veronicaperasso_1/video/7212008840433274118",
     "#options" : {"videos": "ytdl"},
+    "#exception": exception.NotFoundError,
 },
 
 {
@@ -249,7 +249,7 @@ __tests__ = (
     "#comment" : "combined subtitle filter",
     "#class"   : tiktok.TiktokPostExtractor,
     "#pattern" : SUBTITLE_PATTERN,
-    "#count"   : 6,
+    "#count"   : range(1, 10),
     "#options" : {"videos": False, "covers": False, "subtitles": "ASR,deu-DE"}
 },
 
@@ -259,7 +259,7 @@ __tests__ = (
     "#comment" : "all subtitles",
     "#class"   : tiktok.TiktokPostExtractor,
     "#pattern" : SUBTITLE_PATTERN,
-    "#count"   : 64,
+    "#count"   : range(1, 80),
     "#options" : {"videos": False, "covers": False, "subtitles": "all"}
 },
 

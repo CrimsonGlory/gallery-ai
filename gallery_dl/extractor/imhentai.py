@@ -46,6 +46,8 @@ class ImhentaiExtractor(BaseExtractor):
 
             href = text.rextr(page_full, "class='page-link' href='", "'")
             if not href or href == "#":
+                href = text.rextr(page_full, 'class="page-link" href="', '"')
+            if not href or href == "#":
                 pos = page_full.find('rel="next"')
                 href = (text.rextr(page_full, 'href="', '"', pos)
                         if pos >= 0 else None)
@@ -54,6 +56,7 @@ class ImhentaiExtractor(BaseExtractor):
             url = self._join_next(url, href)
 
     def _join_next(self, current, href):
+        href = text.unescape(href)
         if href[0] == "/":
             href = ("https:" + href) if href.startswith("//") else (
                 self.root + href)
@@ -176,8 +179,10 @@ class ImhentaiGalleryExtractor(ImhentaiExtractor, GalleryExtractor):
         title = text.unescape(text.extr(
             page, 'id="gallery-title">', "<") or text.extr(page, "<h1>", "<"))
         title_alt = text.unescape(
+            text.extr(page, 'hr-gallery-description">', "<") or
             text.extr(page, 'hnv-gallery-description">', "<") or
-            text.extr(page, 'hz-gallery-description">', "<"))
+            text.extr(page, 'hz-gallery-description">', "<") or
+            text.extr(page, 'class="subtitle">', "<"))
         data = {
             "gallery_id": text.parse_int(self.gallery_id),
             "title"     : title,
