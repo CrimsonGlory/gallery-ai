@@ -905,18 +905,6 @@ Description
       of a valid cookies.txt file, update its contents.
 
 
-extractor.nhentai.api-key
--------------------------
-Type
-    ``string``
-Default
-    ``null``
-Description
-    Your nHentai API key. Required for API endpoints that need account
-    authentication, such as favorites. Generate an API key in your
-    `account settings <https://nhentai.net/user/settings#apikeys>`__
-
-
 extractor.*.proxy
 -----------------
 Type
@@ -5207,6 +5195,20 @@ Supported Values
     * ``movies``
 Note
     It is possible to use ``"all"`` instead of listing all values separately.
+
+
+extractor.nhentai.api-key
+-------------------------
+Type
+    ``string``
+Default
+    ``null``
+Description
+    Your nHentai API key. Required for API endpoints that need account
+    authentication, such as favorites.
+
+    Generate an API key in your
+    `account settings <https://nhentai.net/user/settings#apikeys>`__
 
 
 extractor.nijie.include
