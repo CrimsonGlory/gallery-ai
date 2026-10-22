@@ -3348,6 +3348,17 @@ Description
     * Provides exact ``date`` and ``filesize``
 
 
+extractor.exhentai.mpv
+----------------------
+Type
+    ``bool``
+Default
+    ``true``
+Description
+    Download image galleries in MPV mode
+    if available and enabled in your account settings.
+
+
 extractor.exhentai.original
 ---------------------------
 Type
