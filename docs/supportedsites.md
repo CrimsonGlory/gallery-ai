@@ -800,7 +800,7 @@ Consider all listed sites to potentially be NSFW.
 </tr>
 <tr id="idolcomplex" title="idolcomplex">
     <td>Idol Complex</td>
-    <td>https://www.idolcomplex.com/</td>
+    <td>https://www.idolcomplex.com/<br>https://idol.sankakucomplex.com/<br>https://iapi.sankakucomplex.com/</td>
     <td><span title="https://www.idolcomplex.com/en/pools/0123456789abcdef">Pools</span> |
         <span title="https://www.idolcomplex.com/en/posts/0123456789abcdef">Posts</span> |
         <span title="https://www.idolcomplex.com/en/posts?tags=TAGS">Tag Searches</span></td>
