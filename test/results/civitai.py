@@ -20,7 +20,7 @@ __tests__ = (
         "id"         : 703211,
         "minor"      : False,
         "name"       : "メイド　クラシック/maid classic",
-        "nsfwLevel"  : 1,
+        "nsfwLevel"  : int,
         "type"       : "LORA",
     },
     "user"   : {

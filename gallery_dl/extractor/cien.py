@@ -31,7 +31,12 @@ class CienExtractor(Extractor):
         params["page"] = text.parse_int(params.get("page"), 1)
 
         while True:
-            page = self.request(url, params=params).text
+            response = self.request(url, params=params)
+            page = response.text
+            if ("maintenance" in getattr(response, "url", "") or
+                    "メンテナンス" in page):
+                raise self.exc.AbortExtraction(
+                    "503 Service Temporarily Unavailable")
 
             for card in text.extract_iter(
                     page, ' class="c-cardCase-item', '</figure>'):

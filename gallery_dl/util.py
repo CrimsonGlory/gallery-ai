@@ -367,7 +367,11 @@ def extract_headers(response):
 
 
 def detect_challenge(response):
-    server = response.headers.get("server")
+    content = getattr(response, "content", None) or b""
+    if b"<title>NG Guard</title>" in content or b"/_guard/assets/" in content:
+        return "NG Guard challenge"
+
+    server = response.headers.get("server") if response.headers else None
     if not server:
         return
 

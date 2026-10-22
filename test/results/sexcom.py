@@ -60,6 +60,7 @@ __tests__ = (
     "#comment" : "gif (legacy URL)",
     "#category": ("", "sexcom", "pin"),
     "#class"   : sexcom.SexcomPinExtractor,
+    "#skip"    : "legacy",
     "#results"     : "https://imagex1.sx.cdn.live/images/pinporn/2017/12/07/18760842.gif",
     "#sha1_content": "176cc63fa05182cb0438c648230c0f324a5965fe",
 

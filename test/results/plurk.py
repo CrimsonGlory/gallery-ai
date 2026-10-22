@@ -12,7 +12,7 @@ __tests__ = (
     "#url"     : "https://www.plurk.com/NetKidz",
     "#category": ("", "plurk", "timeline"),
     "#class"   : plurk.PlurkTimelineExtractor,
-    "#pattern" : r"https://(?:(?:images|imgs)\.plurk\.com/\w+|pbs\.twimg\.com/.+|s\.yimg\.com/.+)",
+    "#pattern" : r"https://(?:(?:images|imgs)\.plurk\.com/\w+|pbs\.twimg\.com/.+|s\.yimg\.com/.+|blogger\.googleusercontent\.com/.+)",
     "#range"   : "1-20",
     "#count"   : range(1, 21),
 },

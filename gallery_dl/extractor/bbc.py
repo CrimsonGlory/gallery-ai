@@ -81,7 +81,12 @@ class BbcProgrammeExtractor(Extractor):
         galleries_url = self.root + path
 
         while True:
-            page = self.request(galleries_url, params=params).text
+            response = self.request(galleries_url, params=params)
+            page = response.text
+            if (getattr(response, "url", "").endswith("/error.html") or
+                    "Service Temporarily Unavailable" in page):
+                raise self.exc.AbortExtraction(
+                    "503 Service Temporarily Unavailable")
             for programme_id in text.extract_iter(
                     page, '<a href="https://www.bbc.co.uk/programmes/', '"'):
                 url = "https://www.bbc.co.uk/programmes/" + programme_id

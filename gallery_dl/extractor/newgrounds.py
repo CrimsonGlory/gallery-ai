@@ -55,6 +55,12 @@ class NewgroundsExtractor(Extractor):
             try:
                 post = self.extract_post(post_url)
                 url = post.get("url")
+            except self.exc.HttpError as exc:
+                status = getattr(exc, "status", 0)
+                if status in (401, 403, 429, 900) or status >= 500:
+                    raise
+                self.log.traceback(exc)
+                url = None
             except Exception as exc:
                 self.log.traceback(exc)
                 url = None
@@ -148,7 +154,10 @@ class NewgroundsExtractor(Extractor):
                 url += "/format/flash"
 
         response = self.request(url, fatal=False)
-        page = response.text
+        page = response.text or ""
+
+        if challenge := util.detect_challenge(response):
+            raise self.exc.ChallengeError(challenge, response)
 
         pos = page.find('id="adults_only"')
         if pos >= 0:
@@ -158,7 +167,7 @@ class NewgroundsExtractor(Extractor):
 
         if response.status_code >= 400:
             if "<title>Content Filtered</title>" not in page:
-                return {}
+                raise self.exc.HttpError("", response)
             self.log.debug('"Content Filtered" response')
 
             url_if = self.root + "/age-verification/ignore-filter"
@@ -358,8 +367,7 @@ class NewgroundsExtractor(Extractor):
 
         while True:
             with self.request(
-                    url, params=params, headers=headers,
-                    fatal=False) as response:
+                    url, params=params, headers=headers) as response:
                 try:
                     data = response.json()
                 except ValueError:

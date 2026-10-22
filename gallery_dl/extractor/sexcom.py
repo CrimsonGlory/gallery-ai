@@ -212,6 +212,8 @@ class SexcomRelatedPinExtractor(SexcomPinExtractor):
 
     def metadata(self):
         pin = self._parse_pin(SexcomPinExtractor.pins(self)[0])
+        if not pin:
+            pin = {"pin_id": text.parse_int(self.groups[1])}
         return {"original_pin": pin}
 
     def pins(self):

@@ -180,7 +180,7 @@ __tests__ = (
     "#class"   : joyreactor.JoyreactorTagExtractor,
     "#pattern" : r"https://img\d+\.joyreactor\.cc/pics/post/(full|webm)/.+",
     "#range"   : "1-50",
-    "#count"   : range(8, 50),
+    "#count"   : range(8, 51),
 
     "date"       : "type:datetime",
     "search_tags": "Touhou Project",
@@ -191,7 +191,8 @@ __tests__ = (
     "#comment" : "'.com' TLD, 'top' results",
     "#category": ("reactor", "joyreactor", "tag"),
     "#class"   : joyreactor.JoyreactorTagExtractor,
-    "#count"   : range(8, 20),
+    "#range"   : "1-15",
+    "#count"   : range(8, 16),
 
     "date"       : "type:datetime",
     "search_tags": "Dark Souls 2",
@@ -202,7 +203,8 @@ __tests__ = (
     "#category": ("reactor", "joyreactor", "search"),
     "#class"   : joyreactor.JoyreactorSearchExtractor,
     "#pattern" : r"https://img\d+\.joyreactor\.cc/pics/post/full/\w+",
-    "#count"   : range(8, 20),
+    "#range"   : "1-15",
+    "#count"   : range(8, 16),
 
     "search_tags": "Nature",
 },
@@ -213,7 +215,7 @@ __tests__ = (
     "#class"   : joyreactor.JoyreactorUserExtractor,
     "#pattern" : r"https://img\d+\.joyreactor\.cc/pics/post/full/\w+",
     "#range"   : "1-50",
-    "#count"   : range(8, 20),
+    "#count"   : range(8, 51),
 
     "user"     : "hemantic",
     "user_id"  : "78",
@@ -225,7 +227,7 @@ __tests__ = (
     "#class"   : joyreactor.JoyreactorUserExtractor,
     "#pattern" : r"https://img\d+\.joyreactor\.com/pics/post/full/\w+",
     "#range"   : "1-50",
-    "#count"   : range(8, 30),
+    "#count"   : range(8, 51),
 
     "user"     : "Tacoman123",
     "user_id"  : "189143",

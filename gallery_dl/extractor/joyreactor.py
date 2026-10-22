@@ -129,33 +129,51 @@ class JoyreactorExtractor(Extractor):
             url, method="POST", json=data, interval=False)["data"]
 
     def _pagination(self, url, opname, variables):
-        data = path = None
+        data = None
+        first = True
+        seen = set()
+        base = url.rstrip("/")
+        page_num = 1
+        numbered = text.re(r"/(\d+)$").search(base)
+        if numbered:
+            page_num = text.parse_int(numbered.group(1), 1)
+            base = base[:numbered.start()]
 
         while True:
             html = self.request(url).text
             html_posts = html.split('class="content"')
             del html_posts[0]
 
-            if path is None and ('class="expand-wrapper relative">'
-                                 '<div class="absolute' in html_posts[0]):
+            if html_posts and ('class="expand-wrapper relative">'
+                               '<div class="absolute' in html_posts[0]):
                 del html_posts[0]
 
-            pgn = text.extr(html, 'ant-pagination-next', "</li>")
-            path = text.extr(pgn, 'href="', '"')
+            if not html_posts:
+                return
 
             if self.metadata:
-                variables["page"] = (text.parse_int(path[path.rfind("/")+1:])+1
-                                     if path else None)
+                variables["page"] = None if first and not numbered else page_num
                 data = self._request_graphql(opname, variables)
                 data_posts = data.popitem()[1]["postPager"]["posts"]
-                yield from zip(html_posts, data_posts)
+                pairs = zip(html_posts, data_posts)
             else:
-                for post in html_posts:
-                    yield post, None
+                pairs = ((post, None) for post in html_posts)
 
-            if not path or not path.endswith("/1/rev"):
-                break
-            url = self.root + path
+            yielded = False
+            for post, post_data in pairs:
+                pid = text.extr(post, "/post/", '"')
+                if not pid or pid in seen:
+                    continue
+                seen.add(pid)
+                yielded = True
+                yield post, post_data
+
+            if not yielded:
+                return
+
+            page_num += 1
+            first = False
+            url = f"{base}/{page_num}"
 
 
 class JoyreactorPostExtractor(JoyreactorExtractor):
