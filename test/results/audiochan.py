@@ -53,7 +53,8 @@ __tests__ = (
 {
     "#url"     : "https://audiochan.com/search?q=Cozy&sort=trending&timeRange=all",
     "#class"   : audiochan.AudiochanSearchExtractor,
-    "#count"   : range(15, 40),
+    "#range"   : "1-20",
+    "#count"   : range(15, 21),
 
     "search_tags": "Cozy",
     "description": list,

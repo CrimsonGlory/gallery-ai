@@ -45,7 +45,10 @@ class ImgboxExtractor(Extractor):
             (None       , 'class="image-container"', ''),
             ("filename" , ' title="', '"'),
         ))[0]
-        if not data.get("filename"):
+        filename = data.get("filename") or ""
+        # Interstitial pages now omit image-container; the next title="…"
+        # is an ad iframe ("Advertisement") with no file extension.
+        if "." not in filename:
             url = self.get_image_url(page)
             if url:
                 data["filename"] = url.rpartition("/")[2].partition("?")[0]

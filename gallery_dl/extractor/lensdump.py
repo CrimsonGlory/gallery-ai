@@ -57,6 +57,8 @@ class LensdumpAlbumExtractor(LensdumpBase, GalleryExtractor):
                 text.extr(image, 'data-object="', '"')))
             image_id = data.get("name")
             image_url = data.get("url")
+            if not image_url or image_url.endswith("/404.png"):
+                continue
             image_title = data.get("title")
             if image_title is not None:
                 image_title = text.unescape(image_title)

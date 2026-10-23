@@ -33,7 +33,7 @@ BASE_PATTERN = ManganeloExtractor.update({
     },
     "mangakakalot": {
         "root"   : "https://www.mangakakalot.gg",
-        "pattern": r"(?:www\.)?mangakakalot\.gg",
+        "pattern": r"(?:www\.)?(?:mangakakalot\.gg|kakamanga\.com)",
     },
 })
 
@@ -97,7 +97,7 @@ class ManganeloMangaExtractor(ManganeloExtractor, MangaExtractor):
     def chapters(self, page):
         extr = text.extract_from(page)
 
-        url = extr('property="og:url" content="', '"')
+        url = extr('property="og:url" content="', '"') or self.page_url
         slug = url[url.rfind("/")+1:]
 
         info = {
@@ -113,7 +113,7 @@ class ManganeloMangaExtractor(ManganeloExtractor, MangaExtractor):
         }
         info["tags"].sort()
 
-        base = url + "/"
+        base = self.page_url.rstrip("/") + "/"
         url = f"{self.root}/api/manga/{slug}/chapters?limit=-1"
 
         results = []

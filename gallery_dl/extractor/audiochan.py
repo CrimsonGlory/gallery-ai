@@ -57,10 +57,25 @@ class AudiochanExtractor(Extractor):
             post["tags"] = tags
 
             if self.user:
-                for credit in post["credits"]:
-                    if user := credit.get("user"):
-                        post["user"] = user
+                user = None
+                fallback = None
+                for credit in post.get("credits") or ():
+                    if u := credit.get("user"):
+                        user = u
                         break
+                    if fallback is None:
+                        if name := credit.get("display_name"):
+                            fallback = {
+                                "display_name": name,
+                                "username": name,
+                            }
+                if user:
+                    post["user"] = user
+                elif not post.get("user"):
+                    post["user"] = fallback or {
+                        "display_name": "",
+                        "username": "",
+                    }
 
             yield Message.Directory, "", post
             if file:
@@ -180,4 +195,11 @@ class AudiochanSearchExtractor(AudiochanExtractor):
         params["count_mode"] = "none"
 
         self.kwdict["search_tags"] = params.get("q")
-        return self._pagination("/search", params, type)
+        seen = set()
+        for post in self._pagination("/search", params, type):
+            key = post.get("id") or (post.get("audioFile") or {}).get("id")
+            if key in seen:
+                continue
+            if key:
+                seen.add(key)
+            yield post

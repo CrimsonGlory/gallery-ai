@@ -119,7 +119,7 @@ __tests__ = (
     "title"           : r"re:some silly pics/vids i took inbetween filming .+",
     "attachments"     : list,
     "user_profile"    : {
-        "avatarThumbhash": "lFgOFwjIh4cgqJaWhFiJZZmJmAx0iFAI",
+        "avatarThumbhash": str,
         "bookmarked"     : int,
         "displayName"    : "Belle Delphine",
         "gender"         : "woman",

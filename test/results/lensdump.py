@@ -23,10 +23,10 @@ __tests__ = (
 
 {
     "#url"     : "https://lensdump.com/a/tA4lA",
-    "#comment" : "2 pages",
+    "#comment" : "2 pages; many album files now 404 on the CDN",
     "#class"   : lensdump.LensdumpAlbumExtractor,
     "#pattern" : r"https://[abcd]\.l3n\.co/(i/)?\w{6}(?:\.(?:md|th))?\.(jpe?g|png|webp)",
-    "#count"   : range(80, 120),
+    "#count"   : range(5, 120),
 },
 
 {

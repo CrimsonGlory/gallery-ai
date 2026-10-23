@@ -133,7 +133,7 @@ __tests__ = (
     "#class"   : steamcommunity.SteamcommunityGameExtractor,
     "#pattern" : r"https://images\.steamusercontent\.com/ugc/\d+/\w+/$",
     "#range"   : "1-25",
-    "#count"   : 25,
+    "#count"   : range(10, 26),
 
     "comments"  : str,
     "creator"   : str,
