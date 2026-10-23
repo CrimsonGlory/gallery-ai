@@ -269,6 +269,21 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://www.deviantart.com/r-e-x01/avatar",
+    "#comment" : "username with '-' (#555)",
+    "#class"   : deviantart.DeviantartAvatarExtractor,
+    "#results" : "https://a.deviantart.net/avatars-big/r/_/r-e-x01.png?6",
+
+    "index"          : 6,
+    "author"         : {
+        "type"    : "regular",
+        "usericon": "https://a.deviantart.net/avatars/r/_/r-e-x01.png?6",
+        "userid"  : "17A368A9-A30F-857F-B79B-0FE7D2688210",
+        "username": "R-E-X01",
+    },
+},
+
+{
     "#url"     : "https://deviantart.com/gdldev/banner",
     "#category": ("", "deviantart", "background"),
     "#class"   : deviantart.DeviantartBackgroundExtractor,
