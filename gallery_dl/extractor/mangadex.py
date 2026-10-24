@@ -422,12 +422,24 @@ class MangadexAPI():
             if response.status_code < 400:
                 return response.json()
             if response.status_code == 429:
-                until = response.headers.get("X-RateLimit-Retry-After")
-                self.extractor.wait(until=until)
+                until = (response.headers.get("X-RateLimit-Retry-After") or
+                         response.headers.get("Retry-After"))
+                if until:
+                    try:
+                        self.extractor.wait(until=until)
+                    except (TypeError, ValueError):
+                        self.extractor.wait(seconds=60.0)
+                else:
+                    self.extractor.wait(seconds=60.0)
                 continue
 
-            msg = ", ".join(f'{error["title"]}: "{error["detail"]}"'
-                            for error in response.json()["errors"])
+            try:
+                errors = response.json().get("errors") or ()
+                msg = ", ".join(
+                    f'{error.get("title", "")}: "{error.get("detail", "")}"'
+                    for error in errors)
+            except Exception:
+                msg = (response.text or "")[:200]
             raise self.extractor.exc.AbortExtraction(
                 f"{response.status_code} {response.reason} ({msg})")
 

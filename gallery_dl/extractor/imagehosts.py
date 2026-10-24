@@ -253,7 +253,7 @@ class ImagetwistGalleryExtractor(ImagehostImageExtractor):
     subcategory = "gallery"
     pattern = (r"(?:https?://)?((?:www\.|phun\.)?image(?:twist|haha)\.com/("
                r"p/[^/?#]+/(\d+)|"
-               r"\?[^#]*\bfld_id=\d+[^#]*&page=\d+))")
+               r"\?[^#]*\bfld_id=(\d+)[^#]*&page=\d+))")
     example = "https://imagetwist.com/p/USER/12345/TITLE"
 
     def items(self):
@@ -265,7 +265,8 @@ class ImagetwistGalleryExtractor(ImagehostImageExtractor):
         data = {
             "_extractor"   : ImagetwistImageExtractor,
             "gallery_title": text.unescape(extr('page_main_title">', "<")),
-            "gallery_id"   : self.groups[2] or extr("&amp;fld_id=", "&"),
+            "gallery_id"   : (self.groups[2] or self.groups[3] or
+                              extr("fld_id=", "&")),
         }
         del extr
 
