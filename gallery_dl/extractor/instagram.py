@@ -221,17 +221,18 @@ class InstagramExtractor(Extractor):
     def _parse_post(self, post):
         if "items" in post:  # story or highlight
             items = post["items"]
+            user = post.get("user") or self._user
             reel_type, _, reel_id = str(post["id"]).rpartition(":")
             if reel_type or post.get("reel_type") == "highlight_reel":
                 post_url = f"{self.root}/stories/highlights/{reel_id}/"
                 expires = None
                 reel_type = "highlight"
             else:
-                post_url = f"{self.root}/stories/{post['user']['username']}/"
+                post_url = f"{self.root}/stories/{user.get('username')}/"
                 expires = post["seen"] + 86400
                 reel_type = "story"
             data = {
-                "user"   : post.get("user"),
+                "user"   : user,
                 "expires": self.parse_timestamp(expires),
                 "post_id": reel_id,
                 "post_shortcode": shortcode_from_id(reel_id),
@@ -895,6 +896,8 @@ class InstagramAPI():
             "reel_ids"       : reel_ids,
             "first": 3,
             "last" : 2,
+            "__relay_internal__pv__"
+            "PolarisCommunityNoteStoriesLabelEnabledrelayprovider": True,
         }
 
         return self._pagination_graphql(
