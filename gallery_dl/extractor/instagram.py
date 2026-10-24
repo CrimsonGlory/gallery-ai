@@ -896,8 +896,6 @@ class InstagramAPI():
             "reel_ids"       : reel_ids,
             "first": 3,
             "last" : 2,
-            "__relay_internal__pv__"
-            "PolarisCommunityNoteStoriesLabelEnabledrelayprovider": True,
         }
 
         return self._pagination_graphql(
@@ -1115,11 +1113,12 @@ class InstagramAPI():
         params_map = {}
 
         base = "https://static.cdninstagram.com/rsrc.php/"
+        opnames = "|".join(QUERIES)
         docids_pattern = text.re(
-            r'__d\("(\w+)_instagramRelayOperation",\[\],'
-            r'\(function\([^)]+\).+?\bexports="([^"]+)')
+            rf'__d\("({opnames})_instagramRelayOperation",\[\],'
+            rf'\(function\([^)]+\).+?\bexports="([^"]+)')
         params_pattern = text.re(
-            r'__d\("(\w+)\.graphql",\[([^\]]+)\]')
+            rf'__d\("({opnames})(?:\.graphql|\$Parameters)",\[([^\]]+)\]')
 
         for href in util.unique(text.extract_iter(
                 extr.cache(self._webpage, path), 'href="' + base, '"')):
@@ -1128,10 +1127,9 @@ class InstagramAPI():
             url = base + text.unescape(href)
             script = extr.request(url, interval=False).text
             for opname, docid in docids_pattern.findall(script):
-                if opname in QUERIES:
-                    opname_map[opname] = docid
+                opname_map[opname] = docid
             for opname, params in params_pattern.findall(script):
-                if opname in QUERIES:
+                if not params_map.get(opname):
                     params_map[opname] = [
                         param[1:-15] for param in params.split(",")
                         if param.endswith('.relayprovider"')]
