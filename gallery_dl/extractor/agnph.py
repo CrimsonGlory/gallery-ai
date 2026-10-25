@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2024-2025 Mike Fährmann
+# Copyright 2024-2026 Mike Fährmann
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -38,7 +38,11 @@ class AgnphExtractor(booru.BooruExtractor):
         post["has_children"] = ("true" in post["has_children"])
 
     def _xml_to_dict(self, xml):
-        return {element.tag: element.text for element in xml}
+        post = {element.tag: element.text for element in xml}
+        for key in ("file_url", "thumbnail_url"):
+            if (url := post.get(key)) and url.startswith("http://"):
+                post[key] = "https://" + url[7:]
+        return post
 
     def _pagination(self, url, params):
         params["api"] = "xml"

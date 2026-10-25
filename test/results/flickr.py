@@ -249,7 +249,7 @@ __tests__ = (
     "#class"   : flickr.FlickrSearchExtractor,
     "#range"   : "1-10",
     "#count"   : 10,
-    "#pattern" : r"https://live\.staticflickr\.com/\d+/.+",
+    "#pattern" : r"https://live\.staticflickr\.com/(?:\d+|video)/.+",
 
     "search": {
         "text": "mountain",
