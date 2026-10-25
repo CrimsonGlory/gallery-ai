@@ -20,6 +20,7 @@ QUERIES = {
     "PolarisProfilePostsTabContentQuery_connection" : "28544666141895803",
     "PolarisProfileReelsTabContentQuery_connection" : "29285972954340351",
     "PolarisProfileTaggedTabContentQuery_connection": "28474042942277898",
+    "PolarisProfileRepostsTabContentRefetchQuery"   : "39686700687609779",
     "PolarisProfileStoryHighlightsTrayContentQuery" : "26970053832668570",
     "PolarisStoriesV3ReelPageGalleryQuery"          : "29306733562261201",
     "PolarisStoriesV3TrayContainerQuery"            : "38657722893875056",
@@ -283,9 +284,9 @@ class InstagramExtractor(Extractor):
 
             if coauthors := post.get("coauthor_producers"):
                 data["coauthors"] = [
-                    {"id"       : user["pk"],
-                     "username" : user["username"],
-                     "full_name": user["full_name"]}
+                    {"id"       : user.get("pk") or user.get("id"),
+                     "username" : user.get("username"),
+                     "full_name": user.get("full_name")}
                     for user in coauthors
                 ]
 
@@ -599,6 +600,7 @@ class InstagramUserExtractor(Dispatch, InstagramExtractor):
             (InstagramPhotosExtractor    , base + "photos/"),
             (InstagramReelsExtractor     , base + "reels/"),
             (InstagramTaggedExtractor    , base + "tagged/"),
+            (InstagramRepostsExtractor   , base + "reposts/"),
         ), ("posts",))
 
 
@@ -663,7 +665,24 @@ class InstagramTaggedExtractor(InstagramExtractor):
 
     def posts(self):
         for post in self.api.user_tagged(self.item):
-            yield from self.api.media(post["code"])
+            if post.get("product_type") == "feed":
+                yield post
+            else:
+                yield from self.api.media(post["code"])
+
+
+class InstagramRepostsExtractor(InstagramExtractor):
+    """Extractor for an Instagram user's reposts"""
+    subcategory = "reposts"
+    pattern = USER_PATTERN + r"/reposts"
+    example = "https://www.instagram.com/USER/reposts/"
+
+    def posts(self):
+        for post in self.api.user_reposts(self.item):
+            if post.get("product_type") == "feed":
+                yield post
+            else:
+                yield from self.api.media(post["code"])
 
 
 class InstagramSavedExtractor(InstagramExtractor):
@@ -1044,6 +1063,16 @@ class InstagramAPI():
             "PolarisProfileReelsTabContentQuery_connection", variables,
             "fetch__XDTUserDict", "/reels")
 
+    def user_reposts(self, handle):
+        variables = {
+            "max_id": None,
+            "id"    : str(self.user(handle)["id"]),
+        }
+
+        return self._pagination_graphql(
+            "PolarisProfileRepostsTabContentRefetchQuery", variables,
+            "fetch__XDTUserDict", "/reposts")
+
     def user_tagged(self, handle):
         variables = {
             "after"  : None,
@@ -1298,7 +1327,10 @@ class InstagramAPI():
         extr = self.extractor
         url = extr.root + "/graphql/query"
 
-        variables["after"] = extr._init_cursor()
+        if "max_id" in variables:
+            variables["max_id"] = extr._init_cursor()
+        else:
+            variables["after"] = extr._init_cursor()
         headers, body = self._prepare_graphql(
             opname, variables, fieldname, path)
 
@@ -1322,21 +1354,33 @@ class InstagramAPI():
                 raise self.exc.AbortExtraction(
                     f"Failed to load API data ({msg})")
 
-            if "edges" not in data:
-                for value in data.values():
-                    if value.__class__ is dict and "edges" in value:
-                        data = value
-                        break
-                else:
+            if "max_id" in variables:
+                data = data["user_reposts_timeline"]
+
+                for item in data["repost_grid_items"]:
+                    yield item["media"]
+
+                if not data.get("repost_more_available"):
                     break
+                variables["max_id"] = extr._update_cursor(
+                    data["repost_next_max_id"])
+            else:
+                if "edges" not in data:
+                    for value in data.values():
+                        if value.__class__ is dict and "edges" in value:
+                            data = value
+                            break
+                    else:
+                        break
 
-            for edge in data["edges"]:
-                yield edge["node"]
+                for edge in data["edges"]:
+                    yield edge["node"]
 
-            info = data.get("page_info")
-            if not info or not info.get("has_next_page"):
-                break
-            variables["after"] = extr._update_cursor(info["end_cursor"])
+                info = data.get("page_info")
+                if not info or not info.get("has_next_page"):
+                    break
+                variables["after"] = extr._update_cursor(info["end_cursor"])
+
             body["variables"] = util.json_dumps(variables)
 
 

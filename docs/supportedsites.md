@@ -919,6 +919,7 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://www.instagram.com/USER/photos/">Photos</span> |
         <span title="https://www.instagram.com/p/abcdefg/">Posts</span> |
         <span title="https://www.instagram.com/USER/reels/">Reels</span> |
+        <span title="https://www.instagram.com/USER/reposts/">Reposts</span> |
         <span title="https://www.instagram.com/USER/saved/">Saved Posts</span> |
         <span title="https://www.instagram.com/stories/USER/">Stories</span> |
         <span title="https://www.instagram.com/stories/me/">Stories Home Tray</span> |

@@ -4210,7 +4210,9 @@ Description
 Supported Values
     * ``posts``
     * ``reels``
+    * ``photos``
     * ``tagged``
+    * ``reposts``
     * ``stories``
     * ``highlights``
     * ``info``

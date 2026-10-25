@@ -307,7 +307,13 @@ __tests__ = (
     "#url"     : "https://www.instagram.com/share/reel/BARSSL4rTu",
     "#category": ("", "instagram", "reel"),
     "#class"   : instagram.InstagramPostExtractor,
-    "shortcode"  : "DHbVbT4Jx0c",
-}
+
+    "shortcode": "DHbVbT4Jx0c",
+},
+
+{
+    "#url"     : "https://www.instagram.com/instagram/reposts/",
+    "#class"   : instagram.InstagramRepostsExtractor,
+},
 
 )
