@@ -1098,20 +1098,10 @@ class InstagramAPI():
 
     def _extract_opname_info(self, opname, path):
         extr = self.extractor
-        extr.log.debug("Looking up '%s' parameters", opname)
+        extr.log.debug("Collecting GraphQL parameters")
 
-        opname_map = self._extract_opname_map(path)
-        for name, info in opname_map.items():
-            extr.cache_update(self._extract_opname_info, name, info,
-                              _exp=86400, _mem=False)
-
-        return opname_map[opname]
-
-    def _extract_opname_map(self, path):
-        extr = self.extractor
         opname_map = {}
         params_map = {}
-
         base = "https://static.cdninstagram.com/rsrc.php/"
         opnames = "|".join(QUERIES)
         docids_pattern = text.re(
@@ -1126,17 +1116,20 @@ class InstagramAPI():
                 continue
             url = base + text.unescape(href)
             script = extr.request(url, interval=False).text
-            for opname, docid in docids_pattern.findall(script):
-                opname_map[opname] = docid
-            for opname, params in params_pattern.findall(script):
-                if not params_map.get(opname):
-                    params_map[opname] = [
+            for name, docid in docids_pattern.findall(script):
+                opname_map[name] = docid
+            for name, params in params_pattern.findall(script):
+                if not params_map.get(name):
+                    params_map[name] = [
                         param[1:-15] for param in params.split(",")
                         if param.endswith('.relayprovider"')]
 
-        for opname, docid in opname_map.items():
-            opname_map[opname] = (docid, params_map.get(opname))
-        return opname_map
+        for name, docid in opname_map.items():
+            opname_map[name] = info = (docid, params_map.get(name))
+            extr.cache_update(self._extract_opname_info, name, info,
+                              _exp=86400, _mem=False)
+
+        return opname_map[opname]
 
     def _webpage(self, path):
         headers = {
@@ -1166,8 +1159,9 @@ class InstagramAPI():
                                    _exp=86400, _mem=False)
         if params:
             for param in params:
-                full = f"__relay_internal__pv__{param}relayprovider"
-                variables.setdefault(full, True)
+                name = f"__relay_internal__pv__{param}relayprovider"
+                value = (param != "PolarisSEOIsCrawler")
+                variables.setdefault(name, value)
 
         headers = {
             "Accept"            : "*/*",
