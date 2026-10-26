@@ -909,6 +909,13 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://www.deviantart.com/justatest235723/status-update/Poll%3A5%2B2%2A3%E2%80%A2-11%E2%80%A2-21%E2%80%A2-31-1402406261",
+    "#comment" : "status update post",
+    "#class"   : deviantart.DeviantartDeviationExtractor,
+    "#pattern" : r"text:<!DOCTYPE html>.+",
+},
+
+{
     "#url"     : "https://www.deviantart.com/stash/09z3557z648",
     "#comment" : "sta.sh journal (#6207)",
     "#class"   : deviantart.DeviantartStashExtractor,

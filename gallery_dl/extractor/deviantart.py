@@ -1065,12 +1065,13 @@ class DeviantartDeviationExtractor(DeviantartExtractor):
     subcategory = "deviation"
     archive_fmt = "g_{_username}_{index}.{extension}"
     skip_files = None
-    pattern = (BASE_PATTERN + r"/(art|journal)/(?:[^/?#]+-)?(\d+)"
+    pattern = (BASE_PATTERN +
+               r"/(art|journal|status-update)/(?:[^/?#]+-)?(\d+)"
                r"|(?:https?://)?(?:www\.)?(?:fx)?deviantart\.com/"
                r"(?:view/|deviation/|view(?:-full)?\.php/*\?(?:[^#]+&)?id=)"
                r"(\d+)"  # bare deviation ID without slug
                r"|(?:https?://)?fav\.me/([0-9a-z]+)")  # base36
-    example = "https://www.deviantart.com/UsER/art/TITLE-12345"
+    example = "https://www.deviantart.com/USER/art/TITLE-12345"
 
     def deviations(self):
         _, _, type, did1, did2, did3 = self.groups
