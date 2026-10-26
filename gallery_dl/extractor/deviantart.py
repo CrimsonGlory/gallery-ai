@@ -420,12 +420,16 @@ class DeviantartExtractor(Extractor):
                 page = self._limited_request(deviation["url"]).text
 
             # extract journal html from webpage
-            html = text.extr(
-                page,
-                "<h2>Literature Text</h2></span><div>",
-                "</div></section></div></div>")
-            if html:
+            if (html := text.extr(
+                    page,
+                    "<h2>Literature Text</h2></span><div>",
+                    "</div></section></div></div>")):
                 return {"html": html}
+
+            if (pos := page.find(' data-editor-viewer="1"')) >= 0:
+                if html := text.rextr(
+                        page, ">", '</div></div></div><div class="', pos):
+                    return {"html": html}
 
             self.log.debug("%s: Failed to extract journal HTML from webpage. "
                            "Falling back to __INITIAL_STATE__ markup.",
