@@ -21,7 +21,7 @@ __tests__ = (
 {
     "#url"    : "https://leakgallery.com/sophieraiin",
     "#class"  : leakgallery.LeakgalleryUserExtractor,
-    "#pattern": r"https://cdn\.leakgallery\.com/content\d+/(?:[\w.()-]+/)*(?:compressed_)?watermark_[0-9a-f]+_sophieraiin_[\w.-]+\.(jpg|png|mp4|mov)",
+    "#pattern": FILE_PATTERN,
     "#range"  : "1-100",
     "#count"  : 100,
 

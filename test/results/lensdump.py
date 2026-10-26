@@ -23,7 +23,7 @@ __tests__ = (
 
 {
     "#url"     : "https://lensdump.com/a/tA4lA",
-    "#comment" : "2 pages; many album files now 404 on the CDN",
+    "#comment" : "paginated album; some CDN files 404",
     "#class"   : lensdump.LensdumpAlbumExtractor,
     "#pattern" : r"https://[abcd]\.l3n\.co/(i/)?\w{6}(?:\.(?:md|th))?\.(jpe?g|png|webp)",
     "#count"   : range(5, 120),
@@ -37,6 +37,7 @@ __tests__ = (
         "https://lensdump.com/a/R0gfK",
         "https://lensdump.com/a/RSOMv",
         "https://lensdump.com/a/9TbdT",
+        "https://lensdump.com/a/bSqGYz1z",
     ),
 },
 
@@ -45,6 +46,7 @@ __tests__ = (
     "#comment" : "custom sort order",
     "#class"   : lensdump.LensdumpAlbumsExtractor,
     "#results" : (
+        "https://lensdump.com/a/bSqGYz1z",
         "https://lensdump.com/a/9TbdT",
         "https://lensdump.com/a/RSOMv",
         "https://lensdump.com/a/R0gfK",

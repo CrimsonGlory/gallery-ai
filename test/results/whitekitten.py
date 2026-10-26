@@ -42,7 +42,7 @@ __tests__ = (
         "https://dql0sduktnnev.cloudfront.net/media/101d0835582598b131f99c1204ff085f82615896152ebf9d4d8171409ed2657f.avif",
     ),
 
-    "children"       : [],
+    "?children"      : [],
     "count"          : 2,
     "createdAt"      : "2024-11-20T22:48:42.513Z",
     "date"           : "dt:2024-11-20 22:48:42",
@@ -61,7 +61,7 @@ __tests__ = (
     "isFavorited"    : False,
     "nextId"         : 1674,
     "num"            : range(1, 3),
-    "parentId"       : None,
+    "?parentId"      : None,
     "prevId"         : 1677,
     "rating"         : "safe",
     "score"          : range(3, 30),

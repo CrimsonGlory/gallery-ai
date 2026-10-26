@@ -18,15 +18,24 @@ class LensdumpBase():
     root = "https://lensdump.com"
 
     def _pagination(self, page, begin, end):
+        seen = set()
         while True:
             yield from text.extract_iter(page, begin, end)
 
-            next = text.extr(page, ' data-pagination="next"', '>')
-            if not next:
+            url = self._next_page_url(page)
+            if not url or url in seen:
                 return
-
-            url = text.urljoin(self.root, text.extr(next, 'href="', '"'))
+            seen.add(url)
             page = self.request(url).text
+
+    def _next_page_url(self, page):
+        nxt = text.extr(page, ' data-pagination="next"', '>')
+        url = text.extr(nxt, 'href="', '"') if nxt else ""
+        if not url:
+            url = text.extr(page, 'rel="next" href="', '"')
+        if url:
+            return text.urljoin(self.root, text.unescape(url))
+        return ""
 
 
 class LensdumpAlbumExtractor(LensdumpBase, GalleryExtractor):
@@ -50,15 +59,32 @@ class LensdumpAlbumExtractor(LensdumpBase, GalleryExtractor):
         }
 
     def images(self, page):
-        for image in self._pagination(page, ' class="list-item ', '>'):
+        seen = set()
+        for raw in self._pagination(page, 'data-object="', '"'):
+            try:
+                data = util.json_loads(text.unquote(raw))
+            except Exception:
+                continue
 
-            data = util.json_loads(text.unquote(
-                text.extr(image, "data-object='", "'") or
-                text.extr(image, 'data-object="', '"')))
-            image_id = data.get("name")
-            image_url = data.get("url")
+            image = data.get("image")
+            if image.__class__ is dict:
+                image_url = image.get("url") or data.get("url")
+            else:
+                image_url = data.get("url")
             if not image_url or image_url.endswith("/404.png"):
                 continue
+
+            image_id = data.get("name")
+            if not image_id:
+                path = data.get("path_viewer") or ""
+                image_id = path.rpartition("/")[2]
+            if not image_id:
+                filename = data.get("filename") or ""
+                image_id = filename.rpartition(".")[0] or filename
+            if not image_id or image_id in seen:
+                continue
+            seen.add(image_id)
+
             image_title = data.get("title")
             if image_title is not None:
                 image_title = text.unescape(image_title)
@@ -91,9 +117,28 @@ class LensdumpAlbumsExtractor(LensdumpBase, Extractor):
         page = self.request(url, params=params).text
 
         data = {"_extractor": LensdumpAlbumExtractor}
-        for album_path in self._pagination(page, 'data-url-short="', '"'):
-            album_url = text.urljoin(self.root, album_path)
-            yield Message.Queue, album_url, data
+        seen = set()
+        pages_seen = set()
+        while True:
+            paths = list(text.extract_iter(page, 'data-url-short="', '"'))
+            if not paths:
+                paths = [
+                    "/a/" + code
+                    for code in text.extract_iter(
+                        page, 'class="tilecell" data-code="', '"')
+                ]
+            for album_path in paths:
+                album_url = text.urljoin(self.root, album_path)
+                if album_url in seen:
+                    continue
+                seen.add(album_url)
+                yield Message.Queue, album_url, data
+
+            next_url = self._next_page_url(page)
+            if not next_url or next_url in pages_seen:
+                return
+            pages_seen.add(next_url)
+            page = self.request(next_url).text
 
 
 class LensdumpImageExtractor(LensdumpBase, Extractor):
@@ -108,26 +153,58 @@ class LensdumpImageExtractor(LensdumpBase, Extractor):
 
     def items(self):
         key = self.groups[0]
-        url = f"{self.root}/i/{key}"
-        extr = text.extract_from(self.request(url).text)
+        page = self.request(f"{self.root}/i/{key}").text
+
+        cfg = text.extr(page, "window.lensConfig = ", ";")
+        try:
+            file = (util.json_loads(cfg) if cfg else {}).get("file") or {}
+        except Exception:
+            file = {}
+
+        url = file.get("url") or text.extr(
+            page, 'property="og:image" content="', '"')
+        if not url:
+            url = self._direct_url(key, page)
+
+        date_str = (
+            text.extr(page, 'ld-iv-chip" title="', '"') or
+            text.extr(page, '<dt>Uploaded</dt><dd title="', '"')
+        ).replace(" UTC", "")
 
         data = {
             "id"    : key,
-            "title" : text.unescape(extr(
-                'property="og:title" content="', '"')),
-            "url"   : extr(
-                'property="og:image" content="', '"'),
+            "title" : text.unescape(text.extr(
+                page, 'property="og:title" content="', '"')),
+            "url"   : url,
             "width" : text.parse_int(
-                extr('property="og:image:width" content="', '"') or
-                extr('property="image:width" content="', '"')),
+                file.get("width") or
+                text.extr(page, 'property="og:image:width" content="', '"') or
+                text.extr(page, 'property="image:width" content="', '"')),
             "height": text.parse_int(
-                extr('property="og:image:height" content="', '"') or
-                extr('property="image:height" content="', '"')),
-            "date"  : self.parse_datetime_iso(
-                extr('ld-iv-chip" title="', '"') or
-                extr('<span title="', '"')),
+                file.get("height") or
+                text.extr(page, 'property="og:image:height" content="', '"') or
+                text.extr(page, 'property="image:height" content="', '"')),
+            "date"  : self.parse_datetime_iso(date_str),
         }
 
-        text.nameext_from_url(data["url"], data)
+        text.nameext_from_url(url, data)
         yield Message.Directory, "", data
-        yield Message.Url, data["url"], data
+        yield Message.Url, url, data
+
+    def _direct_url(self, key, page):
+        src = self.url
+        if ".l3n.co/" in src:
+            return src.replace("/i/", "/", 1)
+
+        ext = text.extr(page, "<dt>Type and size</dt><dd>", " ").strip().lower()
+        if ext == "jpeg":
+            ext = "jpg"
+        if not ext:
+            return ""
+
+        for host in "abcd":
+            cand = f"https://{host}.l3n.co/{key}.{ext}"
+            resp = self.request(cand, method="HEAD", fatal=False)
+            if resp.status_code < 400:
+                return cand
+        return ""

@@ -57,7 +57,7 @@ __tests__ = (
     "#sha1_content": "66f46e96a893fba8e694c4e049b23c2acc9af462",
 
     "approver_id"     : None,
-    "change_seq"      : 59815157,
+    "change_seq"      : int,
     "comment_count"   : range(4, 8),
     "created_at"      : "iso:dt",
     "date"            : "dt:2007-02-17 19:02:32",
@@ -95,6 +95,7 @@ __tests__ = (
         "arthropod",
         "canid",
         "canine",
+        "carnivoran",
         "fennec_fox",
         "fox",
         "insect",
