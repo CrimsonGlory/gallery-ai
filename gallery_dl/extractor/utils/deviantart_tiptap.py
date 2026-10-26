@@ -140,10 +140,12 @@ def process_content(html, content):
                     'rols=""></video></div></div></div>')
 
     elif type == "da-poll":
-        poll_id = content["attrs"]["pollId"]
-        poll_version = content["attrs"]["version"]
-        html.append(f'<div class="surface-tertiary ds-surface-tertiary it8jUA" data-da-type="da-poll" data-poll-id="{poll_id}" data-version="{poll_version}" role="group">')
-        html.append('<div class="zdtYXB">')
+        attrs = content["attrs"]
+        html.append(f'<div class="surface-tertiary ds-surface-tertiary '
+                    f'it8jUA" data-da-type="da-poll" '
+                    f'data-poll-id="{attrs["pollId"]}" '
+                    f'data-version="{attrs["version"]}" '
+                    f'role="group"><div class="zdtYXB">')
         for element in content["content"]:
             process_poll(html, element)
         html.append('</div></div>')
@@ -153,22 +155,25 @@ def process_content(html, content):
         logging.getLogger("tiptap").warning(
             "Unsupported content type '%s'", type)
 
+
 def process_poll(html, content):
     type = content["type"]
 
     if type == "da-poll-question":
-        html.append('<div class="sVKe97" data-da-type="da-poll-question"')
+        html.append('<div class="sVKe97" data-da-type="da-poll-question">')
         for element in content["content"]:
             process_content(html, element)
         html.append('</div>')
 
     elif type == "da-poll-answer":
-        answer_id = content["attrs"]["answerId"]
-        html.append(f'<div class="rHP9pk KMlBpr" data-da-type="da-poll-answer" data-answer-id="{answer_id}">')
-        html.append('<div class="yU6XHu">')
+        html.append(f'<div class="rHP9pk KMlBpr" '
+                    f'data-da-type="da-poll-answer" '
+                    f'data-answer-id="{content["attrs"]["answerId"]}">'
+                    f'<div class="yU6XHu">')
         for element in content["content"]:
             process_content(html, element)
         html.append('</div></div>')
+
 
 def process_text(html, content):
     if marks := content.get("marks"):
