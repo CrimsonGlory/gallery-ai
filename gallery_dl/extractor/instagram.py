@@ -251,8 +251,9 @@ class InstagramExtractor(Extractor):
                     img.setdefault("width", 0)
                     img.setdefault("height", 0)
                     items.insert(0, {
-                        "pk": f"{reel_id}_cover",
-                        "code": reel_id,
+                        "pk"  : reel_id + "_cover",
+                        "code": shortcode_from_id(reel_id),
+                        "type": "cover",
                         "taken_at": post["seen"],
                         "image_versions2": {"candidates": (img,)}})
 
@@ -596,6 +597,7 @@ class InstagramUserExtractor(Dispatch, InstagramExtractor):
             (InstagramAvatarExtractor    , base + "avatar/"),
             (InstagramStoriesExtractor   , stories),
             (InstagramHighlightsExtractor, base + "highlights/"),
+            (InstagramHighlightsCoversExtractor, base + "highlights/covers/"),
             (InstagramPostsExtractor     , base + "posts/"),
             (InstagramPhotosExtractor    , base + "photos/"),
             (InstagramReelsExtractor     , base + "reels/"),
@@ -776,6 +778,20 @@ class InstagramStoriesExtractor(InstagramExtractor):
                 reels.append(copy)
 
         return reels
+
+
+class InstagramHighlightsCoversExtractor(InstagramExtractor):
+    """Extractor for an Instagram user's story highlight covers"""
+    subcategory = "highlights-covers"
+    pattern = USER_PATTERN + r"/(?:highlights/)?covers"
+    example = "https://www.instagram.com/USER/highlights/covers/"
+
+    def posts(self):
+        self._highlight_covers = True
+        tray = self.api.highlights_tray(self.item)
+        for hl in tray:
+            hl["items"] = []
+        return tray
 
 
 class InstagramHighlightsExtractor(InstagramExtractor):

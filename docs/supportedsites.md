@@ -915,6 +915,7 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://www.instagram.com/USER/followers/">Followers</span> |
         <span title="https://www.instagram.com/USER/following/">Followed Users</span> |
         <span title="https://www.instagram.com/USER/highlights/">Highlights</span> |
+        <span title="https://www.instagram.com/USER/highlights/covers/">Highlights Covers</span> |
         <span title="https://www.instagram.com/USER/info/">User Profile Information</span> |
         <span title="https://www.instagram.com/USER/photos/">Photos</span> |
         <span title="https://www.instagram.com/p/abcdefg/">Posts</span> |

@@ -4215,6 +4215,7 @@ Supported Values
     * ``reposts``
     * ``stories``
     * ``highlights``
+    * ``highlights-covers``
     * ``info``
     * ``avatar``
 Note

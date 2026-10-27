@@ -316,4 +316,14 @@ __tests__ = (
     "#class"   : instagram.InstagramRepostsExtractor,
 },
 
+{
+    "#url"     : "https://www.instagram.com/instagram/covers/",
+    "#class"   : instagram.InstagramHighlightsCoversExtractor,
+},
+
+{
+    "#url"     : "https://www.instagram.com/instagram/highlights/covers/",
+    "#class"   : instagram.InstagramHighlightsCoversExtractor,
+},
+
 )
