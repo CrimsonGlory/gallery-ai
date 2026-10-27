@@ -147,7 +147,7 @@ __tests__ = (
         "folders" : 1,
         "original": 0,
     },
-    "#count"   : 10,
+    "#count"   : 11,
 
     "description": str,
     "folders"    : list,
