@@ -443,7 +443,7 @@ Consider all listed sites to potentially be NSFW.
     <td><span title="https://www.deviantart.com/USER/avatar/">Avatars</span> |
         <span title="https://www.deviantart.com/USER/banner/">Backgrounds</span> |
         <span title="https://www.deviantart.com/USER/favourites/12345/TITLE">Collections</span> |
-        <span title="https://www.deviantart.com/UsER/art/TITLE-12345">Deviations</span> |
+        <span title="https://www.deviantart.com/USER/art/TITLE-12345">Deviations</span> |
         <span title="https://www.deviantart.com/USER/favourites/">Favorites</span> |
         <span title="https://www.deviantart.com/USER/gallery/12345/TITLE">Folders</span> |
         <span title="https://www.deviantart.com/USER/about#watching">Followed Users</span> |
@@ -747,8 +747,8 @@ Consider all listed sites to potentially be NSFW.
 <tr id="hentai2read" title="hentai2read">
     <td>Hentai2Read</td>
     <td>https://hentai2read.com/</td>
-    <td><span title="https://hentai2read.com/TITLE/1/">Chapters</span> |
-        <span title="https://hentai2read.com/TITLE/">Manga</span></td>
+    <td><span title="https://hentai2read.com/reader/12345-TITLE/12345">Chapters</span> |
+        <span title="https://hentai2read.com/original/12345-TITLE/">Manga</span></td>
     <td></td>
 </tr>
 <tr id="hentaihand" title="hentaihand">
