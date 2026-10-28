@@ -400,6 +400,19 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://pawchive.pw/fanbox/user/11063482/post/3942454",
+    "#comment" : "attachments without 'name' (#576)",
+    "#category": ("", "pawchive", "fanbox"),
+    "#class"   : pawchive.PawchivePostExtractor,
+    "#count"   : 15,
+
+    "date"          : "dt:2022-06-05 10:16:55",
+    "has_full"      : False,
+    "id"            : "3942454",
+    "title"         : "【原神】モナちゃん　腹パン+種付きレイプ／（莫娜 虐腹/强奸中出）　",
+},
+
+{
     "#url"     : "https://pawchive.st/patreon/user/3295915",
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchiveUserExtractor,
