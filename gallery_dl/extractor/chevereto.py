@@ -21,6 +21,8 @@ class CheveretoExtractor(BaseExtractor):
 
     def _init(self):
         self.path = self.groups[-1]
+        if fmt := self.config_instance("filename_fmt"):
+            self.filename_fmt = fmt
 
     def _pagination(self, url, callback=None):
         page = self.request(url).text
@@ -94,6 +96,11 @@ BASE_PATTERN = CheveretoExtractor.update({
     "putmega": {
         "root": "https://putmega.com",
         "pattern": r"(?:www\.)?putme(?:ga\.com|\.ga)",
+    },
+    "freeimagehost": {
+        "root": "https://freeimage.host",
+        "pattern": r"(?:www\.)?freeimage\.host",
+        "filename_fmt": "{filename} [{id}].{extension}",
     },
 
 })
@@ -173,6 +180,8 @@ class CheveretoFileExtractor(CheveretoExtractor):
                 album_url, "/", '"').rpartition(".")
 
         text.nameext_from_url(file["url"], file)
+        if file.get("filename") == file.get("id") and file.get("title"):
+            file["filename"] = file["title"]
         yield Message.Directory, "", file
         yield Message.Url, file["url"], file
 

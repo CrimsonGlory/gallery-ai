@@ -84,6 +84,7 @@ CATEGORY_MAP = {
     "fitnakedgirls"  : "FitNakedGirls",
     "foriio"         : "foriio",
     "framedsc"       : "FRAMED. Screenshot Community",
+    "freeimagehost"  : "Freeimage.host",
     "furaffinity"    : "Fur Affinity",
     "furry34"        : "Furry 34",
     "ganknow"        : "Gank",

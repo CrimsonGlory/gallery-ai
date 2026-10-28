@@ -2204,6 +2204,15 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://putmega.com/USER">User Profiles</span></td>
     <td></td>
 </tr>
+<tr id="freeimagehost" title="freeimagehost">
+    <td>Freeimage.host</td>
+    <td>https://freeimage.host/</td>
+    <td><span title="https://freeimage.host/album/TITLE.ID">Albums</span> |
+        <span title="https://freeimage.host/category/TITLE">Categories</span> |
+        <span title="https://freeimage.host/img/TITLE.ID">Files</span> |
+        <span title="https://freeimage.host/USER">User Profiles</span></td>
+    <td></td>
+</tr>
 
 <tr id="Danbooru" title="Danbooru">
     <td colspan="4"><strong>Danbooru Instances</strong></td>
