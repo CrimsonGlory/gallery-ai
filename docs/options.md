@@ -114,7 +114,9 @@
                                 800k-2M)
     --chunk-size SIZE           Size of in-memory data chunks (default: 32k)
     --no-part                   Do not use .part files
-    --no-skip                   Do not skip downloads; overwrite existing files
+    --no-skip                   Do not skip downloads; overwrite files from
+                                previous runs. Files that share a name in the
+                                same run still get a unique name
     --no-mtime                  Do not set file modification times according to
                                 Last-Modified HTTP response headers
     --no-download               Do not download any files

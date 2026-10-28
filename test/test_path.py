@@ -9,6 +9,7 @@
 
 import os
 import sys
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -60,6 +61,8 @@ class TestPathObject(TestPath):
         self.assertEqual(pfmt.temppath, "")
         self.assertEqual(pfmt.basedirectory, "./gallery-dl/")
         self.assertEqual(pfmt.strip, "")
+        self.assertEqual(pfmt.overwrite, False)
+        self.assertIs(pfmt.claimed_paths, None)
 
         self.assertIs(pfmt.filename_conditions, None)
         self.assertIs(pfmt.directory_conditions, None)
@@ -393,6 +396,120 @@ class TestPathOptions(TestPath):
 
         pfmt = self._pfmt(kwdict=True)
         self.assertEqual(pfmt.realdirectory, "baz/012345/999/")
+
+
+class TestPathExists(TestPath):
+
+    def _file_pathfmt(self, directory, filename="Anto", extension="jpg"):
+        config.setg("base-directory", directory)
+        config.setg("directory", ())
+        kwdict = {
+            "category" : "test",
+            "filename" : filename,
+            "extension": extension,
+        }
+        pfmt = self._pfmt()
+        pfmt.set_directory(kwdict)
+        pfmt.set_filename(kwdict)
+        pfmt.build_path()
+        return pfmt
+
+    def test_exists_missing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            pfmt = self._file_pathfmt(tmp)
+            self.assertFalse(pfmt.exists())
+
+    def test_exists_skip(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            pfmt = self._file_pathfmt(tmp)
+            os.makedirs(pfmt.realdirectory, exist_ok=True)
+            with open(pfmt.realpath, "w") as fp:
+                fp.write("one")
+            self.assertTrue(pfmt.exists())
+            self.assertEqual(pfmt.filename, "Anto.jpg")
+
+    def test_exists_overwrite(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            pfmt = self._file_pathfmt(tmp)
+            os.makedirs(pfmt.realdirectory, exist_ok=True)
+            with open(pfmt.realpath, "w") as fp:
+                fp.write("one")
+            pfmt.overwrite = True
+            self.assertFalse(pfmt.exists())
+            self.assertEqual(pfmt.filename, "Anto.jpg")
+
+    def test_exists_enum_claimed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            first = self._file_pathfmt(tmp)
+            os.makedirs(first.realdirectory, exist_ok=True)
+            with open(first.realpath, "w") as fp:
+                fp.write("one")
+            first.claimed_paths = set()
+            first.claim()
+
+            second = self._file_pathfmt(tmp)
+            second.claimed_paths = first.claimed_paths
+            self.assertFalse(second.exists())
+            self.assertEqual(second.filename, "Anto.1.jpg")
+            self.assertEqual(second.prefix, "1.")
+
+    def test_exists_enum_claimed_chain(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            claimed = set()
+            names = []
+            for _ in range(3):
+                pfmt = self._file_pathfmt(tmp)
+                pfmt.claimed_paths = claimed
+                os.makedirs(pfmt.realdirectory, exist_ok=True)
+                self.assertFalse(pfmt.exists())
+                with open(pfmt.realpath, "w") as fp:
+                    fp.write("x")
+                pfmt.claim()
+                names.append(pfmt.filename)
+            self.assertEqual(names, ["Anto.jpg", "Anto.1.jpg", "Anto.2.jpg"])
+
+    def test_exists_overwrite_enum_claimed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            first = self._file_pathfmt(tmp)
+            os.makedirs(first.realdirectory, exist_ok=True)
+            with open(first.realpath, "w") as fp:
+                fp.write("one")
+            first.claimed_paths = set()
+            first.claim()
+
+            second = self._file_pathfmt(tmp)
+            second.claimed_paths = first.claimed_paths
+            second.overwrite = True
+            self.assertFalse(second.exists())
+            self.assertEqual(second.filename, "Anto.1.jpg")
+
+    def test_enum_file(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            pfmt = self._file_pathfmt(tmp)
+            os.makedirs(pfmt.realdirectory, exist_ok=True)
+            with open(pfmt.realpath, "w") as fp:
+                fp.write("0")
+            with open(os.path.join(pfmt.realdirectory, "Anto.1.jpg"),
+                      "w") as fp:
+                fp.write("1")
+
+            self.assertFalse(pfmt._enum_file())
+            self.assertEqual(pfmt.filename, "Anto.2.jpg")
+            self.assertEqual(pfmt.prefix, "2.")
+            self.assertEqual(pfmt.temppath, pfmt.realpath)
+
+    def test_enum_file_syncs_part_temppath(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            pfmt = self._file_pathfmt(tmp)
+            os.makedirs(pfmt.realdirectory, exist_ok=True)
+            with open(pfmt.realpath, "w") as fp:
+                fp.write("0")
+            pfmt.part_enable()
+            self.assertTrue(pfmt.temppath.endswith(".part"))
+
+            self.assertFalse(pfmt._enum_file())
+            self.assertEqual(pfmt.filename, "Anto.1.jpg")
+            self.assertEqual(pfmt.temppath, pfmt.realpath + ".part")
 
 
 if __name__ == "__main__":

@@ -437,6 +437,7 @@ class DownloadJob(Job):
         self.downloaders = {}
         self.out = output.select()
         self.visited = set() if parent is None else parent.visited
+        self.claimed_paths = set() if parent is None else parent.claimed_paths
         self._extractor_filter = None
         self._children = True
         self._skipcnt = 0
@@ -529,6 +530,7 @@ class DownloadJob(Job):
         # download succeeded
         pathfmt.finalize()
         self.out.success(pathfmt.path)
+        pathfmt.claim()
         self._skipcnt = 0
         if archive is not None and self._archive_write_file:
             archive.add(kwdict)
@@ -724,6 +726,7 @@ class DownloadJob(Job):
         cfg = extr.config
 
         pathfmt = self.pathfmt = path.PathFormat(extr)
+        pathfmt.claimed_paths = self.claimed_paths
         if kwdict is not None:
             pathfmt.set_directory(kwdict)
 
@@ -798,10 +801,9 @@ class DownloadJob(Job):
                 else:
                     self._skipftr = None
         else:
-            # monkey-patch methods to always return False
-            pathfmt.exists = lambda x=None: False
+            pathfmt.overwrite = True
             if self.archive is not None:
-                self.archive.check = pathfmt.exists
+                self.archive.check = util.false
 
         if not cfg("postprocess", True):
             return

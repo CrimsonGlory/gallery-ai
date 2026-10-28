@@ -83,6 +83,8 @@ class PathFormat():
         self.realpath = ""
         self.temppath = ""
         self.part = False
+        self.overwrite = False
+        self.claimed_paths = None
 
         extension_map = config("extension-map")
         if extension_map is None:
@@ -164,8 +166,13 @@ class PathFormat():
             return open(self.temppath, mode)
 
     def exists(self):
-        """Return True if the file exists on disk"""
+        """Return True if the file exists on disk and should be skipped"""
         if self.extension:
+            claimed = self.claimed_paths
+            if claimed is not None and self.realpath in claimed:
+                return self._enum_file()
+            if self.overwrite:
+                return False
             try:
                 os.lstat(self.realpath)  # raises OSError if file doesn't exist
                 return self.check_file()
@@ -176,19 +183,41 @@ class PathFormat():
     def check_file(self):
         return True
 
+    def claim(self):
+        """Remember the current target path as used in this run"""
+        if self.claimed_paths is not None and self.realpath:
+            self.claimed_paths.add(self.realpath)
+
     def _enum_file(self):
         num = 1
+        claimed = self.claimed_paths
         try:
             while True:
                 prefix = format(num) + "."
                 self.kwdict["extension"] = prefix + self.extension
                 self.build_path()
+                if claimed is not None and self.realpath in claimed:
+                    num += 1
+                    continue
                 os.lstat(self.realpath)  # raises OSError if file doesn't exist
                 num += 1
         except OSError:
             pass
         self.prefix = prefix
+        self._sync_temppath()
         return False
+
+    def _sync_temppath(self):
+        """Keep the temporary path in lockstep with the current target name"""
+        if not self.part:
+            self.temppath = self.realpath
+            return
+        name = os.path.basename(self.realpath)
+        if self.temppath.endswith(".part"):
+            self.temppath = os.path.join(
+                os.path.dirname(self.temppath), name + ".part")
+        else:
+            self.temppath = self.realpath
 
     def set_directory(self, kwdict):
         """Build directory path and create it if necessary"""

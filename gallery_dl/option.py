@@ -552,7 +552,9 @@ def build_parser():
     downloader.add_argument(
         "--no-skip",
         dest="skip", nargs=0, action=ConfigConstAction, const=False,
-        help="Do not skip downloads; overwrite existing files",
+        help=("Do not skip downloads; overwrite files from previous runs. "
+              "Files that share a name in the same run still get a unique "
+              "name"),
     )
     downloader.add_argument(
         "--no-mtime",

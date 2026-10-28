@@ -9,6 +9,7 @@
 
 import os
 import sys
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -106,6 +107,110 @@ class TestDownloadJob(TestJob):
         out = self._capture_stdout(extr)
         # no output if '_extractor' is overwritten (#8958)
         self.assertEqual(out, "11\n")
+
+    def _download_same_name(self, extr, skip=True):
+        with tempfile.TemporaryDirectory() as tmp:
+            config.set(("output",), "mode", False)
+            config.setg("base-directory", tmp)
+            config.setg("directory", ())
+            config.setg("skip", skip)
+            config.set(("downloader",), "part", False)
+
+            tjob = self.jobclass(extr)
+            tjob.run()
+
+            files = {}
+            for dirpath, _, filenames in os.walk(tmp):
+                for name in filenames:
+                    path = os.path.join(dirpath, name)
+                    with open(path, "rb") as fp:
+                        files[name] = fp.read()
+            return files
+
+    def test_same_filename_enumerates(self):
+        files = self._download_same_name(
+            TestExtractorSameName.from_url("test:samename"))
+        self.assertEqual(files, {
+            "Anto.jpg"  : b"content-1",
+            "Anto.1.jpg": b"content-2",
+            "Anto.2.jpg": b"content-3",
+        })
+
+    def test_same_filename_skip_existing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config.set(("output",), "mode", False)
+            config.setg("base-directory", tmp)
+            config.setg("directory", ())
+            config.setg("skip", True)
+            config.set(("downloader",), "part", False)
+
+            dest = os.path.join(tmp, "Anto.jpg")
+            os.makedirs(tmp, exist_ok=True)
+            with open(dest, "wb") as fp:
+                fp.write(b"previous")
+
+            extr = TestExtractorSameName.from_url("test:samename")
+            tjob = self.jobclass(extr)
+            tjob.run()
+
+            files = {}
+            for dirpath, _, filenames in os.walk(tmp):
+                for name in filenames:
+                    path = os.path.join(dirpath, name)
+                    with open(path, "rb") as fp:
+                        files[name] = fp.read()
+            self.assertEqual(files, {"Anto.jpg": b"previous"})
+
+    def test_same_filename_overwrite_enumerates(self):
+        files = self._download_same_name(
+            TestExtractorSameName.from_url("test:samename"), skip=False)
+        self.assertEqual(files, {
+            "Anto.jpg"  : b"content-1",
+            "Anto.1.jpg": b"content-2",
+            "Anto.2.jpg": b"content-3",
+        })
+
+    def test_same_filename_skip_enumerate(self):
+        files = self._download_same_name(
+            TestExtractorSameName.from_url("test:samename"),
+            skip="enumerate")
+        self.assertEqual(files, {
+            "Anto.jpg"  : b"content-1",
+            "Anto.1.jpg": b"content-2",
+            "Anto.2.jpg": b"content-3",
+        })
+
+    def test_same_filename_with_part_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config.set(("output",), "mode", False)
+            config.setg("base-directory", tmp)
+            config.setg("directory", ())
+            config.setg("skip", True)
+
+            extr = TestExtractorSameName.from_url("test:samename")
+            tjob = self.jobclass(extr)
+            tjob.run()
+
+            files = {}
+            for dirpath, _, filenames in os.walk(tmp):
+                for name in filenames:
+                    path = os.path.join(dirpath, name)
+                    with open(path, "rb") as fp:
+                        files[name] = fp.read()
+            self.assertEqual(files, {
+                "Anto.jpg"  : b"content-1",
+                "Anto.1.jpg": b"content-2",
+                "Anto.2.jpg": b"content-3",
+            })
+
+    def test_same_filename_child_extractors(self):
+        files = self._download_same_name(
+            TestExtractorSameNameGallery.from_url("test:samename-gallery"))
+        self.assertEqual(files, {
+            "Anto.jpg"  : b"child-1",
+            "Anto.1.jpg": b"child-2",
+            "Anto.2.jpg": b"child-3",
+        })
 
 
 class TestKeywordJob(TestJob):
@@ -604,6 +709,57 @@ class TestExtractorNoop(Extractor):
     category = "test_category_alt"
     subcategory = "test_subcategory"
     pattern = r"test:noop"
+
+
+class TestExtractorSameName(Extractor):
+    category = "test_samename"
+    subcategory = "test"
+    directory_fmt = ()
+    filename_fmt = "{filename}.{extension}"
+    pattern = r"test:samename$"
+
+    def items(self):
+        yield Message.Directory, "", {}
+        for i in range(1, 4):
+            yield Message.Url, f"text:content-{i}", {
+                "filename" : "Anto",
+                "extension": "jpg",
+                "id"       : i,
+            }
+
+
+class TestExtractorSameNameChild(Extractor):
+    category = "test_samename"
+    subcategory = "image"
+    directory_fmt = ()
+    filename_fmt = "{filename}.{extension}"
+    parent = True
+    pattern = r"test:samename-child:(\d+)$"
+
+    def items(self):
+        num = self.groups[0]
+        yield Message.Directory, "", {}
+        yield Message.Url, f"text:child-{num}", {
+            "filename" : "Anto",
+            "extension": "jpg",
+            "id"       : num,
+        }
+
+
+class TestExtractorSameNameGallery(Extractor):
+    category = "test_samename"
+    subcategory = "gallery"
+    directory_fmt = ()
+    parent = True
+    pattern = r"test:samename-gallery$"
+
+    def items(self):
+        for i in range(1, 4):
+            yield Message.Queue, f"test:samename-child:{i}", {
+                "_extractor": TestExtractorSameNameChild,
+                "filename"  : "Anto",
+                "extension" : "jpg",
+            }
 
 
 if __name__ == "__main__":

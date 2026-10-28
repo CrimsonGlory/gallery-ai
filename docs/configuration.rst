@@ -512,10 +512,15 @@ Description
     downloaded before, i.e. a file with the same filename already
     exists or its ID is in a `download archive <extractor.*.archive_>`__.
 
+    When several files in the same run would use the same filename
+    (for example two images in a gallery both named ``Anto.jpg``),
+    later files always get a unique name (``Anto.1.jpg``,
+    ``Anto.2.jpg``, …). The earlier file is kept.
+
     ``true``
-        Skip downloads
+        Skip downloads of files that already exist from a previous run
     ``false``
-        Overwrite already existing files
+        Overwrite already existing files from a previous run
 
     ``"abort"``
         Stop the current extractor
