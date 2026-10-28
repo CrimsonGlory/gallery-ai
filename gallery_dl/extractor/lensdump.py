@@ -17,6 +17,9 @@ class LensdumpBase():
     category = "lensdump"
     root = "https://lensdump.com"
 
+    def _init(self):
+        self.cookies.set("ld_nsfw_ok", "1", domain="lensdump.com")
+
     def _pagination(self, page, begin, end):
         seen = set()
         while True:
@@ -33,6 +36,10 @@ class LensdumpBase():
         url = text.extr(nxt, 'href="', '"') if nxt else ""
         if not url:
             url = text.extr(page, 'rel="next" href="', '"')
+        if not url:
+            pos = page.find(" data-load-more ")
+            if pos >= 0:
+                url = text.rextr(page, 'data-src="', '"', pos)
         if url:
             return text.urljoin(self.root, text.unescape(url))
         return ""
@@ -60,7 +67,11 @@ class LensdumpAlbumExtractor(LensdumpBase, GalleryExtractor):
 
     def images(self, page):
         seen = set()
-        for raw in self._pagination(page, 'data-object="', '"'):
+        for tile in self._pagination(page, '<a class="tile" ', '>'):
+            raw = (text.extr(tile, "data-object='", "'") or
+                   text.extr(tile, 'data-object="', '"'))
+            if not raw:
+                continue
             try:
                 data = util.json_loads(text.unquote(raw))
             except Exception:
@@ -71,20 +82,22 @@ class LensdumpAlbumExtractor(LensdumpBase, GalleryExtractor):
                 image_url = image.get("url") or data.get("url")
             else:
                 image_url = data.get("url")
+                image = {}
             if not image_url or image_url.endswith("/404.png"):
                 continue
 
+            name = data.get("filename") or ""
             image_id = data.get("name")
             if not image_id:
                 path = data.get("path_viewer") or ""
                 image_id = path.rpartition("/")[2]
             if not image_id:
-                filename = data.get("filename") or ""
-                image_id = filename.rpartition(".")[0] or filename
+                image_id = name[:name.rfind(".")] if "." in name else name
             if not image_id or image_id in seen:
                 continue
             seen.add(image_id)
 
+            user = data.get("user")
             image_title = data.get("title")
             if image_title is not None:
                 image_title = text.unescape(image_title)
@@ -98,6 +111,8 @@ class LensdumpAlbumExtractor(LensdumpBase, GalleryExtractor):
                 "extension": data.get("extension"),
                 "width"    : text.parse_int(data.get("width")),
                 "height"   : text.parse_int(data.get("height")),
+                "size"     : text.parse_int(image.get("size")),
+                "user"     : user.get("username") if user else "",
             })
 
 
@@ -124,8 +139,7 @@ class LensdumpAlbumsExtractor(LensdumpBase, Extractor):
             if not paths:
                 paths = [
                     "/a/" + code
-                    for code in text.extract_iter(
-                        page, 'class="tilecell" data-code="', '"')
+                    for code in text.extract_iter(page, 'data-code="', '"')
                 ]
             for album_path in paths:
                 album_url = text.urljoin(self.root, album_path)
@@ -168,7 +182,8 @@ class LensdumpImageExtractor(LensdumpBase, Extractor):
 
         date_str = (
             text.extr(page, 'ld-iv-chip" title="', '"') or
-            text.extr(page, '<dt>Uploaded</dt><dd title="', '"')
+            text.extr(page, '<dt>Uploaded</dt><dd title="', '"') or
+            text.extr(page, 'datetime="', '"')
         ).replace(" UTC", "")
 
         data = {
@@ -196,7 +211,8 @@ class LensdumpImageExtractor(LensdumpBase, Extractor):
         if ".l3n.co/" in src:
             return src.replace("/i/", "/", 1)
 
-        ext = text.extr(page, "<dt>Type and size</dt><dd>", " ").strip().lower()
+        ext = text.extr(
+            page, "<dt>Type and size</dt><dd>", " ").strip().lower()
         if ext == "jpeg":
             ext = "jpg"
         if not ext:

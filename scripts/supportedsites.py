@@ -608,6 +608,11 @@ URL_MAP = {
     "hatenablog": (
         "https://hatena.blog/",
     ),
+    "idolcomplex": (
+        "https://www.idolcomplex.com/",
+        "https://idol.sankakucomplex.com/",
+        "https://iapi.sankakucomplex.com/",
+    ),
     "iwara": (
         "https://www.iwara.tv/",
         "https://www.iwara.ai/",
@@ -615,6 +620,12 @@ URL_MAP = {
     "joyreactor": (
         "https://joyreactor.com/",
         "https://joyreactor.cc/",
+    ),
+    "kagane": (
+        "https://kagane.si/",
+        "https://kagane.cx/",
+        "https://kagane.moe/",
+        "https://kagane.net/",
     ),
     "konachan": (
         "https://konachan.com/",

@@ -3353,6 +3353,17 @@ Description
     * Provides exact ``date`` and ``filesize``
 
 
+extractor.exhentai.mpv
+----------------------
+Type
+    ``bool``
+Default
+    ``true``
+Description
+    Download image galleries in MPV mode
+    if available and enabled in your account settings.
+
+
 extractor.exhentai.original
 ---------------------------
 Type
@@ -4204,9 +4215,12 @@ Description
 Supported Values
     * ``posts``
     * ``reels``
+    * ``photos``
     * ``tagged``
+    * ``reposts``
     * ``stories``
     * ``highlights``
+    * ``highlights-covers``
     * ``info``
     * ``avatar``
 Note
@@ -5178,6 +5192,20 @@ Supported Values
     * ``movies``
 Note
     It is possible to use ``"all"`` instead of listing all values separately.
+
+
+extractor.nhentai.api-key
+-------------------------
+Type
+    ``string``
+Default
+    ``null``
+Description
+    Your nHentai API key. Required for API endpoints that need account
+    authentication, such as favorites.
+
+    Generate an API key in your
+    `account settings <https://nhentai.net/user/settings#apikeys>`__
 
 
 extractor.nijie.include

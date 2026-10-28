@@ -29,6 +29,7 @@ executable-linux:
 
 completion: data/completion/gallery-dl data/completion/_gallery-dl data/completion/gallery-dl.fish
 
+req: requirements
 requirements: requirements/docker requirements/windows requirements/linux requirements/macos
 
 man: data/man/gallery-dl.1 data/man/gallery-dl.conf.5

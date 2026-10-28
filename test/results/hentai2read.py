@@ -9,27 +9,17 @@ from gallery_dl.extractor import hentai2read
 
 __tests__ = (
 {
-    "#url"     : "https://hentai2read.com/amazon_elixir/1/",
-    "#category": ("", "hentai2read", "chapter"),
+    "#url"     : "https://hentai2read.com/reader/13088-popuni-kei-joshi-panic/116411/page-1",
     "#class"   : hentai2read.Hentai2readChapterExtractor,
-    "#sha1_url"     : "964b942cf492b3a129d2fe2608abfc475bc99e71",
-    "#sha1_metadata": "85645b02d34aa11b3deb6dadd7536863476e1bad",
-},
-
-{
-    "#url"     : "https://hentai2read.com/popuni_kei_joshi_panic/2.5/",
-    "#category": ("", "hentai2read", "chapter"),
-    "#class"   : hentai2read.Hentai2readChapterExtractor,
-    "#pattern" : r"https://hentaicdn\.com/hentai/13088/2\.5y/ccdn00\d+\.jpg",
+    "#pattern" : r"https://hentaicdn\.com/hentai/up/13088/c116411-jkvvy8/\d+\.webp",
     "#count"   : 36,
 
-    "author"       : "Kurisu",
+    "author"       : ["Kurisu", "Potato Salad (Himekuri Kurisu)"],
     "chapter"      : 2,
-    "chapter_id"   : 75152,
+    "chapter_id"   : 116411,
     "chapter_minor": ".5",
     "count"        : 36,
     "lang"         : "en",
-    "language"     : "English",
     "manga"        : "Popuni Kei Joshi Panic!",
     "manga_id"     : 13088,
     "page"         : int,
@@ -38,13 +28,12 @@ __tests__ = (
 },
 
 {
-    "#url"     : "https://hentai2read.com/nozoki_ana/1/",
-    "#category": ("", "hentai2read", "chapter"),
+    "#url"     : "https://hentai2read.com/reader/2720-nozoki-ana-ecchi/2965/page-1",
     "#class"   : hentai2read.Hentai2readChapterExtractor,
     "#pattern" : r"https://hentaicdn\.com/hentai/2720/1/hcdn00\d+\.jpg",
     "#count"   : 203,
 
-    "author"       : "",
+    "author"       : [],
     "chapter"      : 1,
     "chapter_id"   : 2965,
     "chapter_minor": "",
@@ -52,7 +41,6 @@ __tests__ = (
     "extension"    : "jpg",
     "filename"     : str,
     "lang"         : "en",
-    "language"     : "English",
     "manga"        : "Nozoki Ana [Ecchi]",
     "manga_id"     : 2720,
     "page"         : range(1, 203),
@@ -64,36 +52,44 @@ __tests__ = (
 
 {
     "#url"     : "https://hentai2read.com/amazon_elixir/",
-    "#category": ("", "hentai2read", "manga"),
+    "#comment" : "legacy URL format",
     "#class"   : hentai2read.Hentai2readMangaExtractor,
-    "#pattern"      : r"https://hentai2read\.com/amazon_elixir/.+",
-    "#count"        : ">= 1",
+    "#result"  : "",
 },
 
 {
     "#url"     : "https://hentai2read.com/oshikage_riot/",
-    "#category": ("", "hentai2read", "manga"),
     "#class"   : hentai2read.Hentai2readMangaExtractor,
-    "#pattern"      : r"https://hentai2read\.com/oshikage_riot/.+",
-    "#count"        : ">= 1",
+    "#pattern" : hentai2read.Hentai2readChapterExtractor.pattern,
+    "#count"   : 10,
+
 },
 
 {
     "#url"     : "https://hentai2read.com/popuni_kei_joshi_panic/",
-    "#category": ("", "hentai2read", "manga"),
     "#class"   : hentai2read.Hentai2readMangaExtractor,
     "#pattern" : hentai2read.Hentai2readChapterExtractor.pattern,
-    "#range"   : "2-3",
 
     "chapter"      : int,
     "chapter_id"   : int,
-    "chapter_minor": ".5",
+    "chapter_minor": {"", ".5", ".6"},
     "lang"         : "en",
-    "language"     : "English",
     "manga"        : "Popuni Kei Joshi Panic!",
     "manga_id"     : 13088,
     "title"        : str,
     "type"         : "Original",
+},
+
+{
+    "#url"     : "https://hentai2read.com/amazon_elixir/1/",
+    "#comment" : "legacy chapter URL",
+    "#class"   : hentai2read.Hentai2readMangaExtractor,
+},
+
+{
+    "#url"     : "https://hentai2read.com/popuni_kei_joshi_panic/2.5/",
+    "#comment" : "legacy chapter URL",
+    "#class"   : hentai2read.Hentai2readMangaExtractor,
 },
 
 )

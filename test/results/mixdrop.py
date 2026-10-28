@@ -22,6 +22,11 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://mxdrop.click/f/k0mmklw8axe09e",
+    "#class"   : mixdrop.MixdropFileExtractor,
+},
+
+{
     "#url"     : "https://m1xdrop.com/e/k0mmklw8axe09e",
     "#class"   : mixdrop.MixdropFileExtractor,
 },
