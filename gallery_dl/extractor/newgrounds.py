@@ -55,6 +55,8 @@ class NewgroundsExtractor(Extractor):
             try:
                 post = self.extract_post(post_url)
                 url = post.get("url")
+            except self.exc.ControlException:
+                raise
             except self.exc.HttpError as exc:
                 status = getattr(exc, "status", 0)
                 if status in (401, 403, 429, 900) or status >= 500:
@@ -94,6 +96,23 @@ class NewgroundsExtractor(Extractor):
                 self.log.warning(
                     "Unable to get download URL for '%s'", post_url)
 
+    def request(self, url, **kwdict):
+        fatal = kwdict.pop("fatal", True)
+        try:
+            return Extractor.request(self, url, **kwdict)
+        except self.exc.ChallengeError:
+            raise
+        except self.exc.HttpError as exc:
+            response = exc.response
+            if (exc.status == 403 and response is not None and
+                    util.detect_challenge(response)):
+                raise self.exc.AbortExtraction(
+                    f"'NG Guard' challenge. "
+                    f"Visit {self.root}/ in a browser to bypass it")
+            if fatal:
+                raise
+            return response
+
     def posts(self):
         """Return URLs of all relevant post pages"""
         return self._pagination(self.__class__.subcategory, self.groups[1])
@@ -117,25 +136,46 @@ class NewgroundsExtractor(Extractor):
             return self.cookies
 
         page = response.text
+        token = text.unescape(text.extr(page, 'name="_token" value="', '"'))
         headers = {
             "Accept": "application/json, text/javascript, */*; q=0.01",
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-CSRF-TOKEN": token,
             "X-Requested-With": "XMLHttpRequest",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
             "Origin": self.root,
             "Referer": url,
         }
-        data = {
-            "_token"  : text.extr(page, 'name="_token" value="', '"'),
+        body = {
+            "_token"  : token,
             "remember": "1",
             "identity": username,
             "password": str(password),
         }
 
-        try:
+        response = self.request(
+            url, method="POST", headers=headers, data=body, fatal=False)
+        data = util.json_loads(response.text)
+        if response.status_code >= 400:
+            msg = data.get("message")
+            raise self.exc.AuthenticationError(f'"{msg}"' if msg else None)
+
+        if data.get("two_factor"):
+            self.log.info("A one-time login code was sent to '>%s', "
+                          "please enter it below:",
+                          data.get("obfuscated_email"))
+            url = self.root + "/login/two-factor"
+            body = {
+                "_token"  : token,
+                "code"    : self.input("Email Confirmation Code: "),
+                "codehint": "______",
+                "recovery_code": "",
+            }
             response = self.request(
-                url, method="POST", headers=headers, data=data)
-        except Exception:
-            raise self.exc.AuthenticationError()
+                url, method="POST", headers=headers, data=body, fatal=False)
+            data = util.json_loads(response.text)
+            if response.status_code >= 400:
+                msg = data.get("message")
+                raise self.exc.AuthenticationError(f'"{msg}"' if msg else None)
 
         return {
             cookie.name: cookie.value
@@ -159,11 +199,10 @@ class NewgroundsExtractor(Extractor):
         if challenge := util.detect_challenge(response):
             raise self.exc.ChallengeError(challenge, response)
 
-        pos = page.find('id="adults_only"')
+        pos = page.find('<h1 id="filter-title"')
         if pos >= 0:
-            msg = text.extract(page, 'class="highlight">', '<', pos)[0]
+            msg = text.rextr(page, '">', '<', pos).strip()
             self.log.warning('"%s"', msg)
-            return {}
 
         if response.status_code >= 400:
             if "<title>Content Filtered</title>" not in page:
@@ -226,7 +265,7 @@ class NewgroundsExtractor(Extractor):
         }
 
         if not data["url"]:
-            data["url"] = extr('<a href="', '"')
+            data["url"] = extr('art-item-container"><a href="', '"')
 
         index = data["url"].rpartition("/")[2].partition("_")[0]
         data["index"] = text.parse_int(index)

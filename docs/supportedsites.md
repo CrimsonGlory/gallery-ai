@@ -761,8 +761,8 @@ Consider all listed sites to potentially be NSFW.
 <tr id="hentaihere" title="hentaihere">
     <td>HentaiHere</td>
     <td>https://hentaihere.com/</td>
-    <td><span title="https://hentaihere.com/m/S12345/1/1/">Chapters</span> |
-        <span title="https://hentaihere.com/m/S12345">Manga</span></td>
+    <td><span title="https://hentaihere.com/reader/12345-TITLE/12345">Chapters</span> |
+        <span title="https://hentaihere.com/original/12345-TITLE">Manga</span></td>
     <td></td>
 </tr>
 <tr id="hentainexus" title="hentainexus">
