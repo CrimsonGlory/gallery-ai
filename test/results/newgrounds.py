@@ -261,7 +261,7 @@ __tests__ = (
 {
     "#url"     : "https://tomfulp.newgrounds.com/art",
     "#class"   : newgrounds.NewgroundsArtExtractor,
-    "#pattern" : r"https://(art.ngfiles.com/images/\d+|uploads.ungrounded.net/tmp/img/)",
+    "#pattern" : r"https://((?:art|img)\.ngfiles\.com/|uploads\.ungrounded\.net/tmp/img/)",
     "#count"   : ">= 3",
 },
 

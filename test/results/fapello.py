@@ -43,8 +43,10 @@ __tests__ = (
 
 {
     "#url"     : "https://fapello.su/grace-charis-gracecharisxo/2038266/",
+    "#comment" : "fapello.su is a parked domain",
     "#category": ("", "fapello", "post"),
     "#class"   : fapello.FapelloPostExtractor,
+    "#exception": exception.NotFoundError,
 
     "model"    : "grace-charis-gracecharisxo",
     "id"       : 2038266,
@@ -75,11 +77,10 @@ __tests__ = (
 
 {
     "#url"     : "https://fapello.su/grace-charis-gracecharisxo/",
+    "#comment" : "fapello.su is a parked domain",
     "#category": ("", "fapello", "model"),
     "#class"   : fapello.FapelloModelExtractor,
-    "#pattern" : fapello.FapelloPostExtractor.pattern,
-    "#range"   : "1-50",
-    "#count"   : 50,
+    "#exception": exception.NotFoundError,
 },
 
 {

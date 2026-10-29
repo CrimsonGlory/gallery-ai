@@ -66,6 +66,8 @@ class FapelloModelExtractor(FapelloExtractor):
         url = f"{self.root}/{model}/"
         page = self.request(url).text
         name, pos = text.extract(page, "<h2", "<")
+        if name is None:
+            raise self.exc.NotFoundError("model")
         alias, pos = text.extract(page, '<p class="flex', "<", pos)
 
         data = {

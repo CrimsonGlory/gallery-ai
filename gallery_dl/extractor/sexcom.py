@@ -143,17 +143,27 @@ class SexcomExtractor(Extractor):
         return data
 
     def _parse_pin_image(self, response):
-        extr = text.extract_from(response.text)
+        page = response.text
+        extr = text.extract_from(page)
         href = extr(' href="', '"').partition("?")[0]
-        title, _, type = extr("<title>", " | ").rpartition(" ")
+        name, _, _ = text.unescape(extr("<title>", "</title>")).partition(" | ")
+        title, _, type = name.rpartition(" ")
+
+        tags = text.split_html(text.extr(page, "</h1>", "</section>"))
+        if not tags:
+            desc = text.unescape(text.extr(
+                page, 'name="description" content="', '"'))
+            _, sep, tagstr = desc.partition(" with ")
+            if sep:
+                tags = [t.strip() for t in tagstr.split(",") if t.strip()]
 
         data = {
             "_http_headers": {"Referer": response.url},
             "url": href,
-            "title": text.unescape(title),
+            "title": title,
             "pin_id": text.parse_int(extr(
                 'rel="canonical" href="', '"').rpartition("/")[2]),
-            "tags": text.split_html(extr("</h1>", "</section>")),
+            "tags": tags,
         }
 
         text.nameext_from_url(href, data)

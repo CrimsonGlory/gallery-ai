@@ -19,10 +19,12 @@ __tests__ = (
         "https://www.instagram.com/instagram/avatar/",
         "https://www.instagram.com/stories/instagram/",
         "https://www.instagram.com/instagram/highlights/",
+        "https://www.instagram.com/instagram/highlights/covers/",
         "https://www.instagram.com/instagram/posts/",
         "https://www.instagram.com/instagram/photos/",
         "https://www.instagram.com/instagram/reels/",
         "https://www.instagram.com/instagram/tagged/",
+        "https://www.instagram.com/instagram/reposts/",
     ),
 },
 
