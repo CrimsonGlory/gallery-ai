@@ -127,25 +127,46 @@ class NewgroundsExtractor(Extractor):
             return self.cookies
 
         page = response.text
+        token = text.unescape(text.extr(page, 'name="_token" value="', '"'))
         headers = {
             "Accept": "application/json, text/javascript, */*; q=0.01",
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-CSRF-TOKEN": token,
             "X-Requested-With": "XMLHttpRequest",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
             "Origin": self.root,
             "Referer": url,
         }
-        data = {
-            "_token"  : text.extr(page, 'name="_token" value="', '"'),
+        body = {
+            "_token"  : token,
             "remember": "1",
             "identity": username,
             "password": str(password),
         }
 
-        try:
+        response = self.request(
+            url, method="POST", headers=headers, data=body, fatal=False)
+        data = util.json_loads(response.text)
+        if response.status_code >= 400:
+            msg = data.get("message")
+            raise self.exc.AuthenticationError(f'"{msg}"' if msg else None)
+
+        if data.get("two_factor"):
+            self.log.info("A one-time login code was sent to '>%s', "
+                          "please enter it below:",
+                          data.get("obfuscated_email"))
+            url = self.root + "/login/two-factor"
+            body = {
+                "_token"  : token,
+                "code"    : self.input("Email Confirmation Code: "),
+                "codehint": "______",
+                "recovery_code": "",
+            }
             response = self.request(
-                url, method="POST", headers=headers, data=data)
-        except Exception:
-            raise self.exc.AuthenticationError()
+                url, method="POST", headers=headers, data=body, fatal=False)
+            data = util.json_loads(response.text)
+            if response.status_code >= 400:
+                msg = data.get("message")
+                raise self.exc.AuthenticationError(f'"{msg}"' if msg else None)
 
         return {
             cookie.name: cookie.value
