@@ -55,6 +55,8 @@ class NewgroundsExtractor(Extractor):
             try:
                 post = self.extract_post(post_url)
                 url = post.get("url")
+            except self.exc.ControlException:
+                raise
             except Exception as exc:
                 self.log.traceback(exc)
                 url = None
@@ -87,6 +89,20 @@ class NewgroundsExtractor(Extractor):
                 self.status |= 1
                 self.log.warning(
                     "Unable to get download URL for '%s'", post_url)
+
+    def request(self, url, **kwdict):
+        fatal = kwdict.pop("fatal", True)
+        try:
+            return Extractor.request(self, url, **kwdict)
+        except self.exc.HttpError as exc:
+            if exc.status == 403 and exc.response.content.find(
+                    b"<title>NG Guard</title>", 0, 200) >= 0:
+                raise self.exc.AbortExtraction(
+                    f"'NG Guard' challenge. "
+                    f"Visit {self.root}/ in a browser to bypass it")
+            if fatal:
+                raise
+            return exc.response
 
     def posts(self):
         """Return URLs of all relevant post pages"""
