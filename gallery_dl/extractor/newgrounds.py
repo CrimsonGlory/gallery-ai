@@ -166,11 +166,10 @@ class NewgroundsExtractor(Extractor):
         response = self.request(url, fatal=False)
         page = response.text
 
-        pos = page.find('id="adults_only"')
+        pos = page.find('<h1 id="filter-title"')
         if pos >= 0:
-            msg = text.extract(page, 'class="highlight">', '<', pos)[0]
+            msg = text.rextr(page, '">', '<', pos).strip()
             self.log.warning('"%s"', msg)
-            return {}
 
         if response.status_code >= 400:
             if "<title>Content Filtered</title>" not in page:
