@@ -232,7 +232,7 @@ class NewgroundsExtractor(Extractor):
         }
 
         if not data["url"]:
-            data["url"] = extr('<a href="', '"')
+            data["url"] = extr('art-item-container"><a href="', '"')
 
         index = data["url"].rpartition("/")[2].partition("_")[0]
         data["index"] = text.parse_int(index)
