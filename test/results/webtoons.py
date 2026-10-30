@@ -335,8 +335,8 @@ __tests__ = (
     "#url"     : "https://www.webtoons.com/p/community/en/u/g6vj8",
     "#class"   : webtoons.WebtoonsArtistExtractor,
     "#results" : (
-        "https://www.webtoons.com/en/canvas/scoob-and-shag/list?title_no=210827",
-        "https://www.webtoons.com/en/canvas/sparkle-kid/list?title_no=205304",
+        "https://www.webtoons.com/en/canvas/scoob-and-shag/list?title_no=210827&readingLanguageCode=en",
+        "https://www.webtoons.com/en/canvas/sparkle-kid/list?title_no=205304&readingLanguageCode=en",
     ),
 
     "id"     : {"210827", "205304"},

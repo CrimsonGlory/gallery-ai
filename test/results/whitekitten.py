@@ -23,7 +23,8 @@ __tests__ = (
     "tags_character": ["lori_meyers"],
     "tags_copyright": ["night_in_the_woods"],
     "tags_species"  : ["mouse"],
-    "tags_uncategorized": ["color", "not_whitekitten"],
+    "tags_meta"         : ["not_whitekitten"],
+    "tags_uncategorized": ["color"],
     "tags"          : list,
     "uploader"      : {
         "id"      : 36,
