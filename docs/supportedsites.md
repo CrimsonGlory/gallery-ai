@@ -579,6 +579,13 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://fapello.com/MODEL/12345/">Posts</span></td>
     <td></td>
 </tr>
+<tr id="febri" title="febri">
+    <td>Febri</td>
+    <td>https://febri.jp/</td>
+    <td><span title="https://febri.jp/topics/TITLE/">Articles</span> |
+        <span title="https://febri.jp/topics/">Topics</span></td>
+    <td></td>
+</tr>
 <tr id="fikfap" title="fikfap">
     <td>FikFap</td>
     <td>https://fikfap.com/</td>
