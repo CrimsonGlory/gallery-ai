@@ -4244,11 +4244,7 @@ Type
 Default
     ``false``
 Description
-    Provide extended ``user`` metadata even when referring to a user by ID,
-    e.g. ``instagram.com/id:12345678``.
-Note
-    This metadata is always available when referring to a user by name,
-    e.g. ``instagram.com/USERNAME``.
+    Provide complete post metadata for all ``tagged`` and ``reposts`` results.
 
 
 extractor.instagram.order-files
