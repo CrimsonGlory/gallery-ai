@@ -169,6 +169,17 @@ class InstagramExtractor(Extractor):
     def posts(self):
         return ()
 
+    def _posts_expand(self, posts):
+        if self.config("metadata"):
+            for post in posts:
+                yield from self.api.media(post["code"])
+        else:
+            for post in posts:
+                if post.get("product_type") == "feed":
+                    yield post
+                else:
+                    yield from self.api.media(post["code"])
+
     def finalize(self, status):
         if status and self._cursor:
             self.log.info("Use '-o cursor=%s' to continue downloading "
@@ -666,11 +677,7 @@ class InstagramTaggedExtractor(InstagramExtractor):
         }
 
     def posts(self):
-        for post in self.api.user_tagged(self.item):
-            if post.get("product_type") == "feed":
-                yield post
-            else:
-                yield from self.api.media(post["code"])
+        return self._posts_expand(self.api.user_tagged(self.item))
 
 
 class InstagramRepostsExtractor(InstagramExtractor):
@@ -680,11 +687,7 @@ class InstagramRepostsExtractor(InstagramExtractor):
     example = "https://www.instagram.com/USER/reposts/"
 
     def posts(self):
-        for post in self.api.user_reposts(self.item):
-            if post.get("product_type") == "feed":
-                yield post
-            else:
-                yield from self.api.media(post["code"])
+        return self._posts_expand(self.api.user_reposts(self.item))
 
 
 class InstagramSavedExtractor(InstagramExtractor):
