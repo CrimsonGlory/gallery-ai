@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import rule34vault
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -28,10 +29,18 @@ __tests__ = (
 },
 
 {
-    "#url"  : "https://rule34vault.com/playlists/view/20164",
-    "#class": rule34vault.Rule34vaultPlaylistExtractor,
+    "#url"     : "https://rule34vault.com/playlists/view/20164",
+    "#comment" : "playlist is private",
+    "#class"   : rule34vault.Rule34vaultPlaylistExtractor,
+    "#exception": exception.AuthorizationError,
+},
+
+{
+    "#url"    : "https://rule34vault.com/playlists/view/2",
+    "#class"  : rule34vault.Rule34vaultPlaylistExtractor,
     "#pattern": r"https://r34xyz\.b-cdn\.net/posts/\d+/\d+/\d+\.(jpg|mp4)",
-    "#count"  : range(55, 75),
+    "#range"  : "1-10",
+    "#count"  : 10,
 },
 
 {

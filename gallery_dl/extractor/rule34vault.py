@@ -69,7 +69,13 @@ class Rule34vaultExtractor(BooruExtractor):
         threshold = self.per_page
 
         while True:
-            data = self.request_json(url, method="POST", json=params)
+            data = self.request_json(
+                url, method="POST", json=params, expected=(400,))
+            if data.get("statusCode"):
+                msg = data.get("message") or "Bad Request"
+                if "private" in msg.lower():
+                    raise self.exc.AuthorizationError(msg)
+                raise self.exc.HttpError(msg)
 
             yield from data["items"]
 

@@ -12,7 +12,13 @@ __tests__ = (
     "#url"     : "https://ponybooru.org/images/1",
     "#category": ("philomena", "ponybooru", "post"),
     "#class"   : philomena.PhilomenaPostExtractor,
-    "#sha1_content": "bca26f58fafd791fe07adcd2a28efd7751824605",
+    "#pattern" : r"https://cdn\.ponybooru\.org/img/view/2020/7/5/1\.png",
+    "#count"   : 1,
+
+    "id"     : 1,
+    "format" : "png",
+    "width"  : 3000,
+    "height" : 3000,
 },
 
 {
