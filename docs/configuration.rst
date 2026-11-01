@@ -8984,7 +8984,7 @@ downloader.http.retry-codes
 Type
     ``list`` of ``integers``
 Default
-    `extractor.*.retry-codes`_
+    `extractor.*.retry-codes`_ + ``429``
 Description
     Additional `HTTP response status codes <https://developer.mozilla.org/en-US/docs/Web/HTTP/Status>`__
     to retry a download on.

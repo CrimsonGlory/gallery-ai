@@ -35,11 +35,11 @@ class HttpDownloader(DownloaderBase):
         self.minsize = self.config("filesize-min")
         self.maxsize = self.config("filesize-max")
         self.retries = self.config("retries", extractor._retries)
-        self.retry_codes = self.config("retry-codes", extractor._retry_codes)
         self.timeout = self.config("timeout", extractor._timeout)
         self.verify = self.config("verify", extractor._verify)
         self.mtime = self.config("mtime", True)
         self.rate = self.config("rate")
+        retry_codes = self.config("retry-codes")
         interval_429 = self.config("sleep-429")
 
         if self.config("consume-content", False):
@@ -95,6 +95,12 @@ class HttpDownloader(DownloaderBase):
                 self.log.error("Invalid 'sleep-429' value '%s' (%s: %s)",
                                interval_429, exc.__class__.__name__, exc)
                 self.interval_429 = extractor._interval_429
+        if retry_codes is not None:
+            self.retry_codes = retry_codes
+        elif self.interval_429 and 429 not in extractor._retry_codes:
+            self.retry_codes = [*extractor._retry_codes, 429]
+        else:
+            self.retry_codes = extractor._retry_codes
 
     def download(self, url, pathfmt):
         try:
