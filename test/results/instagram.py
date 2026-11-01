@@ -124,6 +124,12 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MDQyNTA5NDg4MTcwMDk1/",
+    "#category": ("", "instagram", "highlights"),
+    "#class"   : instagram.InstagramStoriesExtractor,
+},
+
+{
     "#url"     : "https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MDQyNTA5NDg4MTcwMDk1?story_media_id=2724343156064789461",
     "#category": ("", "instagram", "highlights"),
     "#class"   : instagram.InstagramStoriesExtractor,
