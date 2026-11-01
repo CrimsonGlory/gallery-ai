@@ -20,7 +20,7 @@ class LusciousExtractor(Extractor):
 
     def _request_graphql(self, opname, variables):
         data = {
-            "id"           : 1,
+            "id"           : "1",
             "operationName": opname,
             "query"        : self.utils("graphql", opname),
             "variables"    : variables,
@@ -44,7 +44,7 @@ class LusciousAlbumExtractor(LusciousExtractor):
     directory_fmt = ("{category}", "{album[id]} {album[title]}")
     archive_fmt = "{album[id]}_{id}"
     pattern = (r"(?:https?://)?(?:www\.|members\.)?luscious\.net"
-               r"/(?:albums|pictures/c/[^/?#]+/album)/[^/?#]+_(\d+)")
+               r"/(?:albums|pictures/c/[^/?#]+/album)/(?:[^/?#]*_)?(\d+)")
     example = "https://luscious.net/albums/TITLE_12345/"
 
     def _init(self):
@@ -53,6 +53,18 @@ class LusciousAlbumExtractor(LusciousExtractor):
 
     def items(self):
         album = self.metadata()
+
+        if album.get("number_of_pictures", 0) > 1000:
+            for c in self.cookies:
+                if c.domain == ".luscious.net" and c.value and \
+                        c.name.startswith("sessionid-"):
+                    break
+            else:
+                self.log.warning("Guest users can only access the first 1000 "
+                                 "files of an album. Provide authenticated "
+                                 "cookies to be able to download all %s files",
+                                 album["number_of_pictures"])
+
         yield Message.Directory, "", {"album": album}
         for num, image in enumerate(self.images(), 1):
             image["num"] = num
@@ -98,6 +110,7 @@ class LusciousAlbumExtractor(LusciousExtractor):
         return album
 
     def images(self):
+        opname = "PictureListInsideAlbum"
         variables = {
             "input": {
                 "filters": [{
@@ -110,11 +123,12 @@ class LusciousAlbumExtractor(LusciousExtractor):
         }
 
         while True:
-            data = self._request_graphql("AlbumListOwnPictures", variables)
-            yield from data["picture"]["list"]["items"]
+            data = self._request_graphql(
+                opname, variables)["picture"]["list_in_album"]
+            yield from data["items"]
 
-            if not data["picture"]["list"]["info"]["has_next_page"]:
-                return
+            if not data["info"]["has_next_page"]:
+                break
             variables["input"]["page"] += 1
 
 
@@ -130,6 +144,7 @@ class LusciousSearchExtractor(LusciousExtractor):
         display = query.pop("display", "date_newest")
         page = query.pop("page", None)
 
+        opname = "AlbumList"
         variables = {
             "input": {
                 "display": display,
@@ -139,13 +154,14 @@ class LusciousSearchExtractor(LusciousExtractor):
         }
 
         while True:
-            data = self._request_graphql("AlbumListWithPeek", variables)
+            data = self._request_graphql(
+                opname, variables)["album"]["list"]
 
-            for album in data["album"]["list"]["items"]:
+            for album in data["items"]:
                 album["url"] = self.root + album["url"]
                 album["_extractor"] = LusciousAlbumExtractor
                 yield Message.Queue, album["url"], album
 
-            if not data["album"]["list"]["info"]["has_next_page"]:
-                return
+            if not data["info"]["has_next_page"]:
+                break
             variables["input"]["page"] += 1
