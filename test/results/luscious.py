@@ -91,6 +91,16 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://www.luscious.net/albums/408738/",
+    "#comment" : "album with >1000 files (#275)",
+    "#class"   : luscious.LusciousAlbumExtractor,
+    "#auth"    : False,
+    "#range"   : "1",
+    "#results" : "https://ah-img.luscious.net/Maebarakei/408738/80f734a842b8d18a9e41_01F459HD6YGBNE09448AFMADQM.1024x0.jpg",
+    "#log"     : "Guest users can only access the first 1000 files of an album. Provide authenticated cookies to be able to download all 1100 files",
+},
+
+{
     "#url"     : "https://members.luscious.net/albums/list/",
     "#class"   : luscious.LusciousSearchExtractor,
 },

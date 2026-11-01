@@ -46,7 +46,7 @@ class LusciousAlbumExtractor(LusciousExtractor):
     directory_fmt = ("{category}", "{album[id]} {album[title]}")
     archive_fmt = "{album[id]}_{id}"
     pattern = (r"(?:https?://)?(?:www\.|members\.)?luscious\.net"
-               r"/(?:albums|pictures/c/[^/?#]+/album)/[^/?#]+_(\d+)")
+               r"/(?:albums|pictures/c/[^/?#]+/album)/(?:[^/?#]*_)?(\d+)")
     example = "https://luscious.net/albums/TITLE_12345/"
 
     def _init(self):
@@ -55,6 +55,18 @@ class LusciousAlbumExtractor(LusciousExtractor):
 
     def items(self):
         album = self.metadata()
+
+        if album.get("number_of_pictures", 0) > 1000:
+            for c in self.cookies:
+                if c.domain == ".luscious.net" and c.value and \
+                        c.name.startswith("sessionid-"):
+                    break
+            else:
+                self.log.warning("Guest users can only access the first 1000 "
+                                 "files of an album. Provide authenticated "
+                                 "cookies to be able to download all %s files",
+                                 album["number_of_pictures"])
+
         yield Message.Directory, "", {"album": album}
         for num, image in enumerate(self.images(), 1):
             image["num"] = num
