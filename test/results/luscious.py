@@ -11,8 +11,7 @@ __tests__ = (
 {
     "#url"     : "https://luscious.net/albums/okinami-no-koigokoro_277031/",
     "#class"   : luscious.LusciousAlbumExtractor,
-    #  "#pattern" : r"https://storage\.bhs\.cloud\.ovh\.net/v1/AUTH_\w+/images/NTRshouldbeillegal/277031/luscious_net_\d+_\d+\.jpg$",
-    "#pattern" : r"https://cdni.luscious.net/NTRshouldbeillegal/277031/luscious_net_\d+_\d+.1680x0.jpg\?md5=[\w-]+&expires=\d+$",
+    "#pattern" : r"https://[\w-]+.luscious.net/NTRshouldbeillegal/277031/luscious_net_\d+_\d+.1680x0.jpg$",
     "#count"   : 18,
 
     "album"           : {
@@ -33,9 +32,9 @@ __tests__ = (
         "like_status"                : "none",
         "modified"                   : float,
         "permissions"                : list,
-        "rating"                     : None,
+        "!rating"                    : None,
         "slug"                       : "okinami-no-koigokoro",
-        "status"                     : None,
+        "!status"                    : None,
         "tags"                       : list,
         "title"                      : "Okinami no Koigokoro",
         "url"                        : "/albums/okinami-no-koigokoro_277031/",
@@ -55,7 +54,7 @@ __tests__ = (
     "like_status"     : "none",
     "position"        : int,
     "resolution"      : r"re:\d+x\d+",
-    "status"          : None,
+    "!status"         : None,
     "tags"            : list,
     "thumbnail"       : str,
     "title"           : str,
