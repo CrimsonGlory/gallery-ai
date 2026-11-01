@@ -33,7 +33,15 @@ class PhilomenaExtractor(BooruExtractor):
             url = post["view_url"]
 
         if self.svg and post["format"] == "svg":
-            return url.rpartition(".")[0] + ".svg"
+            url = url.rpartition(".")[0] + ".svg"
+
+        # 'full' and 'view_url' each 404 on some CDN edges (#6922)
+        view_url = post.get("view_url")
+        if view_url and view_url != url:
+            if self.svg and post["format"] == "svg":
+                view_url = view_url.rpartition(".")[0] + ".svg"
+            if view_url != url:
+                post["_fallback"] = (view_url,)
         return url
 
     def _prepare(self, post):

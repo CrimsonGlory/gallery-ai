@@ -711,6 +711,27 @@ def hash(value):
 
 class TestOther(unittest.TestCase):
 
+    def test_detect_challenge(self):
+        def response(status, server="cloudflare", body=b"", **headers):
+            if server is not None:
+                headers.setdefault("server", server)
+            resp = Mock()
+            resp.status_code = status
+            resp.content = body
+            resp.headers = headers
+            return resp
+
+        challenge_js = b"/cdn-cgi/challenge-platform/scripts/jsd/main.js"
+        self.assertEqual(
+            util.detect_challenge(response(418, body=challenge_js)),
+            "Cloudflare challenge")
+        self.assertEqual(
+            util.detect_challenge(response(418, body=b"teapot")),
+            "Cloudflare challenge")
+        self.assertIsNone(util.detect_challenge(response(403)))
+        self.assertIsNone(util.detect_challenge(
+            response(418, server="nginx", body=challenge_js)))
+
     def test_bencode(self):
         self.assertEqual(util.bencode(0), "")
         self.assertEqual(util.bencode(123), "123")

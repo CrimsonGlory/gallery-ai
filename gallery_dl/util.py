@@ -399,7 +399,8 @@ def detect_challenge(response):
         return
 
     elif server.startswith("cloudflare"):
-        if response.status_code not in (403, 503):
+        # 418 is Cloudflare's "I'm a teapot" bot block (AO3, etc.)
+        if response.status_code not in (403, 418, 503):
             return
 
         mitigated = response.headers.get("cf-mitigated")
@@ -407,10 +408,15 @@ def detect_challenge(response):
             return "Cloudflare challenge"
 
         content = response.content
-        if b"_cf_chl_opt" in content or b"jschl-answer" in content:
+        if (b"_cf_chl_opt" in content or
+                b"jschl-answer" in content or
+                b"cdn-cgi/challenge-platform" in content or
+                b"__CF$cv$params" in content):
             return "Cloudflare challenge"
         elif b'name="captcha-bypass"' in content:
             return "Cloudflare CAPTCHA"
+        elif response.status_code == 418:
+            return "Cloudflare challenge"
 
     elif server.startswith("ddos-guard"):
         if response.status_code == 403 and \

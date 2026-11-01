@@ -66,7 +66,7 @@ __tests__ = (
     "tags_artist"   : "kawanakajima",
     "tags_character": "heath_ledger ronald_mcdonald the_joker",
     "tags_copyright": "dc_comics mcdonald's the_dark_knight",
-    "tags_metadata" : "tagme",
+    "tags_metadata" : "parody tagme",
 },
 
 )
