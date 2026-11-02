@@ -10193,13 +10193,29 @@ Type
 Default
     ``"utf-8"``
 Description
-    Name of the encoding used to encode a file's content.
+    Name of the
+    `encoding <https://docs.python.org/3/library/codecs.html#standard-encodings>`__
+    used to encode a file's content.
 
     See the ``encoding`` argument of |open()|_ for further details.
 
 
+metadata.errors
+---------------
+Type
+    ``string``
+Default
+    ``"ignore"``
+Description
+    Name of the
+    `error handler <https://docs.python.org/3/library/codecs.html#error-handlers>`__
+    that specifies how encoding errors are to be handled.
+
+    See the ``errors`` argument of |open()|_ for further details.
+
+
 metadata.newline
------------------
+----------------
 Type
     ``string``
 Default
