@@ -78,12 +78,17 @@ def load_cookies_firefox(browser_name, profile=None,
         sql = f"{sql} WHERE ( {' ) AND ( '.join(conditions)} )"
 
     with DatabaseConnection(path) as db:
+        version = db.execute('PRAGMA user_version;').fetchone()[0]
+        _log_debug("Cookies database version: %s", version)
+        ms = (version >= 16)
+
         cookies = [
             Cookie(
                 0, name, value, None, False,
                 domain, True if domain else False,
                 domain[0] == "." if domain else False,
-                path, True if path else False, secure, expires,
+                path, True if path else False, secure,
+                (expires / 1000) if ms and expires is not None else expires,
                 False, None, None, {},
             )
             for name, value, domain, path, secure, expires in db.execute(
