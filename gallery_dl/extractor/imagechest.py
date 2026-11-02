@@ -45,6 +45,9 @@ class ImagechestGalleryExtractor(GalleryExtractor):
             return {}
 
         self.files = post.pop("files", ())
+        if (total := post.get("files_total")) and total > len(self.files):
+            url = self.root + "/p/" + self.gallery_id + "/files"
+            self.files = self.request_json(url, params={"all": 1})["files"]
         post["gallery_id"] = self.gallery_id
         post["tags"] = [tag["name"] for tag in post["tags"]]
 
