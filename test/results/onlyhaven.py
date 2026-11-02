@@ -12,7 +12,7 @@ __tests__ = (
     "#url"     : "https://cum.st/creators/onlyfans/32696630/post/2607872163",
     "#category": ("", "onlyhaven", "onlyfans"),
     "#class"   : onlyhaven.OnlyhavenPostExtractor,
-    "#pattern" : r"https://e1\.cum\.st/media/[0-9a-f]{64}/original\.jpg",
+    "#pattern" : r"https://cdn\.cum\.st/media/[0-9a-f]{64}/original\.jpg",
     "#count"   : range(1, 10),
 
     "added"           : 1785214191,
@@ -39,7 +39,7 @@ __tests__ = (
     "sha256"          : "hash:sha256",
     "storageKey"      : "hash:sha256",
     "title"           : str,
-    "url"             : r"re:https://e1\.cum\.st/media/[0-9a-f]{64}/original\.jpg",
+    "url"             : r"re:https://cdn\.cum\.st/media/[0-9a-f]{64}/original\.jpg",
     "user"            : "32696630",
     "username"        : "sweetiefox_of",
     "width"           : int,
@@ -57,7 +57,7 @@ __tests__ = (
         "position"        : int,
         "sha256"          : "hash:sha256",
         "storageKey"      : "hash:sha256",
-        "url"             : r"re:https://e1\.cum\.st/media/[0-9a-f]{64}/original\.jpg",
+        "url"             : r"re:https://cdn\.cum\.st/media/[0-9a-f]{64}/original\.jpg",
         "width"           : int,
         "variants"        : [{
             "bytes": int,
@@ -86,7 +86,7 @@ __tests__ = (
     "#url"     : "https://cum.st/creators/onlyfans/39058172/post/2159745472",
     "#category": ("", "onlyhaven", "onlyfans"),
     "#class"   : onlyhaven.OnlyhavenPostExtractor,
-    "#pattern" : r"https://e1\.cum\.st/media/\w{64}/original\.\w+",
+    "#pattern" : r"https://cdn\.cum\.st/media/\w{64}/original\.\w+",
     "#count"   : range(1, 50),
 
     "added"           : 1784196801,
@@ -146,7 +146,7 @@ __tests__ = (
     "#url"     : "https://cum.st/creators/fansly/365239425979916288",
     "#category": ("", "onlyhaven", "fansly"),
     "#class"   : onlyhaven.OnlyhavenUserExtractor,
-    "#pattern" : r"https://e1\.cum\.st/media/\w+/original\.\w+",
+    "#pattern" : r"https://cdn\.cum\.st/media/\w+/original\.\w+",
     "#range"   : "1-100",
     "#count"   : 100,
 
@@ -189,6 +189,7 @@ __tests__ = (
 {
     "#url"     : "https://cum.st/posts?service=fansly&type=audio&sort=popular",
     "#class"   : onlyhaven.OnlyhavenPostsExtractor,
+    "#pattern" : r"https://cdn\.cum\.st/media/\w{64}/original\.\w+",
     "#range"   : "1-100",
     "#count"   : range(0, 100),
 

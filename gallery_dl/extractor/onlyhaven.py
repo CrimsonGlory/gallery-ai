@@ -19,7 +19,7 @@ class OnlyhavenExtractor(Extractor):
     """Base class for onlyhaven extractors"""
     category = "onlyhaven"
     root = "https://cum.st"
-    root_dl = "https://e1.cum.st/media"
+    root_dl = "https://cdn.cum.st/media"
     directory_fmt = ("{category}", "{service}", "{user}")
     filename_fmt = "{id}_{title[:180]}_{num:>02}_{filename[:180]}.{extension}"
     archive_fmt = "{service}_{user}_{id}_{num}"
@@ -30,7 +30,7 @@ class OnlyhavenExtractor(Extractor):
             self.root = (text.root_from_url(self.url) if domain == "auto" else
                          text.ensure_http_scheme(domain))
             lhs, sep, rhs = self.root.partition("://")
-            self.root_dl = f"{lhs}{sep}e1.{rhs}/media"
+            self.root_dl = f"{lhs}{sep}cdn.{rhs}/media"
             self.cookies_domain = "." + rhs
 
         self.api = OnlyhavenAPI(self)
