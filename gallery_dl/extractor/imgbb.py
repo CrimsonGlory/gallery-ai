@@ -8,8 +8,29 @@
 
 """Extractors for https://imgbb.com/"""
 
+import re
+import socket
+from urllib.parse import urlsplit
+
 from .common import Extractor, Message
-from .. import text, util
+from .. import http, text, util
+
+# Chevereto tooltip sizes use SI units ("1.7 MB" ≈ 1.7e6 bytes).
+_FILESIZE_RE = re.compile(r"([\d.]+)\s*([KMGT]?)I?B\s*$", re.I)
+
+
+def _parse_filesize(value):
+    if not value:
+        return 0
+    if value.__class__ is int:
+        return value
+    match = _FILESIZE_RE.search(str(value).strip())
+    if not match:
+        return text.parse_int(value)
+    num = float(match.group(1))
+    unit = match.group(2).upper()
+    exp = "BKMGT".index(unit) if unit else 0
+    return int(num * (1000 ** exp))
 
 
 class ImgbbExtractor(Extractor):
@@ -29,8 +50,131 @@ class ImgbbExtractor(Extractor):
         for image in self.posts():
             url = image["url"]
             text.nameext_from_url(url, image)
+            image["_http_headers"] = {
+                "Referer": self.root + "/" + (image.get("id") or ""),
+            }
+            image["_http_validate"] = self._cdn_validator(
+                url, image.get("size"))
             yield Message.Directory, "", image
             yield Message.Url, url, image
+
+    def _cdn_validator(self, url, expected_size):
+        tried = set()
+
+        def validate(response):
+            return self._validate_cdn(
+                response, url, expected_size, tried)
+
+        return validate
+
+    def _validate_cdn(self, response, url, expected_size, tried):
+        clen = text.parse_int(response.headers.get("Content-Length"))
+        if (not self._cdn_placeholder(response, url) and
+                not self._cdn_truncated(clen, expected_size)):
+            self.session.curl_options[http.CurlOpt.FRESH_CONNECT] = 0
+            return True
+
+        host = urlsplit(url).hostname
+        if not tried:
+            tried.update(self._resolve_ipv4(host))
+
+        for ip in self._iter_cdn_ips(host):
+            if ip in tried:
+                continue
+            tried.add(ip)
+            if self._cdn_complete(url, ip, expected_size):
+                self.log.debug("Using ImgBB CDN %s", ip)
+                try:
+                    response.close()
+                except Exception:
+                    pass
+                return url
+
+        self.log.warning(
+            "Incomplete file from %s (%s bytes, expected %s)",
+            url, clen, expected_size or "?")
+        self._clear_cdn_pin()
+        return False
+
+    def _cdn_placeholder(self, response, url):
+        ctype = (response.headers.get("content-type") or "")
+        if not ctype.startswith("image/png"):
+            return False
+        path = urlsplit(url).path.lower()
+        if path.endswith((".jpg", ".jpeg", ".gif", ".webp")):
+            return True
+        clen = text.parse_int(response.headers.get("content-length"))
+        return clen in (1031, 1115)
+
+    def _cdn_truncated(self, clen, expected_size):
+        clen = text.parse_int(clen)
+        expected_size = text.parse_int(expected_size)
+        if not expected_size or not clen:
+            return False
+        return clen < expected_size * 85 // 100
+
+    def _cdn_complete(self, url, ip, expected_size):
+        host = urlsplit(url).hostname
+        self._pin_cdn(host, ip)
+        resp = None
+        try:
+            resp = self.session.request(
+                "HEAD", url, timeout=self._timeout)
+            if resp.status_code >= 400 or self._cdn_placeholder(resp, url):
+                return False
+            clen = text.parse_int(resp.headers.get("Content-Length"))
+            if not clen:
+                return False
+            return not self._cdn_truncated(clen, expected_size)
+        except Exception:
+            return False
+        finally:
+            if resp is not None:
+                try:
+                    resp.close()
+                except Exception:
+                    pass
+
+    def _pin_cdn(self, host, ip):
+        opts = self.session.curl_options
+        opts[http.CurlOpt.RESOLVE] = [
+            f"{host}:443:{ip}",
+            f"{host}:80:{ip}",
+        ]
+        opts[http.CurlOpt.FRESH_CONNECT] = 1
+
+    def _clear_cdn_pin(self):
+        opts = self.session.curl_options
+        try:
+            del opts[http.CurlOpt.RESOLVE]
+        except (KeyError, TypeError):
+            pass
+        opts[http.CurlOpt.FRESH_CONNECT] = 0
+
+    def _iter_cdn_ips(self, host):
+        # ImgBB geo-DNS may pin a PoP with a truncated object.
+        # ns1/ns2/ns3.ibb.co A records are the other PoPs.
+        seen = set()
+        for name in (host, "ns1.ibb.co", "ns2.ibb.co", "ns3.ibb.co"):
+            for ip in self._resolve_ipv4(name):
+                if ip not in seen:
+                    seen.add(ip)
+                    yield ip
+
+    def _resolve_ipv4(self, name):
+        try:
+            infos = socket.getaddrinfo(
+                name, 443, socket.AF_INET, socket.SOCK_STREAM)
+        except OSError:
+            return ()
+        ips = []
+        seen = set()
+        for info in infos:
+            ip = info[4][0]
+            if ip not in seen:
+                seen.add(ip)
+                ips.append(ip)
+        return ips
 
     def login(self):
         if self.cookies_check(self.cookies_names):
@@ -167,9 +311,12 @@ class ImgbbImageExtractor(ImgbbExtractor):
             "height": text.parse_int(extr('"og:image:height" content="', '"')),
             "album" : extr("Added to <a", "</a>"),
             "date"  : self.parse_datetime_iso(extr('<span title="', '"')),
-            "user"  : util.json_loads(extr(
-                "CHV.obj.resource=", "};") + "}").get("user"),
         }
+        try:
+            image["user"] = util.json_loads(extr(
+                "CHV.obj.resource=", "};") + "}").get("user")
+        except Exception:
+            image["user"] = None
 
         if album := image["album"]:
             image["album"] = {
@@ -178,6 +325,35 @@ class ImgbbImageExtractor(ImgbbExtractor):
             }
         else:
             image["album"] = None
+
+        if obj := text.extr(page, "CHV.obj.image_viewer.image=", ";"):
+            try:
+                viewer = util.json_loads(obj)
+            except Exception:
+                viewer = None
+            if isinstance(viewer, dict):
+                if viewer.get("url"):
+                    image["url"] = viewer["url"]
+                if viewer.get("width"):
+                    image["width"] = text.parse_int(viewer["width"])
+                if viewer.get("height"):
+                    image["height"] = text.parse_int(viewer["height"])
+                if viewer.get("size"):
+                    image["size"] = _parse_filesize(viewer["size"])
+
+        pos = page.find("btn-download")
+        if pos >= 0:
+            start = page.rfind("<a", 0, pos)
+            end = page.find(">", pos)
+            tag = page[start:end] if start >= 0 and end > start else ""
+            if not image["url"] or image["url"].endswith("/loading.svg"):
+                href = text.extr(tag, 'href="', '"')
+                if href.startswith("http"):
+                    image["url"] = href
+            if title := text.extr(tag, 'title="', '"'):
+                size = _parse_filesize(title)
+                if size and not image.get("size"):
+                    image["size"] = size
 
         return (image,)
 

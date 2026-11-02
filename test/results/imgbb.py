@@ -171,6 +171,23 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://ibb.co/dGFyRQm",
+    "#comment" : "original file is truncated on some ImgBB CDN PoPs",
+    "#class"   : imgbb.ImgbbImageExtractor,
+    "#auth"    : False,
+    "#results" : "https://i.ibb.co/9s6j7qZ/In-Shot-20220512-212334331.jpg",
+    "#sha1_content": "bacd593a3a641bab5aaaffbabb271786414f8ad2",
+
+    "id"       : "dGFyRQm",
+    "title"    : "In-Shot-20220512-212334331",
+    "url"      : "https://i.ibb.co/9s6j7qZ/In-Shot-20220512-212334331.jpg",
+    "width"    : 1920,
+    "height"   : 1920,
+    "filename" : "In-Shot-20220512-212334331",
+    "extension": "jpg",
+},
+
+{
     "#url"     : "https://ibb.co/bRGKX9bm",
     "#class"   : imgbb.ImgbbImageExtractor,
     "#auth"    : False,

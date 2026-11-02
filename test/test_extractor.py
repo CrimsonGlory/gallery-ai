@@ -416,5 +416,178 @@ class TextExtractorOAuth(unittest.TestCase):
             self.assertEqual(len(m.mock_calls), 1)
 
 
+class TestImgbb(unittest.TestCase):
+    _IMAGE_HTML = (
+        "<html><head>\n"
+        '<link title="In-Shot hosted at ImgBB — ImgBB">\n'
+        '<meta property="og:url" content="https://ibb.co/dGFyRQm">\n'
+        '<meta property="og:title" content="'
+        'In-Shot-20220512-212334331 hosted at ImgBB">\n'
+        '<meta property="og:image" content="https://i.ibb.co/'
+        '9s6j7qZ/In-Shot-20220512-212334331.jpg">\n'
+        '<meta property="og:image:width" content="1920">\n'
+        '<meta property="og:image:height" content="1920">\n'
+        "</head><body>\n"
+        'Added to <a href="https://ibb.co/album/abc123">Test Album</a>\n'
+        '<p>Uploaded <span title="2022-05-13 00:25:52">'
+        "4 years ago</span></p>\n"
+        '<a href="https://i.ibb.co/'
+        '9s6j7qZ/In-Shot-20220512-212334331.jpg"'
+        ' download="In-Shot-20220512-212334331.jpg"'
+        ' class="btn btn-download default" rel="tooltip"'
+        ' title="1920 x 1920 - JPG 1.7 MB"></a>\n'
+        "<script>\n"
+        'CHV.obj.resource={"id":"dGFyRQm","type":"image"};\n'
+        'CHV.obj.image_viewer.image={"width":1920,"height":1920,'
+        '"url":"https://i.ibb.co/'
+        '9s6j7qZ/In-Shot-20220512-212334331.jpg"};\n'
+        "</script>\n"
+        "</body></html>\n"
+    )
+
+    class _Resp:
+        def __init__(self, clen, ctype="image/jpeg", status=200):
+            self.status_code = status
+            self.headers = {
+                "Content-Length": str(clen),
+                "content-length": str(clen),
+                "content-type": ctype,
+                "Content-Type": ctype,
+            }
+            self.closed = False
+
+        def close(self):
+            self.closed = True
+
+    def _image_extractor(self):
+        from gallery_dl.extractor.imgbb import ImgbbImageExtractor
+        extr = ImgbbImageExtractor.from_url("https://ibb.co/dGFyRQm")
+        extr.initialize()
+        return extr
+
+    def test_parse_filesize(self):
+        from gallery_dl.extractor.imgbb import _parse_filesize
+
+        self.assertEqual(_parse_filesize("1.7 MB"), 1_700_000)
+        self.assertEqual(
+            _parse_filesize("1920 x 1920 - JPG 1.7 MB"), 1_700_000)
+        self.assertEqual(_parse_filesize("182 B"), 182)
+        self.assertEqual(_parse_filesize("45 KB"), 45_000)
+        self.assertEqual(_parse_filesize("1.7 MiB"), 1_700_000)
+        self.assertEqual(_parse_filesize(1_744_075), 1_744_075)
+        self.assertEqual(_parse_filesize(""), 0)
+        self.assertEqual(_parse_filesize(None), 0)
+        self.assertEqual(_parse_filesize(
+            "In-Shot-20220512-212334331 hosted at ImgBB — ImgBB"), 0)
+
+    def test_cdn_truncated(self):
+        from gallery_dl.extractor.imgbb import ImgbbExtractor
+
+        trunc = ImgbbExtractor._cdn_truncated
+        self.assertTrue(trunc(None, 819200, 1_700_000))
+        self.assertFalse(trunc(None, 1_744_075, 1_700_000))
+        self.assertFalse(trunc(None, 819200, 0))
+        self.assertFalse(trunc(None, 0, 1_700_000))
+
+    def test_image_page_size_from_download_button(self):
+        extr = self._image_extractor()
+
+        class _Page:
+            text = self._IMAGE_HTML
+        extr.request = lambda *a, **k: _Page()
+
+        image, = extr.posts()
+        self.assertEqual(image["id"], "dGFyRQm")
+        self.assertEqual(image["title"], "In-Shot-20220512-212334331")
+        self.assertEqual(
+            image["url"],
+            "https://i.ibb.co/9s6j7qZ/In-Shot-20220512-212334331.jpg")
+        self.assertEqual(image["width"], 1920)
+        self.assertEqual(image["height"], 1920)
+        self.assertEqual(image["size"], 1_700_000)
+        self.assertEqual(image["album"]["id"], "abc123")
+        self.assertEqual(image["album"]["title"], "Test Album")
+
+    def test_cdn_placeholder(self):
+        from gallery_dl.extractor.imgbb import ImgbbExtractor
+
+        url = "https://i.ibb.co/9s6j7qZ/file.jpg"
+        ph = ImgbbExtractor._cdn_placeholder
+        self.assertTrue(ph(None, self._Resp(1115, "image/png"), url))
+        self.assertFalse(ph(None, self._Resp(819200, "image/jpeg"), url))
+        self.assertFalse(ph(
+            None, self._Resp(182, "image/png"),
+            "https://i.ibb.co/1J4mTWzQ/test.png"))
+
+    def test_cdn_failover_pins_complete_pop(self):
+        from gallery_dl import http
+
+        extr = self._image_extractor()
+        extr._timeout = 5
+        ips = {
+            "i.ibb.co": ("207.174.26.219",),
+            "ns1.ibb.co": ("51.75.213.70",),
+            "ns2.ibb.co": ("23.237.219.162",),
+            "ns3.ibb.co": ("207.174.26.219",),
+        }
+        extr._resolve_ipv4 = lambda name: ips.get(name, ())
+
+        def fake_request(method, url, **kwargs):
+            resolve = extr.session.curl_options.get(
+                http.CurlOpt.RESOLVE) or ()
+            ip = resolve[0].rsplit(":", 1)[-1] if resolve else ""
+            if ip == "51.75.213.70":
+                raise OSError("ssl")
+            clen = 1744075 if ip == "23.237.219.162" else 819200
+            return self._Resp(clen)
+
+        extr.session.request = fake_request
+        url = ("https://i.ibb.co/9s6j7qZ/"
+               "In-Shot-20220512-212334331.jpg")
+        result = extr._validate_cdn(
+            self._Resp(819200), url, 1_700_000, set())
+        self.assertEqual(result, url)
+        pinned = extr.session.curl_options[http.CurlOpt.RESOLVE]
+        self.assertIn("23.237.219.162", pinned[0])
+
+    def test_cdn_complete_response_accepted(self):
+        extr = self._image_extractor()
+        url = ("https://i.ibb.co/9s6j7qZ/"
+               "In-Shot-20220512-212334331.jpg")
+        result = extr._validate_cdn(
+            self._Resp(1_744_075), url, 1_700_000, set())
+        self.assertTrue(result)
+
+    def test_cdn_missing_size_skips_failover(self):
+        extr = self._image_extractor()
+        url = ("https://i.ibb.co/9s6j7qZ/"
+               "In-Shot-20220512-212334331.jpg")
+        result = extr._validate_cdn(
+            self._Resp(819200), url, 0, set())
+        self.assertTrue(result)
+
+    def test_cdn_failover_exhausted_refuses_file(self):
+        from gallery_dl import http
+
+        extr = self._image_extractor()
+        extr._timeout = 5
+        ips = {
+            "i.ibb.co": ("207.174.26.219",),
+            "ns1.ibb.co": ("51.75.213.70",),
+            "ns2.ibb.co": ("23.237.219.162",),
+            "ns3.ibb.co": ("207.174.26.219",),
+        }
+        extr._resolve_ipv4 = lambda name: ips.get(name, ())
+        extr.session.request = lambda *a, **k: self._Resp(819200)
+        url = ("https://i.ibb.co/9s6j7qZ/"
+               "In-Shot-20220512-212334331.jpg")
+        with self.assertLogs(extr.log, "WARNING"):
+            result = extr._validate_cdn(
+                self._Resp(819200), url, 1_700_000, set())
+        self.assertIs(result, False)
+        self.assertFalse(
+            extr.session.curl_options.get(http.CurlOpt.RESOLVE))
+
+
 if __name__ == "__main__":
     unittest.main()
