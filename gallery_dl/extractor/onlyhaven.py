@@ -19,7 +19,7 @@ class OnlyhavenExtractor(Extractor):
     """Base class for onlyhaven extractors"""
     category = "onlyhaven"
     root = "https://cum.st"
-    root_dl = "https://e1.cum.st/media"
+    root_dl = "https://cdn.cum.st/media"
     directory_fmt = ("{category}", "{service}", "{user}")
     filename_fmt = "{id}_{title[:180]}_{num:>02}_{filename[:180]}.{extension}"
     archive_fmt = "{service}_{user}_{id}_{num}"

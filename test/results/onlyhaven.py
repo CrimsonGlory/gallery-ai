@@ -12,7 +12,7 @@ __tests__ = (
     "#url"     : "https://cum.st/creators/onlyfans/32696630/post/2607872163",
     "#category": ("", "onlyhaven", "onlyfans"),
     "#class"   : onlyhaven.OnlyhavenPostExtractor,
-    "#results" : "https://e1.cum.st/media/efaebc6e9e2ac41aa66d157367e173750d2270dfa3a2cd99167d436946e99df2/original.jpg",
+    "#results" : "https://cdn.cum.st/media/efaebc6e9e2ac41aa66d157367e173750d2270dfa3a2cd99167d436946e99df2/original.jpg",
 
     "added"           : 1785214191,
     "bytes"           : 1287465,
@@ -38,7 +38,7 @@ __tests__ = (
     "sha256"          : "efaebc6e9e2ac41aa66d157367e173750d2270dfa3a2cd99167d436946e99df2",
     "storageKey"      : "efaebc6e9e2ac41aa66d157367e173750d2270dfa3a2cd99167d436946e99df2",
     "title"           : "Does it drive you crazy when I open my mouth like this? 👅",
-    "url"             : "https://e1.cum.st/media/efaebc6e9e2ac41aa66d157367e173750d2270dfa3a2cd99167d436946e99df2/original.jpg",
+    "url"             : "https://cdn.cum.st/media/efaebc6e9e2ac41aa66d157367e173750d2270dfa3a2cd99167d436946e99df2/original.jpg",
     "user"            : "32696630",
     "username"        : "sweetiefox_of",
     "width"           : 3024,
@@ -56,7 +56,7 @@ __tests__ = (
         "position"        : 0,
         "sha256"          : "efaebc6e9e2ac41aa66d157367e173750d2270dfa3a2cd99167d436946e99df2",
         "storageKey"      : "efaebc6e9e2ac41aa66d157367e173750d2270dfa3a2cd99167d436946e99df2",
-        "url"             : "https://e1.cum.st/media/efaebc6e9e2ac41aa66d157367e173750d2270dfa3a2cd99167d436946e99df2/original.jpg",
+        "url"             : "https://cdn.cum.st/media/efaebc6e9e2ac41aa66d157367e173750d2270dfa3a2cd99167d436946e99df2/original.jpg",
         "width"           : 3024,
         "variants"        : [{
             "bytes": 1287465,
@@ -85,7 +85,7 @@ __tests__ = (
     "#url"     : "https://cum.st/creators/onlyfans/39058172/post/2159745472",
     "#category": ("", "onlyhaven", "onlyfans"),
     "#class"   : onlyhaven.OnlyhavenPostExtractor,
-    "#pattern" : r"https://e1\.cum\.st/media/\w{64}/original\.\w+",
+    "#pattern" : r"https://cdn\.cum\.st/media/\w{64}/original\.\w+",
     "#count"   : 40,
 
     "added"           : 1784196801,
@@ -146,7 +146,7 @@ __tests__ = (
     "#url"     : "https://cum.st/creators/fansly/365239425979916288",
     "#category": ("", "onlyhaven", "fansly"),
     "#class"   : onlyhaven.OnlyhavenUserExtractor,
-    "#pattern" : r"https://e1\.cum\.st/media/\w+/original\.\w+",
+    "#pattern" : r"https://cdn\.cum\.st/media/\w+/original\.\w+",
     "#range"   : "1-100",
     "#count"   : 100,
 
@@ -189,7 +189,7 @@ __tests__ = (
 {
     "#url"     : "https://cum.st/posts?service=fansly&type=audio&sort=popular",
     "#class"   : onlyhaven.OnlyhavenPostsExtractor,
-    "#pattern" : r"https://e1\.cum\.st/media/\w{64}/original\.(mp4|jpeg)",
+    "#pattern" : r"https://cdn\.cum\.st/media/\w{64}/original\.(mp4|jpeg)",
     "#range"   : "1-100",
     "#count"   : 32,
 
