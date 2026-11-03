@@ -155,6 +155,21 @@ class OnlyhavenPostExtractor(OnlyhavenExtractor):
         return (self.api.creator_post(service, self.creator_id, post_id),)
 
 
+class OnlyhavenDmExtractor(OnlyhavenExtractor):
+    """Extractor for a single onlyhaven DM"""
+    subcategory = "dm"
+    pattern = USER_PATTERN + r"/dm/([^/?#]+)"
+    example = "https://cum.st/creators/SERVICE/12345/dm/12345"
+
+    def __init__(self, match):
+        self.subcategory = match[1]
+        OnlyhavenExtractor.__init__(self, match)
+
+    def posts(self):
+        service, self.creator_id, dm_id = self.groups
+        return (self.api.creator_dm(service, self.creator_id, dm_id),)
+
+
 class OnlyhavenPostsExtractor(OnlyhavenExtractor):
     """Extractor for onlyhaven post listings"""
     subcategory = "posts"
@@ -200,6 +215,10 @@ class OnlyhavenAPI():
 
     def creator_post(self, service, creator_id, post_id):
         endpoint = f"/v1/{service}/user/{creator_id}/post/{post_id}"
+        return self._call(endpoint)
+
+    def creator_dm(self, service, creator_id, dm_id):
+        endpoint = f"/v1/{service}/user/{creator_id}/dm/{dm_id}"
         return self._call(endpoint)
 
     def creator_profile(self, service, creator_id):

@@ -1314,7 +1314,8 @@ Consider all listed sites to potentially be NSFW.
 <tr id="onlyhaven" title="onlyhaven">
     <td>OnlyHaven</td>
     <td>https://cum.st/</td>
-    <td><span title="https://cum.st/creators/SERVICE/12345/post/12345">Posts</span> |
+    <td><span title="https://cum.st/creators/SERVICE/12345/dm/12345">DMs</span> |
+        <span title="https://cum.st/creators/SERVICE/12345/post/12345">Posts</span> |
         <span title="https://cum.st/posts">Post Listings</span> |
         <span title="https://cum.st/creators/SERVICE/12345">User Profiles</span></td>
     <td></td>

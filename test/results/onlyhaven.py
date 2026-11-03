@@ -202,4 +202,85 @@ __tests__ = (
     "user_profile"    : dict,
 },
 
+{
+    "#url"     : "https://cum.st/creators/onlyfans/32696630/dm/50a041a9-b971-4031-9678-347e83d24eea",
+    "#category": ("", "onlyhaven", "onlyfans"),
+    "#class"   : onlyhaven.OnlyhavenDmExtractor,
+    "#results" : "https://cdn.cum.st/media/cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666/original.mp4",
+
+    "added"           : 1789764067,
+    "bytes"           : 342601,
+    "count"           : 1,
+    "date"            : "dt:2026-09-18 20:41:07",
+    "durationMs"      : 8000,
+    "extension"       : "mp4",
+    "file_id"         : "e8f3e602-8c4d-45a9-8200-8de3c598e255",
+    "filename"        : "0ig7ebgllftnt1wochslc_source",
+    "height"          : 218,
+    "id"              : "50a041a9-b971-4031-9678-347e83d24eea",
+    "kind"            : "gif",
+    "mimeType"        : "image/gif",
+    "next"            : {"id": "43d2e7b1-11b1-40ba-b3e1-3316ac991754"},
+    "num"             : 1,
+    "originalFilename": "0ig7ebgllftnt1wochslc_source.mp4",
+    "prev"            : {"id": "6ac039a0-18cb-4a97-abd4-4be930d173ef"},
+    "published"       : 1789764067,
+    "service"         : "onlyfans",
+    "sha256"          : "cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666",
+    "storageKey"      : "cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666",
+    "title"           : "**(🍼) ****Lifetime Breeding 5+ Hours Vault ** Master Breeder Chance: 3/3! [ 🟩 🟩 🟩 ]",
+    "url"             : "https://cdn.cum.st/media/cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666/original.mp4",
+    "user"            : "32696630",
+    "username"        : "sweetiefox_of",
+    "width"           : 402,
+    "caption"         : """\
+**(🍼) ****Lifetime Breeding 5+ Hours Vault **
+Master Breeder Chance: 3/3! [ 🟩 🟩 🟩 ]
+
+┌───────────────────────────┐
+│ ⠀**💎 ENDER CHEST 💎** │ [🔓 OPEN] ⠀ │
+└────────────┬──────────────┘
+⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀▼
+⠀ ⠀ ⠀⠀**100% BOOST UP TO RECEIVE:**
+**Limited Edition SweetieFox Painting**
+⠀ ⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀ ⠀ ⠀+
+**Master Breeder: 35+ Hours Worth**
+
+⠀ ⠀ **Unlock → Send a **🔓** → Claim It All**\
+""",
+    "captionHtml"     : """\
+<p>**(🍼) ****Lifetime Breeding 5+ Hours Vault **<br>Master Breeder Chance: 3/3! [ 🟩 🟩 🟩 ]</p>
+<p>┌───────────────────────────┐<br>│ ⠀<strong>💎 ENDER CHEST 💎</strong> │ [🔓 OPEN] ⠀ │<br>└────────────┬──────────────┘<br>⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀▼<br>⠀ ⠀ ⠀⠀<strong>100% BOOST UP TO RECEIVE:</strong><br><strong>Limited Edition SweetieFox Painting</strong><br>⠀ ⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀ ⠀ ⠀+<br><strong>Master Breeder: 35+ Hours Worth</strong></p>
+<p>⠀ ⠀ <strong>Unlock → Send a <strong>🔓</strong> → Claim It All</strong></p>
+\
+""",
+    "attachments"     : [{
+        "bytes"           : 342601,
+        "durationMs"      : 8000,
+        "extension"       : "mp4",
+        "file_id"         : "e8f3e602-8c4d-45a9-8200-8de3c598e255",
+        "filename"        : "0ig7ebgllftnt1wochslc_source",
+        "height"          : 218,
+        "kind"            : "gif",
+        "mimeType"        : "image/gif",
+        "originalFilename": "0ig7ebgllftnt1wochslc_source.mp4",
+        "sha256"          : "cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666",
+        "storageKey"      : "cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666",
+        "url"             : "https://cdn.cum.st/media/cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666/original.mp4",
+        "width"           : 402,
+        "variants"        : [{
+            "bytes": 342601,
+            "name" : "original.mp4",
+        }],
+    }],
+    "variants"        : [{
+        "bytes": 342601,
+        "name" : "original.mp4",
+    }],
+    "creator"         : {
+        "displayName": "Sweetie Fox",
+        "name"       : "sweetiefox_of",
+    },
+},
+
 )
