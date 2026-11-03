@@ -92,7 +92,7 @@ Hope you'll like it!\
 {
     "#url"     : "https://s3nd.pics/search?tag=%23memes",
     "#class"   : s3ndpics.S3ndpicsSearchExtractor,
-    "#pattern" : r"https://s3\.s3nd\.pics/s3nd\-pics/uploads/\w+/.+\.(jpe?g|png|gif|mp4|webp)$",
+    "#pattern" : r"(?i)https://s3\.s3nd\.pics/s3nd\-pics/uploads/\w+/.+\.(jpe?g|png|gif|mp4|webp)$",
     "#range"   : "1-50",
     "#count"   : 50,
 

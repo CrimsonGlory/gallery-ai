@@ -13,7 +13,7 @@ __tests__ = (
     "#url"     : "https://imgpv.com/30zydqn6y1yk/4bi%20(1).jpg.html",
     "#category": ("imagehost", "imgpv", "image"),
     "#class"   : imagehosts.ImgpvImageExtractor,
-    "#pattern" : r"https://s1.imgpv.com/cgi-bin/dl.cgi/xyhr\w+/4bi %26%2340%3B1%26%2341%3B.jpg",
+    "#results" : "https://s1.imgpv.com/i/00000/30zydqn6y1yk.jpg",
 
     "date"     : "dt:2025-12-16 14:59:51",
     "extension": "jpg",

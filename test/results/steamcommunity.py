@@ -62,7 +62,7 @@ __tests__ = (
     "#results" : "https://images.steamusercontent.com/ugc/9795036510357212076/940E21074F339522F872FA09280AC9FB7A6797AC/",
 
     "section"     : "artwork",
-    "creator"     : "76561198118687531",
+    "creator"     : "Gaben",
     "creator_id"  : "mz007",
     "date"        : "dt:2026-09-15 06:37:00",
     "description" : """ТУН ТУН САХУР, ПИНГВИНЫ ИЗ МАДАГАСКАРА, Т-34 И Т.Д.\nСкопируй в консоль CS2:\n[code]connect 45.95.31.104:27315[/code]""",

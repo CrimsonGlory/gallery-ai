@@ -37,7 +37,7 @@ class ImgbbExtractor(Extractor):
     """Base class for imgbb extractors"""
     category = "imgbb"
     directory_fmt = ("{category}", "{user[name]:?//}{user[id]:? (/)/}",
-                     "{album[title]} ({album[id]})")
+                     "{album[title]:?//}{album[id]:? (/)/}")
     filename_fmt = "{title} ({id}).{extension}"
     archive_fmt = "{user[id]:? //}{id}"
     cookies_domain = ".imgbb.com"

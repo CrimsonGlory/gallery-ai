@@ -22,6 +22,7 @@ class ImagehostImageExtractor(Extractor):
     _cookies = None
     _encoding = None
     _validate = None
+    _notfound = None
 
     def __init__(self, match):
         Extractor.__init__(self, match)
@@ -52,6 +53,7 @@ class ImagehostImageExtractor(Extractor):
             data=self._params,
             cookies=_cookies,
             encoding=self._encoding,
+            notfound=self._notfound,
         ).text
 
         url, filename = self.get_info(page)
@@ -591,13 +593,18 @@ class ImgpvImageExtractor(ImagehostImageExtractor):
     pattern = (r"(?:https?://)?(?:www\.)?imgpv\.com"
                r"(/([a-z0-9]{10,})/[\S]+\.html)")
     example = "https://www.imgpv.com/a1b2c3d4f5g6/NAME.EXT.html"
+    _notfound = True
 
     def get_info(self, page):
-        url, pos = text.extract(page, 'id="img-preview" src="', '"')
+        url = text.extr(page, 'id="img-preview" src="', '"')
         if not url:
             self.not_found()
-        alt, pos = text.extract(page, 'alt="', '"', pos)
-        return url, text.unescape(alt)
+        name = text.unescape(text.extr(page, 'class="dfilename">', '<'))
+        if not name:
+            name = text.unquote(self.page_url.rsplit("/", 1)[-1])
+            if name.endswith(".html"):
+                name = name[:-5]
+        return url, name
 
     def metadata(self, page):
         pos = page.find('class="upinfo">')
