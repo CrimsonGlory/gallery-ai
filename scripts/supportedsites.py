@@ -291,6 +291,7 @@ SUBCATEGORY_MAP = {
     "tweets" : "",
     "user"   : "User Profiles",
     "watch"  : "Watches",
+    "dm"             : "DMs",
     "direct-messages": "DMs",
     "direct-link"    : "Direct Links",
     "following"      : "Followed Users",
@@ -436,7 +437,8 @@ SUBCATEGORY_MAP = {
         "nuita" : "Nuita History",
     },
     "onlyhaven": {
-        "posts": "Post Listings",
+        "posts"   : "Post Listings",
+        "user-dms": "User DMs",
     },
     "pawchive": {
         "posts": "Post Listings",

@@ -1314,9 +1314,12 @@ Consider all listed sites to potentially be NSFW.
 <tr id="onlyhaven" title="onlyhaven">
     <td>OnlyHaven</td>
     <td>https://cum.st/</td>
-    <td><span title="https://cum.st/creators/SERVICE/12345/post/12345">Posts</span> |
+    <td><span title="https://cum.st/creators/SERVICE/12345/dm/12345">DMs</span> |
+        <span title="https://cum.st/creators/SERVICE/12345/post/12345">Posts</span> |
         <span title="https://cum.st/posts">Post Listings</span> |
-        <span title="https://cum.st/creators/SERVICE/12345">User Profiles</span></td>
+        <span title="https://cum.st/creators/SERVICE/12345">User Profiles</span> |
+        <span title="https://cum.st/creators/SERVICE/12345?tab=dms">User DMs</span> |
+        <span title="https://cum.st/creators/SERVICE/12345?tab=posts">User Posts</span></td>
     <td></td>
 </tr>
 <tr id="patreon" title="patreon">
@@ -2792,13 +2795,6 @@ Consider all listed sites to potentially be NSFW.
 <tr id="shimmie2" title="shimmie2">
     <td colspan="4"><strong>Shimmie2 Instances</strong></td>
 </tr>
-<tr id="cavemanon" title="cavemanon">
-    <td>Cavemanon</td>
-    <td>https://booru.cavemanon.xyz/</td>
-    <td><span title="https://booru.cavemanon.xyz/post/view/12345">Posts</span> |
-        <span title="https://booru.cavemanon.xyz/post/list/TAG/1">Tag Searches</span></td>
-    <td></td>
-</tr>
 <tr id="rule34hentai" title="rule34hentai">
     <td>Rule34Hentai</td>
     <td>https://rule34hentai.net/</td>
@@ -2832,6 +2828,13 @@ Consider all listed sites to potentially be NSFW.
     <td>https://www.prequeladventure.com/fanartbooru/</td>
     <td><span title="https://www.prequeladventure.com/fanartbooru/post/view/12345">Posts</span> |
         <span title="https://www.prequeladventure.com/fanartbooru/post/list/TAG/1">Tag Searches</span></td>
+    <td></td>
+</tr>
+<tr id="candybooru" title="candybooru">
+    <td>Candybooru</td>
+    <td>https://www.bittersweetcandybowl.com/candybooru/</td>
+    <td><span title="https://www.bittersweetcandybowl.com/candybooru/post/view/12345">Posts</span> |
+        <span title="https://www.bittersweetcandybowl.com/candybooru/post/list/TAG/1">Tag Searches</span></td>
     <td></td>
 </tr>
 

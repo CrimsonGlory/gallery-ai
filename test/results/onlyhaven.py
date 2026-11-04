@@ -146,6 +146,24 @@ __tests__ = (
     "#url"     : "https://cum.st/creators/fansly/365239425979916288",
     "#category": ("", "onlyhaven", "fansly"),
     "#class"   : onlyhaven.OnlyhavenUserExtractor,
+    "#results" : "https://cum.st/creators/fansly/365239425979916288?tab=posts",
+},
+
+{
+    "#url"     : "https://cum.st/creators/fansly/365239425979916288?pppage=3",
+    "#category": ("", "onlyhaven", "fansly"),
+    "#class"   : onlyhaven.OnlyhavenUserExtractor,
+    "#options" : {"include": "all"},
+    "#results" : (
+        "https://cum.st/creators/fansly/365239425979916288?tab=posts&pppage=3",
+        "https://cum.st/creators/fansly/365239425979916288?tab=dms",
+    ),
+},
+
+{
+    "#url"     : "https://cum.st/creators/fansly/365239425979916288?tab=posts",
+    "#category": ("", "onlyhaven", "fansly"),
+    "#class"   : onlyhaven.OnlyhavenUserPostsExtractor,
     "#pattern" : r"https://cdn\.cum\.st/media/\w+/original\.\w+",
     "#range"   : "1-100",
     "#count"   : 100,
@@ -183,6 +201,7 @@ __tests__ = (
         "name"           : "YourSmallDoll",
         "service"        : "fansly",
         "updated"        : int,
+        "?tags"          : list,
     },
 },
 
@@ -193,13 +212,149 @@ __tests__ = (
     "#range"   : "1-100",
     "#count"   : range(0, 100),
 
-    "extension"       : {"mp4", "jpeg"},
+    "extension"       : {"mp4", "jpeg", "jpg"},
     "filename"        : str,
     "kind"            : {"audio", "image", "video"},
     "mimeType"        : {"audio/mpeg", "image/jpeg", "video/mp4"},
     "service"         : "fansly",
     "attachments"     : list,
     "?user_profile"   : dict,
+},
+
+{
+    "#url"     : "https://cum.st/creators/onlyfans/32696630/dm/50a041a9-b971-4031-9678-347e83d24eea",
+    "#category": ("", "onlyhaven", "onlyfans"),
+    "#class"   : onlyhaven.OnlyhavenDmExtractor,
+    "#results" : "https://cdn.cum.st/media/cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666/original.mp4",
+
+    "added"           : 1789764067,
+    "bytes"           : 342601,
+    "count"           : 1,
+    "date"            : "dt:2026-09-18 20:41:07",
+    "durationMs"      : 8000,
+    "extension"       : "mp4",
+    "file_id"         : "e8f3e602-8c4d-45a9-8200-8de3c598e255",
+    "filename"        : "0ig7ebgllftnt1wochslc_source",
+    "height"          : 218,
+    "id"              : "50a041a9-b971-4031-9678-347e83d24eea",
+    "kind"            : "gif",
+    "mimeType"        : "image/gif",
+    "next"            : {"id": "43d2e7b1-11b1-40ba-b3e1-3316ac991754"},
+    "num"             : 1,
+    "originalFilename": "0ig7ebgllftnt1wochslc_source.mp4",
+    "prev"            : {"id": "6ac039a0-18cb-4a97-abd4-4be930d173ef"},
+    "published"       : 1789764067,
+    "service"         : "onlyfans",
+    "sha256"          : "cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666",
+    "storageKey"      : "cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666",
+    "title"           : "**(🍼) ****Lifetime Breeding 5+ Hours Vault ** Master Breeder Chance: 3/3! [ 🟩 🟩 🟩 ]",
+    "url"             : "https://cdn.cum.st/media/cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666/original.mp4",
+    "user"            : "32696630",
+    "username"        : "sweetiefox_of",
+    "width"           : 402,
+    "caption"         : """\
+**(🍼) ****Lifetime Breeding 5+ Hours Vault **
+Master Breeder Chance: 3/3! [ 🟩 🟩 🟩 ]
+
+┌───────────────────────────┐
+│ ⠀**💎 ENDER CHEST 💎** │ [🔓 OPEN] ⠀ │
+└────────────┬──────────────┘
+⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀▼
+⠀ ⠀ ⠀⠀**100% BOOST UP TO RECEIVE:**
+**Limited Edition SweetieFox Painting**
+⠀ ⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀ ⠀ ⠀+
+**Master Breeder: 35+ Hours Worth**
+
+⠀ ⠀ **Unlock → Send a **🔓** → Claim It All**\
+""",
+    "captionHtml"     : """\
+<p>**(🍼) ****Lifetime Breeding 5+ Hours Vault **<br>Master Breeder Chance: 3/3! [ 🟩 🟩 🟩 ]</p>
+<p>┌───────────────────────────┐<br>│ ⠀<strong>💎 ENDER CHEST 💎</strong> │ [🔓 OPEN] ⠀ │<br>└────────────┬──────────────┘<br>⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀▼<br>⠀ ⠀ ⠀⠀<strong>100% BOOST UP TO RECEIVE:</strong><br><strong>Limited Edition SweetieFox Painting</strong><br>⠀ ⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀ ⠀ ⠀+<br><strong>Master Breeder: 35+ Hours Worth</strong></p>
+<p>⠀ ⠀ <strong>Unlock → Send a <strong>🔓</strong> → Claim It All</strong></p>
+\
+""",
+    "attachments"     : [{
+        "bytes"           : 342601,
+        "durationMs"      : 8000,
+        "extension"       : "mp4",
+        "file_id"         : "e8f3e602-8c4d-45a9-8200-8de3c598e255",
+        "filename"        : "0ig7ebgllftnt1wochslc_source",
+        "height"          : 218,
+        "kind"            : "gif",
+        "mimeType"        : "image/gif",
+        "originalFilename": "0ig7ebgllftnt1wochslc_source.mp4",
+        "sha256"          : "cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666",
+        "storageKey"      : "cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666",
+        "url"             : "https://cdn.cum.st/media/cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666/original.mp4",
+        "width"           : 402,
+        "variants"        : [{
+            "bytes": 342601,
+            "name" : "original.mp4",
+        }],
+    }],
+    "variants"        : [{
+        "bytes": 342601,
+        "name" : "original.mp4",
+    }],
+    "creator"         : {
+        "displayName": "Sweetie Fox",
+        "name"       : "sweetiefox_of",
+    },
+},
+
+{
+    "#url"     : "https://cum.st/creators/fansly/365239425979916288?tab=dms",
+    "#category": ("", "onlyhaven", "fansly"),
+    "#class"   : onlyhaven.OnlyhavenUserDmsExtractor,
+    "#results" : (
+        "https://cdn.cum.st/media/83827bdbe2f706ef34b145aa533ca9c9e0745a2f0a35c1bc6fd91e9502958895/original.mp4",
+        "https://cdn.cum.st/media/7c683c29bd432f737528c2f0df0b0306c0247cbb57a452abda4a33bd28b85cf6/original.png",
+        "https://cdn.cum.st/media/7358321496807980d3fc3c6bab3c3b3deaf3b9ba3806325a67e98b9283ca8e4e/original.jpeg",
+        "https://cdn.cum.st/media/51e4f41cceff3cf228a2dedfb73be0e1c51416019fdb16345952a17ce303378a/original.jpeg",
+        "https://cdn.cum.st/media/ab83cec1e3b32e210a645d317fd80e7350b09e645a914738e5214328a1fa7176/original.jpeg",
+    ),
+
+    "bookmarked"      : int,
+    "bytes"           : int,
+    "contentText"     : str,
+    "count"           : int,
+    "date"            : "type:datetime",
+    "durationMs"      : {int, None},
+    "extension"       : {"jpeg", "png", "mp4"},
+    "file_id"         : "iso:uuid",
+    "filename"        : str,
+    "height"          : int,
+    "id"              : "iso:uuid",
+    "kind"            : {"image", "video"},
+    "mimeType"        : str,
+    "num"             : int,
+    "originalFilename": str,
+    "position"        : int,
+    "previewThumbhash": str,
+    "service"         : "fansly",
+    "sha256"          : "hash:sha256",
+    "storageKey"      : "hash:sha256",
+    "title"           : str,
+    "url"             : str,
+    "user"            : "365239425979916288",
+    "username"        : "YourSmallDoll",
+    "width"           : int,
+    "attachments"     : list,
+    "user_profile"    : {
+        "avatarThumbhash": str,
+        "bookmarked"     : int,
+        "contentUpdated" : int,
+        "displayName"    : "Katie ✨",
+        "gender"         : "woman",
+        "hasTags"        : bool,
+        "headerThumbhash": str,
+        "id"             : "365239425979916288",
+        "indexed"        : int,
+        "name"           : "YourSmallDoll",
+        "service"        : "fansly",
+        "updated"        : int,
+        "tags"           : list,
+    },
 },
 
 )

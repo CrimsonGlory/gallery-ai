@@ -18,6 +18,11 @@ __tests__ = (
 },
 
 {
+    "#url"  : "https://ecchi.iwara.tv/profile/user2426993",
+    "#class": iwara.IwaraUserExtractor,
+},
+
+{
     "#url"     : "https://www.iwara.ai/profile/goldenapple",
     "#class"   : iwara.IwaraUserExtractor,
     "#results" : (
