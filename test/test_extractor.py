@@ -589,5 +589,101 @@ class TestImgbb(unittest.TestCase):
             extr.session.curl_options.get(http.CurlOpt.RESOLVE))
 
 
+class TestGofile(unittest.TestCase):
+
+    def setUp(self):
+        config.clear()
+        config.set(("extractor", "gofile"), "api-token", "test-token")
+
+    def tearDown(self):
+        config.clear()
+
+    def _extractor(self, folder):
+        from gallery_dl.extractor.gofile import GofileFolderExtractor
+        extr = GofileFolderExtractor.from_url("https://gofile.io/d/GRl4Xn73")
+        extr._get_content = lambda *a, **k: folder
+        return extr
+
+    def _files(self, children):
+        folder = {
+            "name": "Diara",
+            "code": "GRl4Xn73",
+            "canAccess": True,
+            "type": "folder",
+            "children": children,
+        }
+        files = []
+        for msg in self._extractor(folder):
+            if msg[0] == Message.Url:
+                files.append(msg[2])
+        return files
+
+    def test_extension_from_mime(self):
+        from gallery_dl.extractor.gofile import _extension_from_mime
+
+        self.assertEqual(_extension_from_mime("image/jpeg"), "jpg")
+        self.assertEqual(_extension_from_mime("image/jpeg; charset=binary"),
+                         "jpg")
+        self.assertEqual(_extension_from_mime("IMAGE/PNG"), "png")
+        self.assertEqual(_extension_from_mime("image/webp"), "webp")
+        self.assertEqual(_extension_from_mime("image/gif"), "gif")
+        self.assertEqual(_extension_from_mime("image/svg+xml"), "svg")
+        self.assertEqual(_extension_from_mime("image/xyzzy"), "xyzzy")
+        self.assertEqual(_extension_from_mime("video/mp4"), "")
+        self.assertEqual(_extension_from_mime("text/plain"), "")
+        self.assertEqual(_extension_from_mime(""), "")
+        self.assertEqual(_extension_from_mime(None), "")
+
+    def test_extensionless_images_keep_mime_extension(self):
+        files = self._files({
+            "1": {
+                "id": "1",
+                "type": "file",
+                "name": "Diara1.jpg",
+                "mimetype": "image/jpeg",
+                "link": "https://store.gofile.io/download/1",
+            },
+            "2": {
+                "id": "2",
+                "type": "file",
+                "name": "Diara2",
+                "mimetype": "image/jpeg",
+                "link": "https://store.gofile.io/download/2",
+            },
+            "3": {
+                "id": "3",
+                "type": "file",
+                "name": "Diara3",
+                "mimetype": "image/png",
+                "link": "https://store.gofile.io/download/3",
+            },
+        })
+        by_name = {f["name"]: f for f in files}
+        self.assertEqual(len(files), 3)
+
+        self.assertEqual(by_name["Diara1.jpg"]["filename"], "Diara1")
+        self.assertEqual(by_name["Diara1.jpg"]["extension"], "jpg")
+
+        self.assertEqual(by_name["Diara2"]["filename"], "Diara2")
+        self.assertEqual(by_name["Diara2"]["extension"], "jpg")
+
+        self.assertEqual(by_name["Diara3"]["filename"], "Diara3")
+        self.assertEqual(by_name["Diara3"]["extension"], "png")
+
+    def test_extensionless_non_image_is_kept(self):
+        files = self._files({
+            "1": {
+                "id": "1",
+                "type": "file",
+                "name": "notes",
+                "mimetype": "text/plain",
+                "link": "https://store.gofile.io/download/1",
+            },
+        })
+        self.assertEqual(len(files), 1)
+        self.assertEqual(files[0]["filename"], "notes")
+        self.assertEqual(files[0]["extension"], "")
+
+
 if __name__ == "__main__":
     unittest.main()

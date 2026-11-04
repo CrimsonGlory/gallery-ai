@@ -7,8 +7,44 @@
 """Extractors for https://gofile.io/"""
 
 from .common import Extractor, Message
+from .. import text
 import hashlib
 import time
+
+
+# image/jpeg -> jpg so extensionless images match typical image filters
+_MIME_EXT = {
+    "image/jpeg"               : "jpg",
+    "image/jpg"                : "jpg",
+    "image/png"                : "png",
+    "image/gif"                : "gif",
+    "image/bmp"                : "bmp",
+    "image/x-bmp"              : "bmp",
+    "image/x-ms-bmp"           : "bmp",
+    "image/webp"               : "webp",
+    "image/avif"               : "avif",
+    "image/heic"               : "heic",
+    "image/heif"               : "heif",
+    "image/svg+xml"            : "svg",
+    "image/ico"                : "ico",
+    "image/icon"               : "ico",
+    "image/x-icon"             : "ico",
+    "image/vnd.microsoft.icon" : "ico",
+}
+
+
+def _extension_from_mime(mimetype):
+    """Return a filename extension for an image MIME type, or ''."""
+    if not mimetype:
+        return ""
+    mtype = mimetype.partition(";")[0].strip().lower()
+    if ext := _MIME_EXT.get(mtype):
+        return ext
+    if mtype.startswith("image/"):
+        subtype = mtype.rsplit("/", 1)[-1]
+        if subtype.isalpha() and 2 <= len(subtype) <= 8:
+            return subtype
+    return ""
 
 
 class GofileFolderExtractor(Extractor):
@@ -49,8 +85,7 @@ class GofileFolderExtractor(Extractor):
             if content["type"] == "file":
                 num += 1
                 content["num"] = num
-                content["filename"], _, content["extension"] = \
-                    content["name"].rpartition(".")
+                self._prepare_file(content)
                 yield Message.Url, content["link"], content
 
             elif content["type"] == "folder":
@@ -63,6 +98,12 @@ class GofileFolderExtractor(Extractor):
             else:
                 self.log.debug("'%s' is of unknown type (%s)",
                                content.get("name"), content["type"])
+
+    def _prepare_file(self, content):
+        text.nameext_from_name(content["name"], content)
+        if not content["extension"]:
+            content["extension"] = _extension_from_mime(
+                content.get("mimetype"))
 
     def request_api(self, endpoint, params=None, headers=None, method="GET"):
         response = self.request_json(
