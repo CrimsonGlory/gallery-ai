@@ -5346,6 +5346,23 @@ Description
     Includes ``originalFilename``, ``comments``, ``links``, ``tags``,
 
 
+extractor.onlyhaven.include
+---------------------------
+Type
+    * ``string``
+    * ``list`` of ``strings``
+Default
+    ``"user-posts"``
+Description
+    A (comma-separated) list of subcategories to include
+    when processing a user profile.
+Supported Values
+    * ``user-posts`` (alias ``posts``)
+    * ``user-dms`` (alias ``dms``)
+Note
+    It is possible to use ``"all"`` instead of listing all values separately.
+
+
 extractor.onlyhaven.metadata
 ----------------------------
 Type

@@ -1317,7 +1317,9 @@ Consider all listed sites to potentially be NSFW.
     <td><span title="https://cum.st/creators/SERVICE/12345/dm/12345">DMs</span> |
         <span title="https://cum.st/creators/SERVICE/12345/post/12345">Posts</span> |
         <span title="https://cum.st/posts">Post Listings</span> |
-        <span title="https://cum.st/creators/SERVICE/12345">User Profiles</span></td>
+        <span title="https://cum.st/creators/SERVICE/12345">User Profiles</span> |
+        <span title="https://cum.st/creators/SERVICE/12345?tab=dms">User DMs</span> |
+        <span title="https://cum.st/creators/SERVICE/12345?tab=posts">User Posts</span></td>
     <td></td>
 </tr>
 <tr id="patreon" title="patreon">
