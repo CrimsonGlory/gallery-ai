@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import mangafox
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -55,6 +56,13 @@ __tests__ = (
 
 {
     "#url"     : "https://mangafox.me/manga/shangri_la_frontier",
+    "#category": ("", "mangafox", "manga"),
+    "#class"   : mangafox.MangafoxMangaExtractor,
+    "#exception": exception.NotFoundError,
+},
+
+{
+    "#url"     : "https://mangafox.me/manga/holyland",
     "#category": ("", "mangafox", "manga"),
     "#class"   : mangafox.MangafoxMangaExtractor,
     "#pattern" : mangafox.MangafoxChapterExtractor.pattern,

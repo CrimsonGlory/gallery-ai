@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import mangahere
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -21,7 +22,15 @@ __tests__ = (
     "#comment" : "URLs without HTTP scheme (#1070)",
     "#category": ("", "mangahere", "chapter"),
     "#class"   : mangahere.MangahereChapterExtractor,
-    "#pattern" : "https://zjcdn.mangahere.org/.*",
+    "#exception": exception.NotFoundError,
+},
+
+{
+    "#url"     : "https://www.mangahere.cc/manga/dongguo_xiaojie/c003.2/1.html",
+    "#comment" : "URLs without HTTP scheme (#1070)",
+    "#category": ("", "mangahere", "chapter"),
+    "#class"   : mangahere.MangahereChapterExtractor,
+    "#pattern" : r"https://zjcdn\.mangahere\.org/.*",
 },
 
 {
