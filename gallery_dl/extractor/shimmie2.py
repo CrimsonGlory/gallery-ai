@@ -66,11 +66,6 @@ class Shimmie2Extractor(BaseExtractor):
 
 
 BASE_PATTERN = Shimmie2Extractor.update({
-    "cavemanon": {
-        "root": "https://booru.cavemanon.xyz",
-        "pattern": r"booru\.cavemanon\.xyz",
-        "file_url": "{0}/index.php?q=image/{2}.{4}",
-    },
     "rule34hentai": {
         "root": "https://rule34hentai.net",
         "pattern": r"rule34hentai\.net",

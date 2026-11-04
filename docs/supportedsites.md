@@ -2786,13 +2786,6 @@ Consider all listed sites to potentially be NSFW.
 <tr id="shimmie2" title="shimmie2">
     <td colspan="4"><strong>Shimmie2 Instances</strong></td>
 </tr>
-<tr id="cavemanon" title="cavemanon">
-    <td>Cavemanon</td>
-    <td>https://booru.cavemanon.xyz/</td>
-    <td><span title="https://booru.cavemanon.xyz/post/view/12345">Posts</span> |
-        <span title="https://booru.cavemanon.xyz/post/list/TAG/1">Tag Searches</span></td>
-    <td></td>
-</tr>
 <tr id="rule34hentai" title="rule34hentai">
     <td>Rule34Hentai</td>
     <td>https://rule34hentai.net/</td>
