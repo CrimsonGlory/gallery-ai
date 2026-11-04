@@ -2828,6 +2828,13 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://www.prequeladventure.com/fanartbooru/post/list/TAG/1">Tag Searches</span></td>
     <td></td>
 </tr>
+<tr id="candybooru" title="candybooru">
+    <td>Candybooru</td>
+    <td>https://www.bittersweetcandybowl.com/candybooru/</td>
+    <td><span title="https://www.bittersweetcandybowl.com/candybooru/post/view/12345">Posts</span> |
+        <span title="https://www.bittersweetcandybowl.com/candybooru/post/list/TAG/1">Tag Searches</span></td>
+    <td></td>
+</tr>
 
 <tr id="szurubooru" title="szurubooru">
     <td colspan="4"><strong>szurubooru Instances</strong></td>
