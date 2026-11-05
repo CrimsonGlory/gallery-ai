@@ -87,7 +87,7 @@ __tests__ = (
     ],
     "authorUser"     : {
         "active"     : True,
-        "avatar"     : "https://lh3.googleusercontent.com/Udh1DxtF6O8kvSLOaw-94AYeN_hkeyusmJDolbLDutJX78zz_jntbuMZTDLHby0Fjbi8wvJhWlBQjhDea5-574TslRkkGgtql1u3gHHTXn1es_2JTjPZvA",
+        "avatar"     : str,
         "deletedAt"  : "0001-01-01T00:00:00.000Z",
         "id"         : "c0872970-df9b-4f83-b1e0-a85c3b4107fb",
         "isMembershipEnabled": True,
