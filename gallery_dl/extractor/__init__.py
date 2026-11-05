@@ -245,6 +245,7 @@ modules = [
     "thehentaiworld",
     "tiktok",
     "tmohentai",
+    "topfaps",
     "toyhouse",
     "tumblr",
     "tumblrgallery",
