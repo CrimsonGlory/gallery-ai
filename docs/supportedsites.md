@@ -1928,10 +1928,10 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://x.com/i/lists/12345">Lists</span> |
         <span title="https://x.com/i/lists/12345/members">List Members</span> |
         <span title="https://x.com/USER/media">Media Timelines</span> |
-        <span title="https://x.com/notifications">Notifications</span> |
+        <span title="https://x.com/i/timeline">Notifications</span> |
         <span title="https://x.com/USER/status/12345/quotes">Quotes</span> |
+        <span title="https://x.com/USER/reposts">Reposts</span> |
         <span title="https://x.com/search?q=QUERY">Search Results</span> |
-        <span title="https://x.com/USER/timeline">Timelines</span> |
         <span title="https://x.com/USER/status/12345">Tweets</span> |
         <span title="https://x.com/USER">User Profiles</span></td>
     <td><a href="https://codeberg.org/mikf/gallery-dl#cookies">Cookies</a></td>

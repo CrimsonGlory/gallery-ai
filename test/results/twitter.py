@@ -11,80 +11,68 @@ from gallery_dl import util, exception
 __tests__ = (
 {
     "#url"     : "https://twitter.com/supernaturepics",
-    "#category": ("", "twitter", "user"),
     "#class"   : twitter.TwitterUserExtractor,
     "#options" : {"include": "all"},
     "#results" : (
         "https://x.com/supernaturepics/info",
         "https://x.com/supernaturepics/photo",
         "https://x.com/supernaturepics/header_photo",
-        "https://x.com/supernaturepics/timeline",
         "https://x.com/supernaturepics/tweets",
         "https://x.com/supernaturepics/media",
         "https://x.com/supernaturepics/with_replies",
+        "https://x.com/supernaturepics/reposts",
         "https://x.com/supernaturepics/highlights",
-        "https://x.com/supernaturepics/likes",
     ),
 },
 
 {
     "#url"     : "https://mobile.twitter.com/supernaturepics?p=i",
-    "#category": ("", "twitter", "user"),
     "#class"   : twitter.TwitterUserExtractor,
 },
 
 {
     "#url"     : "https://www.twitter.com/id:2976459548",
-    "#category": ("", "twitter", "user"),
     "#class"   : twitter.TwitterUserExtractor,
 },
 
 {
     "#url"     : "https://twitter.com/i/user/2976459548",
-    "#category": ("", "twitter", "user"),
     "#class"   : twitter.TwitterUserExtractor,
 },
 
 {
     "#url"     : "https://twitter.com/intent/user?user_id=2976459548",
-    "#category": ("", "twitter", "user"),
     "#class"   : twitter.TwitterUserExtractor,
 },
 
 {
     "#url"     : "https://fxtwitter.com/supernaturepics",
-    "#category": ("", "twitter", "user"),
     "#class"   : twitter.TwitterUserExtractor,
 },
 
 {
     "#url"     : "https://vxtwitter.com/supernaturepics",
-    "#category": ("", "twitter", "user"),
     "#class"   : twitter.TwitterUserExtractor,
 },
 
 {
     "#url"     : "https://fixupx.com/supernaturepics",
-    "#category": ("", "twitter", "user"),
     "#class"   : twitter.TwitterUserExtractor,
 },
 
 {
     "#url"     : "https://fixvx.com/supernaturepics",
-    "#category": ("", "twitter", "user"),
     "#class"   : twitter.TwitterUserExtractor,
 },
 
 {
     "#url"     : "https://x.com/supernaturepics",
-    "#category": ("", "twitter", "user"),
     "#class"   : twitter.TwitterUserExtractor,
 },
 
 {
     "#url"     : "https://twitter.com/supernaturepics/timeline",
-    "#category": ("", "twitter", "timeline"),
-    "#class"   : twitter.TwitterTimelineExtractor,
+    "#class"   : twitter.TwitterTweetsExtractor,
     "#range"   : "1-40",
     "#sha1_url": "c570ac1aae38ed1463be726cc46f31cac3d82a40",
 
@@ -145,34 +133,29 @@ __tests__ = (
 {
     "#url"     : "https://twitter.com/OptionalTypo/timeline",
     "#comment" : "suspended account (#2216)",
-    "#category": ("", "twitter", "timeline"),
-    "#class"   : twitter.TwitterTimelineExtractor,
+    "#class"   : twitter.TwitterTweetsExtractor,
     "#exception": exception.NotFoundError,
 },
 
 {
     "#url"     : "https://twitter.com/id:772949683521978368/timeline",
     "#comment" : "suspended account user ID",
-    "#category": ("", "twitter", "timeline"),
-    "#class"   : twitter.TwitterTimelineExtractor,
+    "#class"   : twitter.TwitterTweetsExtractor,
     "#exception": exception.NotFoundError,
 },
 
 {
     "#url"     : "https://mobile.twitter.com/supernaturepics/timeline#t",
-    "#category": ("", "twitter", "timeline"),
-    "#class"   : twitter.TwitterTimelineExtractor,
+    "#class"   : twitter.TwitterTweetsExtractor,
 },
 
 {
     "#url"     : "https://www.twitter.com/id:2976459548/timeline",
-    "#category": ("", "twitter", "timeline"),
-    "#class"   : twitter.TwitterTimelineExtractor,
+    "#class"   : twitter.TwitterTweetsExtractor,
 },
 
 {
     "#url"     : "https://twitter.com/supernaturepics/tweets",
-    "#category": ("", "twitter", "tweets"),
     "#class"   : twitter.TwitterTweetsExtractor,
     "#range"   : "1-40",
     "#sha1_url": "c570ac1aae38ed1463be726cc46f31cac3d82a40",
@@ -180,19 +163,16 @@ __tests__ = (
 
 {
     "#url"     : "https://mobile.twitter.com/supernaturepics/tweets#t",
-    "#category": ("", "twitter", "tweets"),
     "#class"   : twitter.TwitterTweetsExtractor,
 },
 
 {
     "#url"     : "https://www.twitter.com/id:2976459548/tweets",
-    "#category": ("", "twitter", "tweets"),
     "#class"   : twitter.TwitterTweetsExtractor,
 },
 
 {
     "#url"     : "https://twitter.com/supernaturepics/with_replies",
-    "#category": ("", "twitter", "with-replies"),
     "#class"   : twitter.TwitterWithRepliesExtractor,
     "#range"   : "1-40",
     "#sha1_url": "c570ac1aae38ed1463be726cc46f31cac3d82a40",
@@ -200,19 +180,16 @@ __tests__ = (
 
 {
     "#url"     : "https://mobile.twitter.com/supernaturepics/with_replies#t",
-    "#category": ("", "twitter", "with-replies"),
     "#class"   : twitter.TwitterWithRepliesExtractor,
 },
 
 {
     "#url"     : "https://www.twitter.com/id:2976459548/with_replies",
-    "#category": ("", "twitter", "with-replies"),
     "#class"   : twitter.TwitterWithRepliesExtractor,
 },
 
 {
     "#url"     : "https://twitter.com/supernaturepics/media",
-    "#category": ("", "twitter", "media"),
     "#class"   : twitter.TwitterMediaExtractor,
     "#range"   : "1-40",
     "#sha1_url": "c570ac1aae38ed1463be726cc46f31cac3d82a40",
@@ -220,25 +197,21 @@ __tests__ = (
 
 {
     "#url"     : "https://mobile.twitter.com/supernaturepics/media#t",
-    "#category": ("", "twitter", "media"),
     "#class"   : twitter.TwitterMediaExtractor,
 },
 
 {
     "#url"     : "https://www.twitter.com/id:2976459548/media",
-    "#category": ("", "twitter", "media"),
     "#class"   : twitter.TwitterMediaExtractor,
 },
 
 {
     "#url"     : "https://x.com/i/history/likes",
-    "#category": ("", "twitter", "likes"),
     "#class"   : twitter.TwitterLikesExtractor,
 },
 
 {
     "#url"     : "https://twitter.com/supernaturepics/likes",
-    "#category": ("", "twitter", "likes"),
     "#class"   : twitter.TwitterLikesExtractor,
 },
 
@@ -254,7 +227,6 @@ __tests__ = (
 
 {
     "#url"     : "https://twitter.com/i/lists/784214683683127296",
-    "#category": ("", "twitter", "list"),
     "#class"   : twitter.TwitterListExtractor,
     "#range"   : "1-40",
     "#count"   : 40,
@@ -263,7 +235,6 @@ __tests__ = (
 
 {
     "#url"     : "https://twitter.com/i/lists/784214683683127296/members",
-    "#category": ("", "twitter", "list-members"),
     "#class"   : twitter.TwitterListMembersExtractor,
     "#pattern" : twitter.TwitterUserExtractor.pattern,
     "#range"   : "1-40",
@@ -272,25 +243,21 @@ __tests__ = (
 
 {
     "#url"     : "https://twitter.com/supernaturepics/following",
-    "#category": ("", "twitter", "following"),
     "#class"   : twitter.TwitterFollowingExtractor,
 },
 
 {
     "#url"     : "https://www.twitter.com/id:2976459548/following",
-    "#category": ("", "twitter", "following"),
     "#class"   : twitter.TwitterFollowingExtractor,
 },
 
 {
     "#url"     : "https://twitter.com/supernaturepics/followers",
-    "#category": ("", "twitter", "followers"),
     "#class"   : twitter.TwitterFollowersExtractor,
 },
 
 {
     "#url"     : "https://twitter.com/search?q=nature",
-    "#category": ("", "twitter", "search"),
     "#class"   : twitter.TwitterSearchExtractor,
     "#range"   : "1-20",
     "#count"   : 20,
@@ -299,7 +266,6 @@ __tests__ = (
 
 {
     "#url"     : "https://twitter.com/hashtag/nature",
-    "#category": ("", "twitter", "hashtag"),
     "#class"   : twitter.TwitterHashtagExtractor,
     "#pattern" : twitter.TwitterSearchExtractor.pattern,
     "#results" : "https://x.com/search?q=%23nature",
@@ -307,7 +273,6 @@ __tests__ = (
 
 {
     "#url"     : "https://twitter.com/i/events/1484669206993903616",
-    "#category": ("", "twitter", "event"),
     "#class"   : twitter.TwitterEventExtractor,
     "#range"   : "1-20",
     "#count"   : ">=1",
@@ -315,7 +280,6 @@ __tests__ = (
 
 {
     "#url"     : "https://twitter.com/i/communities",
-    "#category": ("", "twitter", "communities"),
     "#class"   : twitter.TwitterCommunitiesExtractor,
     "#range"   : "1-20",
     "#count"   : 20,
@@ -323,7 +287,6 @@ __tests__ = (
 
 {
     "#url"     : "https://twitter.com/i/communities/1651515740753735697",
-    "#category": ("", "twitter", "community"),
     "#class"   : twitter.TwitterCommunityExtractor,
     "#range"   : "1-20",
     "#count"   : 20,
@@ -332,7 +295,6 @@ __tests__ = (
 {
     "#url"     : "https://twitter.com/supernaturepics/status/604341487988576256",
     "#comment" : "all Tweets from a 'conversation' (#1319)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#sha1_url"    : "88a40f7d25529c2501c46f2218f9e0de9aa634b4",
     "#sha1_content": "ab05e1d8d21f8d43496df284d31e8b362cd3bcab",
@@ -341,7 +303,6 @@ __tests__ = (
 {
     "#url"     : "https://twitter.com/perrypumas/status/894001459754180609",
     "#comment" : "4 images",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#sha1_url": "3a2a43dc5fb79dd5432c701d8e55e87c4e551f47",
 
@@ -353,7 +314,6 @@ __tests__ = (
 {
     "#url"     : "https://twitter.com/perrypumas/status/1065692031626829824?s=20",
     "#comment" : "video",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#pattern" : r"https://video.twimg.com/ext_tw_video/.+\.mp4\?tag=5",
 
@@ -394,7 +354,6 @@ __tests__ = (
 {
     "#url"     : "https://twitter.com/playpokemon/status/1263832915173048321/",
     "#comment" : "content with emoji, newlines, hashtags (#338)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
 
     "source" : "Sprinklr",
@@ -406,7 +365,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/i/web/status/1170041925560258560",
     "#comment" : "'replies' option (#705)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#pattern" : "https://pbs.twimg.com/media/EDzS7VrU0AAFL4_",
 },
@@ -414,7 +372,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/i/web/status/1170041925560258560",
     "#comment" : "'replies' option (#705)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"replies": False},
     "#count"   : 0,
@@ -423,7 +380,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/i/web/status/1424882930803908612",
     "#comment" : "'replies' to self (#1254)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"replies": "self"},
     "#count"   : 4,
@@ -436,7 +392,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 
 {
     "#url"     : "https://twitter.com/i/web/status/1424898916156284928",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"replies": "self"},
     "#count"   : 1,
@@ -445,7 +400,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/StobiesGalaxy/status/1270755918330896395",
     "#comment" : "quoted tweet (#526, #854)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"quoted": True},
     "#pattern" : r"https://pbs\.twimg\.com/media/Ea[KG].+=jpg",
@@ -455,7 +409,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/StobiesGalaxy/status/1270755918330896395",
     "#comment" : "quoted tweet (#526, #854)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#pattern" : r"https://pbs\.twimg\.com/media/EaK.+=jpg",
     "#count"   : 4,
@@ -464,7 +417,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/web/status/1644907989109751810",
     "#comment" : "different 'user' and 'author' in quoted Tweet (#3922)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
 
     "author": {
@@ -480,7 +432,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/i/web/status/112900228289540096",
     "#comment" : "TwitPic embeds (#579)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {
         "twitpic": True,
@@ -493,7 +444,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/shimoigusaP/status/8138669971",
     "#comment" : "TwitPic URL not in 'urls' (#3792)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"twitpic": True},
     "#pattern" : r"https://\w+.cloudfront.net/photos/large/\d+.png",
@@ -503,7 +453,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/billboard/status/1306599586602135555",
     "#comment" : "Twitter card (#1005)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"cards": True},
     "#pattern" : r"https://pbs.twimg.com/card_img/\d+/",
@@ -512,7 +461,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/i/web/status/1561674543323910144",
     "#comment" : "unified_card image_website (#2875)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"cards": True},
     "#pattern" : r"https://pbs\.twimg\.com/media/F.+=jpg",
@@ -521,7 +469,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/doax_vv_staff/status/1479438945662685184",
     "#comment" : "unified_card image_carousel_website",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"cards": True},
     "#pattern" : r"https://pbs\.twimg\.com/media/F.+=png",
@@ -531,7 +478,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/bang_dream_1242/status/1561548715348746241",
     "#comment" : "unified_card video_website (#2875)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"cards": True},
     "#pattern" : r"https://video\.twimg\.com/amplify_video/1560607284333449216/vid/720x720/\w+\.mp4",
@@ -540,7 +486,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/i/web/status/1466183847628865544",
     "#comment" : "unified_card without type",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#count"   : 0,
 },
@@ -548,7 +493,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/i/web/status/1571141912295243776",
     "#comment" : "'cards-blacklist' option",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {
         "cards"          : "ytdl",
@@ -560,7 +504,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/jessica_3978/status/1296304589591810048",
     "#comment" : "original retweets (#1026)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"retweets": True},
     "#count"   : 2,
@@ -574,7 +517,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/jessica_3978/status/1296304589591810048",
     "#comment" : "original retweets (#1026)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"retweets": "original"},
     "#count"   : 2,
@@ -588,7 +530,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/supernaturepics/status/604341487988576256",
     "#comment" : "all Tweets from a 'conversation' (#1319)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"conversations": True},
     "#count"   : 5,
@@ -597,21 +538,18 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/supernaturepics/status/604341487988576256/photo/1",
     "#comment" : "/photo/ URL (#5443)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
 },
 
 {
     "#url"     : "https://twitter.com/perrypumas/status/1065692031626829824/video/1",
     "#comment" : "/video/ URL",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
 },
 
 {
     "#url"     : "https://twitter.com/morino_ya/status/1392763691599237121",
     "#comment" : "retweet with missing media entities (#1555)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"retweets": True},
     "#count"   : 4,
@@ -620,7 +558,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/i/web/status/1460044411165888515",
     "#comment" : "deleted quote tweet (#2225)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#count"   : 0,
 },
@@ -628,7 +565,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/i/web/status/1486373748911575046",
     "#comment" : "'Misleading' content",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#count"   : 4,
 },
@@ -636,7 +572,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/mightbecursed/status/1492954264909479936",
     "#comment" : "age-restricted (#2354)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#auth"     : False,
     "#exception": exception.AuthorizationError,
@@ -645,7 +580,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/my0nruri/status/1528379296041299968",
     "#comment" : "media alt texts / descriptions (#2617)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
 
     "description": "oc",
@@ -655,7 +589,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/poco_dandy/status/1150646424461176832",
     "#comment" : "'?format=...&name=...'-style URLs",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"cards": True},
     "#pattern" : r"https://pbs.twimg.com/card_img/17\d+/[\w-]+\?format=(jpg|png)&name=orig$",
@@ -665,7 +598,6 @@ You’ll be able to receive four Galarian form Pokémon with Hidden Abilities, p
 {
     "#url"     : "https://twitter.com/i/web/status/1629193457112686592",
     "#comment" : "note tweet with long 'content'",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
 
     "content": """BREAKING - DEADLY LIES: Independent researchers at Texas A&M University have just contradicted federal government regulators, saying that toxic air pollutants in East Palestine, Ohio, could pose long-term risks. \n
@@ -676,7 +608,6 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 {
     "#url"     : "https://twitter.com/KrisKobach1787/status/1765935595702919299",
     "#comment" : "'birdwatch' note (#5317)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"text-tweets": True},
 
@@ -687,7 +618,6 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 {
     "#url"     : "https://x.com/jsports_motor/status/1801338077618524583",
     "#comment" : "geo-restricted video (#5736)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#count"   : 0,
 },
@@ -695,7 +625,6 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 {
     "#url"     : "https://x.com/fw_rion_/status/1866737025824829544",
     "#comment" : "grok share (#7040)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#options" : {"cards": True},
     "#results" : "https://pbs.twimg.com/grok-img-share/1866736156786008064.jpg",
@@ -704,7 +633,6 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 {
     "#url"     : "https://x.com/gdldev/status/1932109706354733077",
     "#comment" : "'source_id' and 'source_user' metadata (#7470, #7640)",
-    "#category": ("", "twitter", "tweet"),
     "#class"   : twitter.TwitterTweetExtractor,
     "#results" : (
         "https://video.twimg.com/amplify_video/1932079443264376832/vid/avc1/640x336/7xo7NCPkMLRWb8NZ.mp4?tag=14",
@@ -792,7 +720,6 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 
 {
     "#url"     : "https://twitter.com/playpokemon/status/1263832915173048321/quotes",
-    "#category": ("", "twitter", "quotes"),
     "#class"   : twitter.TwitterQuotesExtractor,
     "#pattern" : twitter.TwitterSearchExtractor.pattern,
     "#results" : "https://x.com/search?q=quoted_tweet_id:1263832915173048321",
@@ -800,13 +727,11 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 
 {
     "#url"     : "https://twitter.com/supernaturepics/info",
-    "#category": ("", "twitter", "info"),
     "#class"   : twitter.TwitterInfoExtractor,
 },
 
 {
     "#url"     : "https://twitter.com/supernaturepics/photo",
-    "#category": ("", "twitter", "avatar"),
     "#class"   : twitter.TwitterAvatarExtractor,
     "#results" : "https://pbs.twimg.com/profile_images/554585280938659841/FLVAlX18.jpeg",
 
@@ -818,7 +743,6 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 
 {
     "#url"     : "https://twitter.com/User16/photo",
-    "#category": ("", "twitter", "avatar"),
     "#class"   : twitter.TwitterAvatarExtractor,
     "#count"   : 0,
 },
@@ -826,7 +750,6 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 {
     "#url"     : "https://twitter.com/i_n_u/photo",
     "#comment" : "old avatar with small ID and no valid 'date' (#4696)",
-    "#category": ("", "twitter", "avatar"),
     "#class"   : twitter.TwitterAvatarExtractor,
     "#results" : "https://pbs.twimg.com/profile_images/2946444489/32028c6affdab425e037ff5a6bf77c1d.jpeg",
 
@@ -836,7 +759,6 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 
 {
     "#url"     : "https://twitter.com/supernaturepics/header_photo",
-    "#category": ("", "twitter", "background"),
     "#class"   : twitter.TwitterBackgroundExtractor,
     "#pattern" : r"https://pbs\.twimg\.com/profile_banners/2976459548/1421058583",
 
@@ -847,14 +769,12 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 
 {
     "#url"     : "https://twitter.com/User16/header_photo",
-    "#category": ("", "twitter", "background"),
     "#class"   : twitter.TwitterBackgroundExtractor,
     "#count"   : 0,
 },
 
 {
     "#url"     : "https://pbs.twimg.com/media/EqcpviCVoAAG-QG?format=jpg&name=orig",
-    "#category": ("", "twitter", "image"),
     "#class"   : twitter.TwitterImageExtractor,
     "#options" : {"size": "4096x4096,orig"},
     "#sha1_url": "cb3042a6f6826923da98f0d2b66c427e9385114c",
@@ -862,7 +782,6 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 
 {
     "#url"     : "https://pbs.twimg.com/media/EqcpviCVoAAG-QG.jpg:orig",
-    "#category": ("", "twitter", "image"),
     "#class"   : twitter.TwitterImageExtractor,
 },
 
