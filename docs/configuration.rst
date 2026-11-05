@@ -7563,10 +7563,10 @@ Type
     * ``string``
     * ``list`` of ``strings``
 Default
-    ``"timeline"``
+    ``"tweets"``
 Example
-    * ``"avatar,background,media"``
-    * ``["avatar", "background", "media"]``
+    * ``"avatar,background,tweets"``
+    * ``["avatar", "background", "tweets"]``
 Description
     A (comma-separated) list of subcategories to include
     when processing a user profile.
@@ -7574,12 +7574,13 @@ Supported Values
     * ``info``
     * ``avatar``
     * ``background``
-    * ``timeline``
     * ``tweets``
     * ``media``
-    * ``with-replies``
+    * ``photos``
+    * ``videos``
+    * ``replies``
+    * ``reposts``
     * ``highlights``
-    * ``likes``
 Note
     It is possible to use ``"all"`` instead of listing all values separately.
 
@@ -7956,7 +7957,7 @@ Special Values
     ``"user"``
         ``https://twitter.com/i/user/{rest_id}``
     ``"timeline"``
-        ``https://twitter.com/id:{rest_id}/timeline``
+        ``https://twitter.com/id:{rest_id}/tweets`` (alias of ``"tweets"``)
     ``"tweets"``
         ``https://twitter.com/id:{rest_id}/tweets``
     ``"media"``
