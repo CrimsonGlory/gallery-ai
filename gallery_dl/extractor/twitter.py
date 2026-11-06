@@ -940,6 +940,7 @@ class TwitterRepostsExtractor(TwitterExtractor):
     example = "https://x.com/USER/reposts"
 
     def tweets(self):
+        self.retweets = True
         return self.api.user_reposts(self.user)
 
 
@@ -1217,7 +1218,7 @@ class TwitterAvatarExtractor(TwitterExtractor):
     example = "https://x.com/USER/photo"
 
     def tweets(self):
-        self.api._user_id_by_screen_name(self.user)
+        self.api._user_id(self.user)
         user = self._user_obj
         url = user["avatar"]["image_url"]
 
@@ -1239,12 +1240,12 @@ class TwitterBackgroundExtractor(TwitterExtractor):
     example = "https://x.com/USER/header_photo"
 
     def tweets(self):
-        self.api._user_id_by_screen_name(self.user)
+        self.api._user_id(self.user)
         user = self._user_obj
 
         try:
-            url = user["legacy"]["profile_banner_url"]
-            _, timestamp = url.rsplit("/", 1)
+            url = user["banner"]["image_url"]
+            timestamp = url[url.rfind("/")+1:]
         except (KeyError, ValueError):
             return ()
 
@@ -1647,7 +1648,7 @@ class TwitterAPI():
 
         stop_tweets = cfg("search-stop")
         if stop_tweets is None or stop_tweets == "auto":
-            stop_tweets = 1
+            stop_tweets = 3
 
         return self._pagination_tweets(
             endpoint, variables,
@@ -2242,31 +2243,6 @@ class TwitterAPI():
                         extr.log.debug("Expanding '%s' stub",
                                        item or "Show More")
                     cursor = cursor.get("value")
-
-            if pinned_tweet is not None:
-                if extr._user_obj is None:
-                    pinned = None
-                elif pinned := extr._user_obj["legacy"].get(
-                        "pinned_tweet_ids_str"):
-                    pinned = "-tweet-" + pinned[0]
-                    for idx, entry in enumerate(tweets):
-                        if entry["entryId"].endswith(pinned):
-                            # mark as pinned / set 'pinned = True'
-                            try:
-                                pinned_tweet = (
-                                    (entry.get("content") or entry["item"])
-                                    ["itemContent"]["tweet_results"]["result"])
-                                if "tweet" in pinned_tweet:
-                                    pinned_tweet = pinned_tweet["tweet"]
-                                pinned_tweet["pinned"] = True
-                                # move to front of 'tweets'
-                                del tweets[idx]
-                                tweets.insert(0, entry)
-                            except Exception:
-                                pass
-                            break
-                del pinned
-                pinned_tweet = None
 
             for entry in tweets:
                 try:
