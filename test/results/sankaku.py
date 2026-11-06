@@ -10,7 +10,7 @@ from gallery_dl import exception
 
 __tests__ = (
 {
-    "#url"     : "https://sankaku.app/?tags=bonocho",
+    "#url"     : "https://sankaku.app/?tags=hoshi_shouko_(cosplay)",
     "#category": ("booru", "sankaku", "tag"),
     "#class"   : sankaku.SankakuTagExtractor,
     "#pattern" : r"https://s\.sankakucomplex\.com/o/[^/]{2}/[^/]{2}/[0-9a-f]{32}\.\w+\?e=\d+&(expires=\d+&)?m=[^&#]+",
@@ -185,35 +185,28 @@ __tests__ = (
 
 {
     "#url"     : "https://sankaku.app/posts/y0abGlDOr2o",
-    "#comment" : "extended tag categories; alphanumeric ID (#5073)",
+    "#comment" : "extended tag categories; alphanumeric ID (#5073); post gone",
     "#category": ("booru", "sankaku", "post"),
     "#class"   : sankaku.SankakuPostExtractor,
-    "#options"     : {
-        "tags"     : True,
-        "notes"    : True,
-        "id-format": "alphanumeric",
-    },
-    "#sha1_content": "5e255713cbf0a8e0801dc423563c34d896bb9229",
-
-    "id": "y0abGlDOr2o",
-    "notes": (),
-    "tags_artist": [
-        "bonocho",
-    ],
-    "tags_character": list,
-    "tags_copyright": list,
-    "tags_studio": list,
-    "tags_general": list,
+    "#exception": exception.AbortExtraction,
 },
 
 {
     "#url"     : "https://sankaku.app/posts/y0abGlDOr2o",
+    "#comment" : "new tag categories (#7333); post gone",
+    "#category": ("booru", "sankaku", "post"),
+    "#class"   : sankaku.SankakuPostExtractor,
+    "#exception": exception.AbortExtraction,
+},
+
+{
+    "#url"     : "https://sankaku.app/posts/VAr2mjLJ2av",
     "#comment" : "new tag categories (#7333)",
     "#category": ("booru", "sankaku", "post"),
     "#class"   : sankaku.SankakuPostExtractor,
     "#options" : {"tags": "extended"},
 
-    "id": "y0abGlDOr2o",
+    "id": "VAr2mjLJ2av",
     "?tags_anatomy": list,
     "?tags_artist": list,
     "?tags_character": list,
@@ -344,15 +337,21 @@ __tests__ = (
 },
 
 {
-    #  "#url"     : "https://sankaku.app/post/show/360451",
     "#url"     : "https://sankaku.app/post/show/y0abGlDOr2o",
+    "#comment" : "legacy post URL; post gone",
+    "#category": ("booru", "sankaku", "post"),
+    "#class"   : sankaku.SankakuPostExtractor,
+    "#exception": exception.AbortExtraction,
+},
+
+{
+    "#url"     : "https://sankaku.app/post/show/VAr2mjLJ2av",
     "#comment" : "legacy post URL",
     "#category": ("booru", "sankaku", "post"),
     "#class"   : sankaku.SankakuPostExtractor,
-    "#pattern" : r"https://s\.sankakucomplex\.com/o/ac/8e/ac8e3b92ea328ce9cf7211e69c905bf9\.jpg\?e=.+",
+    "#pattern" : r"https://s\.sankakucomplex\.com/o/9f/29/9f2903d65702c70f790b0bee2c52cd30\.jpg\?e=.+",
 
-    #  "id": 360451,
-    "id": "y0abGlDOr2o",
+    "id": "VAr2mjLJ2av",
 },
 
 {
@@ -407,13 +406,20 @@ __tests__ = (
 
 {
     "#url"     : "https://chan.sankakucomplex.com/en/posts/show/ac8e3b92ea328ce9cf7211e69c905bf9",
+    "#comment" : "/en/posts/show/HEX; post gone",
+    "#category": ("booru", "sankaku", "post"),
+    "#class"   : sankaku.SankakuPostExtractor,
+    "#exception": exception.NotFoundError,
+},
+
+{
+    "#url"     : "https://chan.sankakucomplex.com/en/posts/show/9f2903d65702c70f790b0bee2c52cd30",
     "#comment" : "/en/posts/show/HEX",
     "#category": ("booru", "sankaku", "post"),
     "#class"   : sankaku.SankakuPostExtractor,
 
-    #  "id" : 360451,
-    "id" : "y0abGlDOr2o",
-    "md5": "ac8e3b92ea328ce9cf7211e69c905bf9",
+    "id" : "VAr2mjLJ2av",
+    "md5": "9f2903d65702c70f790b0bee2c52cd30",
 },
 
 {

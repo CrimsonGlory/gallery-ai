@@ -30,7 +30,7 @@ __tests__ = (
         "author"     : "kamikaze-770807",
         "author_id"  : "post-88585",
         "author_slug": "",
-        "author_url" : r"re:/th(?:reads|ema|emen)/addison-vodka\.84947/post-885855",
+        "author_url" : r"re:/th(?:reads?|ema|emen)/addison-vodka\.84947/post-885855",
         "count"      : 4,
         "date"       : "dt:2024-09-15 08:08:16",
         "id"         : "885855",
@@ -47,10 +47,16 @@ __tests__ = (
         "section"    : "Pornostars",
         "tags"       : (),
         "title"      : "Addison Vodka",
-        "url"        : r"re:https://celebforum\.(?:cc|to)/th(?:reads|ema|emen)/addison-vodka\.84947/",
+        "url"        : r"re:https://celebforum\.(?:cc|to)/th(?:reads?|ema|emen)/addison-vodka\.84947/",
         "views"      : -1,
         "path"       : list,
     },
+},
+
+{
+    "#url"     : "https://celebforum.cc/thread/addison-vodka.84947/post-885855",
+    "#category": ("xenforo", "celebforum", "post"),
+    "#class"   : xenforo.XenforoPostExtractor,
 },
 
 {
@@ -98,9 +104,15 @@ __tests__ = (
         "section"    : "Pornostars",
         "tags"       : (),
         "title"      : "Addison Vodka",
-        "url"        : r"re:https://celebforum\.(?:cc|to)/th(?:reads|ema|emen)/addison-vodka\.84947/",
+        "url"        : r"re:https://celebforum\.(?:cc|to)/th(?:reads?|ema|emen)/addison-vodka\.84947/",
         "views"      : -1,
     },
+},
+
+{
+    "#url"     : "https://celebforum.cc/thread/addison-vodka.84947/",
+    "#category": ("xenforo", "celebforum", "thread"),
+    "#class"   : xenforo.XenforoThreadExtractor,
 },
 
 {
@@ -122,12 +134,18 @@ __tests__ = (
 },
 
 {
-    "#url"     : "https://celebforum.cc/forum/pornostars.13/",
+    "#url"     : "https://celebforum.cc/board/pornostars.13/",
     "#category": ("xenforo", "celebforum", "forum"),
     "#class"   : xenforo.XenforoForumExtractor,
     "#pattern" : xenforo.XenforoThreadExtractor.pattern,
     "#range"   : "1-50",
     "#count"   : 50,
+},
+
+{
+    "#url"     : "https://celebforum.cc/forum/pornostars.13/",
+    "#category": ("xenforo", "celebforum", "forum"),
+    "#class"   : xenforo.XenforoForumExtractor,
 },
 
 {
