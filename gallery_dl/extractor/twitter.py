@@ -1244,13 +1244,13 @@ class TwitterBackgroundExtractor(TwitterExtractor):
         user = self._user_obj
 
         try:
-            url = user["banner"]["image_url"]
-            timestamp = url[url.rfind("/")+1:]
-        except (KeyError, ValueError):
-            return ()
-
-        id_str = str((int(timestamp) * 1000 - 1288834974657) << 22)
-        return (self._make_tweet(user, url, id_str),)
+            if url := user["banner"]["image_url"]:
+                timestamp = url[url.rfind("/")+1:]
+                id_str = str((int(timestamp) * 1000 - 1288834974657) << 22)
+                return (self._make_tweet(user, url, id_str),)
+        except (KeyError, ValueError) as exc:
+            self.log.traceback(exc)
+        return ()
 
 
 class TwitterImageExtractor(Extractor):
