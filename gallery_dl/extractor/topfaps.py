@@ -42,8 +42,6 @@ class TopfapsExtractor(Extractor):
         """
         if not token:
             return None
-        if token.startswith("http"):
-            return token
         try:
             token = token[::-1][16:-16]
             token += "=" * (-len(token) % 4)
@@ -70,7 +68,6 @@ class TopfapsExtractor(Extractor):
         for token in text.re(r"[A-Za-z0-9+/=]{120,}").findall(page):
             url = self._decode_stream(token)
             if url:
-                print("[topfaps] TEMP: stream via token")  # TEMP
                 return url
         return None
 
