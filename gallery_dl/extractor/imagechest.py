@@ -45,6 +45,7 @@ class ImagechestGalleryExtractor(GalleryExtractor):
             return {}
 
         self.files = post.pop("files", ())
+        self.total = post.get("files_total", 0)
         post["gallery_id"] = self.gallery_id
         post["tags"] = [tag["name"] for tag in post["tags"]]
 
@@ -58,19 +59,39 @@ class ImagechestGalleryExtractor(GalleryExtractor):
             img["date"] = self.parse_datetime_iso(img["created"])
 
         post["gallery_id"] = self.gallery_id
-        post.pop("image_count", None)
+        self.total = post.pop("image_count", 0)
         self.files = post.pop("images")
 
         return post
 
     def images(self, page):
+        files = self.files
+        if len(files) < self.total:
+            files = self._pagination()
+
         try:
             return [
                 (file["link"], file)
-                for file in self.files
+                for file in files
             ]
-        except Exception:
+        except Exception as exc:
+            self.traceback(exc)
             return ()
+
+    def _pagination(self):
+        url = f"{self.root}/p/{self.gallery_id}/files"
+        params = {"page": 2}
+        per_page = 40
+
+        yield from self.files
+        while True:
+            data = self.request_json(url, params=params)
+
+            yield from data["files"]
+
+            if data["page"] * per_page >= data["total"]:
+                break
+            params["page"] += 1
 
 
 class ImagechestUserExtractor(Extractor):
