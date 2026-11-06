@@ -7676,7 +7676,7 @@ Description
     * ``name_changes``
     * ``source``
 Note
-    This requires 2 additional HTTP request per user.
+    This requires 2 additional HTTP requests per user.
 
 
 extractor.twitter.pinned
@@ -7827,7 +7827,7 @@ extractor.twitter.search-pagination
 Type
     ``string``
 Default
-    ``"max_id"``
+    ``"cursor"``
 Description
     Selects how to paginate over search results.
 
@@ -7884,26 +7884,6 @@ Default
     ``true``
 Description
     Expand ``Show replies`` stubs.
-
-
-extractor.twitter.timeline.strategy
------------------------------------
-Type
-    ``string``
-Default
-    ``"auto"``
-Description
-    Controls the strategy / tweet source used for timeline URLs
-    (``https://twitter.com/USER/timeline``).
-
-    ``"tweets"``
-        `/tweets <https://twitter.com/USER/tweets>`__ timeline + search
-    ``"media"``
-        `/media <https://twitter.com/USER/media>`__ timeline + search
-    ``"with_replies"``
-        `/with_replies <https://twitter.com/USER/with_replies>`__ timeline + search
-    ``"auto"``
-        ``"tweets"`` or ``"media"``, depending on `retweets <extractor.twitter.retweets_>`__ and `text-tweets <extractor.twitter.text-tweets_>`__ settings
 
 
 extractor.twitter.text-tweets
