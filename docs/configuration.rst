@@ -7560,8 +7560,8 @@ Type
 Default
     ``"timeline"``
 Example
-    * ``"avatar,background,media"``
-    * ``["avatar", "background", "media"]``
+    * ``"avatar,background,tweets"``
+    * ``["avatar", "background", "tweets"]``
 Description
     A (comma-separated) list of subcategories to include
     when processing a user profile.
@@ -7569,12 +7569,13 @@ Supported Values
     * ``info``
     * ``avatar``
     * ``background``
-    * ``timeline``
     * ``tweets``
     * ``media``
-    * ``with-replies``
+    * ``photos``
+    * ``videos``
+    * ``replies``
+    * ``reposts``
     * ``highlights``
-    * ``likes``
 Note
     It is possible to use ``"all"`` instead of listing all values separately.
 
