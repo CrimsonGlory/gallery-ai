@@ -42,12 +42,11 @@ class ImagechestGalleryExtractor(GalleryExtractor):
             if "<title>Not Found</title>" in page:
                 raise self.exc.NotFoundError("gallery")
             self.files = ()
+            self.total = 0
             return {}
 
         self.files = post.pop("files", ())
-        if (total := post.get("files_total")) and total > len(self.files):
-            url = self.root + "/p/" + self.gallery_id + "/files"
-            self.files = self.request_json(url, params={"all": 1})["files"]
+        self.total = post.get("files_total", 0)
         post["gallery_id"] = self.gallery_id
         post["tags"] = [tag["name"] for tag in post["tags"]]
 
@@ -61,19 +60,53 @@ class ImagechestGalleryExtractor(GalleryExtractor):
             img["date"] = self.parse_datetime_iso(img["created"])
 
         post["gallery_id"] = self.gallery_id
-        post.pop("image_count", None)
+        self.total = post.pop("image_count", 0)
         self.files = post.pop("images")
 
         return post
 
     def images(self, page):
+        files = self.files
+        if self.total and len(files) < self.total:
+            files = self._pagination()
+
         try:
             return [
                 (file["link"], file)
-                for file in self.files
+                for file in files
             ]
-        except Exception:
+        except Exception as exc:
+            self.log.traceback(exc)
             return ()
+
+    def _pagination(self):
+        url = f"{self.root}/p/{self.gallery_id}/files"
+
+        try:
+            data = self.request_json(url, params={"all": 1})
+            files = data.get("files") or ()
+            total = data.get("total") or self.total
+            if total and len(files) >= total:
+                yield from files
+                return
+        except Exception as exc:
+            self.log.traceback(exc)
+
+        params = {"page": 2}
+        count = len(self.files)
+        yield from self.files
+        while True:
+            data = self.request_json(url, params=params)
+            files = data.get("files") or ()
+            if not files:
+                break
+            yield from files
+            count += len(files)
+            total = data.get("total") or self.total
+            page = data.get("page") or params["page"]
+            if count >= total or page * 40 >= total:
+                break
+            params["page"] += 1
 
 
 class ImagechestUserExtractor(Extractor):

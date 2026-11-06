@@ -291,12 +291,13 @@ class OnlyhavenAPI():
         while True:
             data = self._call(endpoint, params)
 
+            total = data.get("total")
             if key is not None:
                 data = data.get(key)
             if not data:
                 break
             yield from data
 
-            if len(data) < batch:
-                break
             params["o"] += batch
+            if total and total < params["o"]:
+                break
