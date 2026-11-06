@@ -394,6 +394,8 @@ class InstagramExtractor(Extractor):
                 media["expires"] = self.parse_timestamp(item["expiring_at"])
             if "subscription_media_visibility" in item:
                 media["subscription"] = item["subscription_media_visibility"]
+            elif item.get("audience") == "fan_club":
+                media["subscription"] = True
             if "audience" in item:
                 media["audience"] = item["audience"]
 
