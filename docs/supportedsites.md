@@ -2315,6 +2315,18 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://e6ai.net/posts?tags=TAG">Tag Searches</span></td>
     <td>Supported</td>
 </tr>
+<tr id="blep" title="blep">
+    <td>Blep</td>
+    <td>https://blep.art/</td>
+    <td><span title="https://blep.art/artists/12345">Artists</span> |
+        <span title="https://blep.art/artists?QUERY">Artist Searches</span> |
+        <span title="https://blep.art/favorites">Favorites</span> |
+        <span title="https://blep.art/pools/12345">Pools</span> |
+        <span title="https://blep.art/explore/posts/popular">Popular Images</span> |
+        <span title="https://blep.art/posts/12345">Posts</span> |
+        <span title="https://blep.art/posts?tags=TAG">Tag Searches</span></td>
+    <td></td>
+</tr>
 
 <tr id="gelbooru_v01" title="gelbooru_v01">
     <td colspan="4"><strong>Gelbooru Beta 0.1.11</strong></td>
