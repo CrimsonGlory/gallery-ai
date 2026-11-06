@@ -2327,6 +2327,18 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://blep.art/posts?tags=TAG">Tag Searches</span></td>
     <td></td>
 </tr>
+<tr id="hmofa" title="hmofa">
+    <td>hmofa gallery</td>
+    <td>https://hmofa.gallery/</td>
+    <td><span title="https://hmofa.gallery/artists/12345">Artists</span> |
+        <span title="https://hmofa.gallery/artists?QUERY">Artist Searches</span> |
+        <span title="https://hmofa.gallery/favorites">Favorites</span> |
+        <span title="https://hmofa.gallery/pools/12345">Pools</span> |
+        <span title="https://hmofa.gallery/explore/posts/popular">Popular Images</span> |
+        <span title="https://hmofa.gallery/posts/12345">Posts</span> |
+        <span title="https://hmofa.gallery/posts?tags=TAG">Tag Searches</span></td>
+    <td></td>
+</tr>
 
 <tr id="gelbooru_v01" title="gelbooru_v01">
     <td colspan="4"><strong>Gelbooru Beta 0.1.11</strong></td>
