@@ -110,6 +110,7 @@ CATEGORY_MAP = {
     "hentaizap"      : "HentaiZap",
     "hiperdex"       : "HiperDEX",
     "hitomi"         : "Hitomi.la",
+    "hmofa"          : "hmofa gallery",
     "horne"          : "horne",
     "idolcomplex"    : "Idol Complex",
     "illusioncardsbooru": "Illusion Game Cards",

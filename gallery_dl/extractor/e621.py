@@ -98,6 +98,14 @@ BASE_PATTERN = E621Extractor.update({
         "root": "https://e6ai.net",
         "pattern": r"e6ai\.net",
     },
+    "blep": {
+        "root": "https://blep.art",
+        "pattern": r"blep\.art",
+    },
+    "hmofa": {
+        "root": "https://hmofa.gallery",
+        "pattern": r"hmofa\.gallery",
+    },
 })
 
 
