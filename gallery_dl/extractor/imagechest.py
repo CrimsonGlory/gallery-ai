@@ -37,18 +37,30 @@ class ImagechestGalleryExtractor(GalleryExtractor):
         try:
             data = util.json_loads(text.unescape(text.extr(
                 page, 'data-page="', '"')))
-            post = data["props"]["post"]
-        except Exception:
+        except ValueError:
             if "<title>Not Found</title>" in page:
                 raise self.exc.NotFoundError("gallery")
-            self.files = ()
-            self.total = 0
-            return {}
+            self.log.error("Failed to load gallery data")
+            data = {}
+
+        props = data.get("props") or {}
+        post = props.get("post")
+        if not post:
+            component = data.get("component") or ""
+            if (component == "Error" or
+                    props.get("status") == 404 or
+                    "<title>Not Found</title>" in page):
+                raise self.exc.NotFoundError("gallery")
+            if data:
+                raise self.exc.AuthRequired(
+                    "password", "gallery",
+                    "This post has been password protected.")
+            post = {}
 
         self.files = post.pop("files", ())
         self.total = post.get("files_total", 0)
         post["gallery_id"] = self.gallery_id
-        post["tags"] = [tag["name"] for tag in post["tags"]]
+        post["tags"] = [tag["name"] for tag in post.get("tags", ())]
 
         return post
 
@@ -185,5 +197,11 @@ class ImagechestAPI():
                 self.extractor.wait(seconds=600)
 
             else:
-                self.extractor.log.debug(response.text)
-                raise self.extractor.exc.AbortExtraction("API request failed")
+                log = self.extractor.log
+                log.debug(response.text)
+                try:
+                    msg = f'"{response.json()["message"]}"'
+                except Exception as exc:
+                    log.traceback(exc)
+                    msg = "API request failed"
+                raise self.extractor.exc.AbortExtraction(msg)

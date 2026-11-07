@@ -5,13 +5,11 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import imagechest
-from gallery_dl import exception
 
 
 __tests__ = (
 {
     "#url"     : "https://imgchest.com/p/3na7kr3by8d",
-    "#category": ("", "imagechest", "gallery"),
     "#class"   : imagechest.ImagechestGalleryExtractor,
     "#pattern"     : r"https://cdn\.imgchest\.com/files/\w+\.(jpg|png)",
     "#count"       : 3,
@@ -27,7 +25,6 @@ __tests__ = (
 {
     "#url"     : "https://imgchest.com/p/9p4n3q2z7nq",
     "#comment" : "'Load More Files' button (#4028)",
-    "#category": ("", "imagechest", "gallery"),
     "#class"   : imagechest.ImagechestGalleryExtractor,
     "#pattern" : r"https://cdn\.imgchest\.com/files/\w+\.(jpg|png)",
     "#count"   : 52,
@@ -36,14 +33,20 @@ __tests__ = (
 
 {
     "#url"     : "https://imgchest.com/p/xxxxxxxxxxx",
-    "#category": ("", "imagechest", "gallery"),
+    "#comment" : "404",
     "#class"   : imagechest.ImagechestGalleryExtractor,
-    "#exception": exception.NotFoundError,
+    "#exception": "NotFoundError",
+},
+
+{
+    "#url"     : "https://imgchest.com/p/wl7lm5rgoyx",
+    "#comment" : "'Password Required'",
+    "#class"   : imagechest.ImagechestGalleryExtractor,
+    "#exception": "AuthRequired",
 },
 
 {
     "#url"     : "https://imgchest.com/u/LunarLandr",
-    "#category": ("", "imagechest", "user"),
     "#class"   : imagechest.ImagechestUserExtractor,
     "#pattern" : imagechest.ImagechestGalleryExtractor.pattern,
     "#count"   : range(280, 500),
