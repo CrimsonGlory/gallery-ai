@@ -110,6 +110,20 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://www.imagepond.net/videos/Ew9BR9Ji",
+    "#comment" : "plural /videos/ URL",
+    "#category": ("chevereto", "imagepond", "file"),
+    "#class"   : imagepond.ImagepondFileExtractor,
+    "#results" : "https://media.imagepond.net/media/videos/Leela_Egli_I1z3t54F.mp4",
+
+    "extension": "mp4",
+    "filename" : "Leela_Egli_I1z3t54F",
+    "id"       : "Ew9BR9Ji",
+    "mime"     : "video/mp4",
+    "type"     : "video",
+},
+
+{
     "#url"     : "https://www.imagepond.net/a/chv_2822",
     "#category": ("chevereto", "imagepond", "album"),
     "#class"   : imagepond.ImagepondAlbumExtractor,
