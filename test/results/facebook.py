@@ -417,6 +417,18 @@ Hẹn gặp bạn tối nay!
 },
 
 {
+    "#url"     : "https://www.facebook.com/reel/1961685918570549",
+    "#comment" : "'/reel/' video URL",
+    "#class"   : facebook.FacebookVideoExtractor,
+    "#count"   : 2,
+
+    "date"     : "dt:2026-11-02 14:55:32",
+    "id"       : "1961685918570549",
+    "user_id"  : "1383608933",
+    "username" : "Tanatsorn Ingpaiboon",
+},
+
+{
     "#url"     : "https://www.facebook.com/facebook/photos_albums",
     "#class"   : facebook.FacebookAlbumsExtractor,
     "#pattern" : facebook.FacebookSetExtractor.pattern,
