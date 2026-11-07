@@ -38,16 +38,20 @@ class ImagechestGalleryExtractor(GalleryExtractor):
             data = util.json_loads(text.unescape(text.extr(
                 page, 'data-page="', '"')))
             post = data["props"]["post"]
-        except Exception:
+        except KeyError:
+            raise self.exc.AuthRequired(
+                "password", "gallery",
+                "This post has been password protected.")
+        except ValueError:
             if "<title>Not Found</title>" in page:
                 raise self.exc.NotFoundError("gallery")
-            self.files = ()
-            return {}
+            self.log.error("Failed to load gallery data")
+            post = {}
 
         self.files = post.pop("files", ())
         self.total = post.get("files_total", 0)
         post["gallery_id"] = self.gallery_id
-        post["tags"] = [tag["name"] for tag in post["tags"]]
+        post["tags"] = [tag["name"] for tag in post.get("tags", ())]
 
         return post
 
@@ -171,4 +175,9 @@ class ImagechestAPI():
 
             else:
                 self.extractor.log.debug(response.text)
-                raise self.extractor.exc.AbortExtraction("API request failed")
+                try:
+                    msg = f'"{response.json()["message"]}"'
+                except Exception as exc:
+                    self.log.traceback(exc)
+                    msg = "API request failed"
+                raise self.extractor.exc.AbortExtraction(msg)
