@@ -111,6 +111,12 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://www.imagepond.net/videos/Ew9BR9Ji",
+    "#category": ("chevereto", "imagepond", "file"),
+    "#class"   : imagepond.ImagepondFileExtractor,
+},
+
+{
     "#url"     : "https://www.imagepond.net/a/chv_2822",
     "#category": ("chevereto", "imagepond", "album"),
     "#class"   : imagepond.ImagepondAlbumExtractor,
