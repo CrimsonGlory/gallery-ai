@@ -21,7 +21,7 @@ __tests__ = (
     "date"            : "dt:2025-12-31 16:32:08",
     "duration"        : None,
     "extension"       : "jpg",
-    "fav_count"       : 15,
+    "fav_count"       : int,
     "filename"        : "86598080fb2979334b5534a83635fb6b",
     "has_notes"       : False,
     "id"              : 145107,

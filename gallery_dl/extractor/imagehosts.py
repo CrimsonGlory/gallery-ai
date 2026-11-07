@@ -97,7 +97,6 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
     pattern = (r"(?:https?://)?(?:www\.)?((?:imx\.to|img\.yt)"
                r"/(?:i/|img-)(\w+)(\.html)?)")
     example = "https://imx.to/i/ID"
-    _params = "simple"
     _encoding = "utf-8"
 
     def __init__(self, match):
@@ -106,8 +105,12 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
             self.page_url = self.page_url.replace("img.yt", "imx.to")
 
     def get_info(self, page):
+        page = self._continue(page)
         url, pos = text.extract(
-            page, '<div style="text-align:center;"><a href="', '"')
+            page, '<div class="img-center"><a href="', '"')
+        if not url:
+            url, pos = text.extract(
+                page, '<div style="text-align:center;"><a href="', '"')
         if url:
             self.file_url = url
         else:
@@ -115,9 +118,31 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
         filename, pos = text.extract(page, ' title="', '"', pos)
         return url, filename or None
 
+    def _continue(self, page):
+        token = text.extr(page, 'name="imgToken" value="', '"')
+        if not token:
+            self._page = page
+            return page
+        page = self.request(
+            self.page_url,
+            method="POST",
+            data={
+                "imgToken": token,
+                "imgContinue": (
+                    text.extr(page, 'name="imgContinue" value="', '"') or
+                    "Continue to your image..."),
+            },
+            encoding=self._encoding,
+        ).text
+        self._page = page
+        return page
+
     def metadata(self, page):
+        page = getattr(self, "_page", page)
         extr = text.extract_from(page, page.index("[ FILESIZE <"))
-        size = extr(">", "</span>").replace(" ", "")[:-1]
+        size = extr(">", "</span>").replace(" ", "")
+        if size and size[-1] in "bB":
+            size = size[:-1]
         width, _, height = extr(">", " px</span>").partition("x")
 
         try:

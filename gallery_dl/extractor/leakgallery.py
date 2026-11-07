@@ -18,13 +18,13 @@ class LeakgalleryExtractor(Extractor):
     filename_fmt = "{id}_{filename}.{extension}"
     archive_fmt = "{creator}_{id}"
 
-    def _yield_media_items(self, medias, creator=None):
-        seen = set()
+    def _yield_media_items(self, medias, creator=None, seen=None):
+        if seen is None:
+            seen = set()
         for media in medias:
-            path = media["file_path"]
-            if path in seen:
+            path = media.get("file_path")
+            if not path or path in seen:
                 continue
-            seen.add(path)
 
             if creator is None:
                 try:
@@ -35,12 +35,22 @@ class LeakgalleryExtractor(Extractor):
             else:
                 media["creator"] = creator
 
+            ident = media.get("id")
+            key = ((media["creator"], str(ident))
+                   if ident is not None else None)
+            if key is not None and key in seen:
+                continue
+            seen.add(path)
+            if key is not None:
+                seen.add(key)
+
             media["url"] = url = "https://cdn.leakgallery.com/" + path
             text.nameext_from_url(url, media)
             yield Message.Directory, "", media
             yield Message.Url, url, media
 
     def _pagination(self, type, base, params=None, creator=None, pnum=1):
+        seen = set()
         while True:
             try:
                 data = self.request_json(base + str(pnum), params=params)
@@ -52,7 +62,7 @@ class LeakgalleryExtractor(Extractor):
                     if not data or data.__class__ is not list:
                         return
 
-                yield from self._yield_media_items(data, creator)
+                yield from self._yield_media_items(data, creator, seen)
                 pnum += 1
             except Exception as exc:
                 self.log.error("Failed to retrieve %s page %s: %s",

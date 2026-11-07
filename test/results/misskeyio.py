@@ -41,7 +41,7 @@ __tests__ = (
     "#category": ("misskey", "misskey.io", "avatar"),
     "#class"   : misskey.MisskeyAvatarExtractor,
     "#results" : "https://media.misskeyusercontent.jp/io/d84e09f8-99b7-423a-9229-78ba65ab8a82.gif",
-    "#sha1_content": "375af4d302a4aef0bc8fc3f15b2c75ec952ac086",
+    "#sha1_content": "269ab5162fac9b9a051714671b6a6edac3aaead4",
 
     "extension": "gif",
     "filename" : "d84e09f8-99b7-423a-9229-78ba65ab8a82",

@@ -21,7 +21,7 @@ __tests__ = (
     "extension": "png",
     "post_url" : "https://imx.to/i/1qdeva",
     "date"  : "dt:2018-04-09 00:00:00",
-    "size"  : 18,
+    "size"  : 182,
     "width" : 64,
     "height": 32,
     "token" : "1qdeva",
