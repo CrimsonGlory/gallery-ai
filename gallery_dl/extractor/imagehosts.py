@@ -106,16 +106,19 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
 
     def get_info(self, page):
         page = self._continue(page)
-        url, pos = text.extract(
-            page, '<div class="img-center"><a href="', '"')
-        if not url:
-            url, pos = text.extract(
-                page, '<div style="text-align:center;"><a href="', '"')
-        if url:
-            self.file_url = url
+        for needle in (
+            '<div style="text-align:center;"><a href="',
+            'class="img-center"><a href="',
+            'class="centred img-full" src="',
+        ):
+            if img := text.extr(page, needle, '>'):
+                break
         else:
             self.not_found()
-        filename, pos = text.extract(page, ' title="', '"', pos)
+
+        self.file_url = url = img[:img.find('"')]
+        filename = (text.extr(img, ' title="', '"') or
+                    text.extr(img, ' alt="', '"'))
         return url, filename or None
 
     def _continue(self, page):
