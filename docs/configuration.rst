@@ -9006,10 +9006,21 @@ Description
     regardless of this option.
 
 
+downloader.http.sleep-retries
+-----------------------------
+Type
+    |Duration+|_
+Default
+    `extractor.*.sleep-retries`_
+Description
+    Number of seconds to sleep
+    before `retrying <downloader.*.retries_>`__ the request.
+
+
 downloader.http.sleep-429
 -------------------------
 Type
-    |Duration|_
+    |Duration+|_
 Default
     `extractor.*.sleep-429`_
 Description

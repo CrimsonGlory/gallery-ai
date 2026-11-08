@@ -516,7 +516,7 @@ class Extractor():
                 self._interval_retry = util.build_duration_func_ex(
                     _interval_retry)
             except Exception as exc:
-                self.log.error("Invalid 'sleep-retry' value '%s' (%s: %s)",
+                self.log.error("Invalid 'sleep-retries' value: '%s' (%s: %s)",
                                _interval_retry, exc.__class__.__name__, exc)
                 self._interval_retry = util.identity
 
@@ -526,7 +526,7 @@ class Extractor():
         try:
             self._interval_429 = util.build_duration_func_ex(_interval_429)
         except Exception as exc:
-            self.log.error("Invalid 'sleep-429' value '%s' (%s: %s)",
+            self.log.error("Invalid 'sleep-429' value: '%s' (%s: %s)",
                            _interval_429, exc.__class__.__name__, exc)
             self._interval_429 = util.build_duration_func_ex(
                 self.request_interval_429)
