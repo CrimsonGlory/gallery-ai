@@ -34,9 +34,10 @@ class TwitterExtractor(Extractor):
         self.user = match[1]
 
     def _init(self):
-        self.showmore = self.config("showmore", True)
+        self.metadata_user = self.config("metadata-user", False)
         self.showreplies = self.config("showreplies", True)
         self.unavailable = self.config("unavailable", False)
+        self.showmore = self.config("showmore", True)
         self.textonly = self.config("text-tweets", False)
         self.retweets = self.config("retweets", False)
         self.replies = self.config("replies", True)
@@ -646,7 +647,7 @@ class TwitterExtractor(Extractor):
 
     def _transform_user(self, user):
         try:
-            uid = user["rest_id"]
+            uid = user.get("rest_id") or user["id_str"]
         except KeyError:
             # private/invalid user (#4349)
             return {}
@@ -656,45 +657,81 @@ class TwitterExtractor(Extractor):
         except KeyError:
             pass
 
-        core = user["core"]
-        rels = user["relationship_counts"]
-        twts = user["tweet_counts"]
-        self._user_cache[uid] = udata = {
-            "id"              : text.parse_int(uid),
-            "name"            : core.get("screen_name"),
-            "nick"            : core.get("name"),
-            "date"            : dt.parse(
-                core.get("created_at"), "%a %b %d %H:%M:%S %z %Y"),
-            "location"        : user["location"].get("location"),
-            "verified"        : user["verification"].get("verified"),
-            "protected"       : user["privacy"].get("protected"),
-            "profile_image"   : (u := user.get("avatar")) and u.get(
-                "image_url", "").replace("_normal.", "."),
-            "profile_banner"  : (u := user.get("banner")) and u.get(
-                "image_url", ""),
-            "favourites_count": (u := user.get("avatar")) and u.get(
-                "favorites_count"),
-            "followers_count" : rels.get("followers"),
-            "following_count" : rels.get("following"),
-            "media_count"     : twts.get("media_tweets"),
-            "statuses_count"  : twts.get("tweets"),
-        }
+        if "core" in user:
+            core = user["core"]
+            rels = user["relationship_counts"]
+            twts = user["tweet_counts"]
 
-        if (u := user.get("websitess")) and (url := u.get("url")):
-            udata["url"] = url
+            self._user_cache[uid] = udata = {
+                "id"              : text.parse_int(uid),
+                "name"            : core.get("screen_name"),
+                "nick"            : core.get("name"),
+                "date"            : dt.parse(
+                    core.get("created_at"), "%a %b %d %H:%M:%S %z %Y"),
+                "location"        : user["location"].get("location"),
+                "verified"        : user["verification"].get("verified"),
+                "protected"       : user["privacy"].get("protected"),
+                "profile_image"   : (u := user.get("avatar")) and u.get(
+                    "image_url", "").replace("_normal.", "."),
+                "profile_banner"  : (u := user.get("banner")) and u.get(
+                    "image_url", ""),
+                "favourites_count": (u := user.get("action_counts")) and u.get(
+                    "favorites_count"),
+                "followers_count" : rels.get("followers"),
+                "following_count" : rels.get("following"),
+                "media_count"     : twts.get("media_tweets"),
+                "statuses_count"  : twts.get("tweets"),
+            }
 
-        bio = user["profile_bio"]
-        descr = bio.get("description", "")
-        if entities := bio.get("entities"):
-            if urls := entities["description"].get("urls"):
-                for url in urls:
-                    try:
-                        descr = descr.replace(url["url"], url["expanded_url"])
-                    except KeyError:
-                        pass
-        udata["description"] = descr
+            if (u := user.get("websites")) and (url := u.get("url")):
+                udata["url"] = url
 
-        if self.config("metadata-user", False):
+            bio = user["profile_bio"]
+            descr = bio.get("description", "")
+            if entities := bio.get("entities"):
+                if urls := entities["description"].get("urls"):
+                    for url in urls:
+                        try:
+                            descr = descr.replace(
+                                url["url"], url["expanded_url"])
+                        except KeyError:
+                            pass
+            udata["description"] = descr
+
+        else:
+            # legacy user profile
+            uget = user.get
+            self._user_cache[uid] = udata = {
+                "id"              : text.parse_int(uid),
+                "name"            : uget("screen_name"),
+                "nick"            : uget("name"),
+                "date"            : dt.parse(
+                    uget("created_at"), "%a %b %d %H:%M:%S %z %Y"),
+                "location"        : uget("location"),
+                "verified"        : uget("verified"),
+                "protected"       : uget("protected"),
+                "profile_image"   : uget(
+                    "profile_image_url_https", "").replace("_normal.", "."),
+                "profile_banner"  : uget("profile_banner_url", ""),
+                "favourites_count": uget("favourites_count"),
+                "followers_count" : uget("followers_count"),
+                "friends_count"   : uget("friends_count"),
+                "statuses_count"  : uget("statuses_count"),
+                "url"             : uget("url"),
+            }
+
+            descr = uget("description", "")
+            if entities := uget("entities"):
+                if urls := entities["description"].get("urls"):
+                    for url in urls:
+                        try:
+                            descr = descr.replace(
+                                url["url"], url["expanded_url"])
+                        except KeyError:
+                            pass
+            udata["description"] = descr
+
+        if self.metadata_user:
             try:
                 if (about := self.cache(self.api.user_about_account,
                                         udata["name"]).get("about_profile")):
@@ -930,6 +967,7 @@ class TwitterWithRepliesExtractor(TwitterExtractor):
     example = "https://x.com/USER/with_replies"
 
     def tweets(self):
+        self.replies = True
         return self.api.user_replies(self.user)
 
 
