@@ -590,9 +590,9 @@ class TwitterExtractor(Extractor):
             tdata["reply_to"] = legacy["in_reply_to_screen_name"]
         if "quoted_by" in legacy:
             tdata["quote_by"] = legacy["quoted_by"]
-        if "extended_entities" in legacy:
-            self._extract_media_source(
-                tdata, legacy["extended_entities"]["media"][0])
+        if "extended_entities" in legacy and (
+                media := legacy["extended_entities"].get("media")):
+            self._extract_media_source(tdata, media[0])
         if tdata["retweet_id"]:
             tdata["content"] = f"RT @{author['name']}: {tdata['content']}"
             tdata["date_original"] = self._tweetid_to_datetime(
