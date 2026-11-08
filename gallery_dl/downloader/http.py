@@ -41,6 +41,7 @@ class HttpDownloader(DownloaderBase):
         self.rate = self.config("rate")
         retry_codes = self.config("retry-codes")
         interval_429 = self.config("sleep-429")
+        interval_retry = self.config("sleep-retries")
 
         if self.config("consume-content", False):
             self.release_conn = self._release_conn_impl
@@ -86,15 +87,28 @@ class HttpDownloader(DownloaderBase):
             self.receive = self._receive_rate
             if self.progress < 0.0:
                 self.progress = 0.0
+
+        if interval_retry is None:
+            self.interval_retry = extractor._interval_retry
+        else:
+            try:
+                self.interval_retry = util.build_duration_func_ex(
+                    interval_retry)
+            except Exception as exc:
+                self.log.error("Invalid 'sleep-retries' value: '%s' (%s: %s)",
+                               interval_retry, exc.__class__.__name__, exc)
+                self.interval_retry = extractor._interval_retry
+
         if interval_429 is None:
             self.interval_429 = extractor._interval_429
         else:
             try:
                 self.interval_429 = util.build_duration_func_ex(interval_429)
             except Exception as exc:
-                self.log.error("Invalid 'sleep-429' value '%s' (%s: %s)",
+                self.log.error("Invalid 'sleep-429' value: '%s' (%s: %s)",
                                interval_429, exc.__class__.__name__, exc)
                 self.interval_429 = extractor._interval_429
+
         if retry_codes is not None:
             self.retry_codes = retry_codes
         elif self.interval_429 and 429 not in extractor._retry_codes:
@@ -143,11 +157,19 @@ class HttpDownloader(DownloaderBase):
                 if tries > self.retries:
                     return False
 
-                if code == 429 and self.interval_429:
+                seconds = self.interval_retry(tries)
+                if code == 429 and self.interval_429 is not None:
                     s = self.interval_429(tries)
-                    time.sleep(s if s > tries else tries)
+                    if seconds < s:
+                        seconds = s
+                    reason = "429 Too Many Requests"
                 else:
-                    time.sleep(tries)
+                    reason = "retry"
+                if seconds > 0:
+                    self.log.debug("Sleeping %.2f seconds (%s)",
+                                   seconds, reason)
+                    time.sleep(seconds)
+
                 code = 0
 
             tries += 1
