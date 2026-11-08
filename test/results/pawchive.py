@@ -331,7 +331,7 @@ __tests__ = (
 },
 
 {
-    "#url"     : "https://pawchive.pw/patreon/user/11321390/post/165465384",
+    "#url"     : "https://pawchive.pw/patreon/user/11321390/post/174641691",
     "#comment" : "multiple 'deferred' files",
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
@@ -340,8 +340,8 @@ __tests__ = (
     "#count"   : range(1, 20),
 
     "deferred": True,
-    "id"      : "165465384",
-    "title"   : "フルバージョンまとめ 2026/08/01 - 2026/08/31 【739枚】",
+    "id"      : "174641691",
+    "title"   : "20261107 ニコ・ロビン Nico Robin",
     "user"    : "11321390",
     "username": "AI Chaya",
 },
