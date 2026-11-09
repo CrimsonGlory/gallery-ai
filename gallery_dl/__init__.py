@@ -193,7 +193,7 @@ def main():
 
             log.debug("Configuration Files %s", config._files)
 
-        if args.cache_file:
+        if args.cache_file is not None:
             config.set(("cache",), "file", args.cache_file)
 
         if args.cache_status:
