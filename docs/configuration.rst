@@ -7581,6 +7581,7 @@ Supported Values
     * ``replies``
     * ``reposts``
     * ``highlights``
+    * ``articles``
 Note
     It is possible to use ``"all"`` instead of listing all values separately.
 

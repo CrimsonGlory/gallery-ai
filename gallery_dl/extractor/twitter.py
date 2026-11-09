@@ -34,9 +34,10 @@ class TwitterExtractor(Extractor):
         self.user = match[1]
 
     def _init(self):
-        self.showmore = self.config("showmore", True)
+        self.metadata_user = self.config("metadata-user", False)
         self.showreplies = self.config("showreplies", True)
         self.unavailable = self.config("unavailable", False)
+        self.showmore = self.config("showmore", True)
         self.textonly = self.config("text-tweets", False)
         self.retweets = self.config("retweets", False)
         self.replies = self.config("replies", True)
@@ -676,7 +677,8 @@ class TwitterExtractor(Extractor):
                     u.get("image_url") or "").replace("_normal.", "."),
                 "profile_banner"  : (u := user.get("banner")) and (
                     u.get("image_url") or ""),
-                "favourites_count": (u := user.get("avatar")) and u.get(
+                "favourites_count": (u := (user.get("action_counts") or
+                                           user.get("avatar"))) and u.get(
                     "favorites_count"),
                 "followers_count" : rels.get("followers"),
                 "following_count" : rels.get("following"),
@@ -713,8 +715,9 @@ class TwitterExtractor(Extractor):
 
             self._user_cache[uid] = udata = {
                 "id"              : text.parse_int(uid),
-                "name"            : core.get("screen_name"),
-                "nick"            : core.get("name"),
+                "name"            : core.get("screen_name") or lget(
+                    "screen_name"),
+                "nick"            : core.get("name") or lget("name"),
                 "date"            : dt.parse(
                     core.get("created_at") or lget("created_at"),
                     "%a %b %d %H:%M:%S %z %Y"),
@@ -762,9 +765,11 @@ class TwitterExtractor(Extractor):
                             "url")
                     except (KeyError, IndexError):
                         pass
+            if "url" not in udata and (url := lget("url")):
+                udata["url"] = url
             udata["description"] = descr
 
-        if self.config("metadata-user", False):
+        if self.metadata_user:
             try:
                 if (about := self.cache(self.api.user_about_account,
                                         udata["name"]).get("about_profile")):
@@ -976,6 +981,7 @@ class TwitterUserExtractor(Dispatch, TwitterExtractor):
             (TwitterWithRepliesExtractor, base + "with_replies"),
             (TwitterRepostsExtractor    , base + "reposts"),
             (TwitterHighlightsExtractor , base + "highlights"),
+            (TwitterArticlesExtractor   , base + "articles"),
         ), ("tweets",), (
             ("with-replies", "replies", None),
             ("media", "photos", f"{base}media?filter=photo"),
@@ -1000,6 +1006,7 @@ class TwitterWithRepliesExtractor(TwitterExtractor):
     example = "https://x.com/USER/with_replies"
 
     def tweets(self):
+        self.replies = True
         return self.api.user_replies(self.user)
 
 
@@ -1022,6 +1029,22 @@ class TwitterHighlightsExtractor(TwitterExtractor):
 
     def tweets(self):
         return self.api.user_highlights(self.user)
+
+
+class TwitterArticlesExtractor(TwitterExtractor):
+    """Extractor for Tweets from a user's Articles timeline"""
+    subcategory = "articles"
+    pattern = USER_PATTERN + r"/articles(?!\w)"
+    example = "https://x.com/USER/articles"
+
+    def tweets(self):
+        for tweet in self.api.user_articles(self.user):
+            tid = (tweet.get("legacy") or tweet).get("conversation_id_str")
+            if not tid:
+                continue
+            for tweet in self.api.tweet_detail(tid):
+                yield tweet
+                break
 
 
 class TwitterMediaExtractor(TwitterExtractor):
@@ -1613,6 +1636,21 @@ class TwitterAPI():
 
     def user_highlights(self, handle):
         endpoint = "/graphql/clDqp0dS11B6eNOEF6oYhQ/UserHighlightsTweets"
+        variables = {
+            "userId": self._user_id(handle),
+            "count": self.extractor.config("limit", 50),
+            "includePromotedContent": False,
+            "withVoice": True,
+        }
+        field_toggles = {
+            "withPayments": False,
+            "withArticlePlainText": False,
+        }
+        return self._pagination_tweets(
+            endpoint, variables, field_toggles=field_toggles)
+
+    def user_articles(self, handle):
+        endpoint = "/graphql/9Yf6bKYpvNL8ungvkqMlTw/UserArticlesTweets"
         variables = {
             "userId": self._user_id(handle),
             "count": self.extractor.config("limit", 50),
