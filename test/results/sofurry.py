@@ -190,7 +190,7 @@ __tests__ = (
         "username"       : "Zummeng",
         "submissionCount": int,
         "totalLikes"     : int,
-        "totalViews"     : str,
+        "totalViews"     : {int, str},
     },
 },
 

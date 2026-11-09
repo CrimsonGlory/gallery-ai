@@ -270,10 +270,17 @@ class ImagetwistImageExtractor(ImagehostImageExtractor):
         return self.request(self.page_url).cookies
 
     def get_info(self, page):
-        url     , pos = text.extract(page, '<img src="', '"')
-        if url and url.startswith("/imgs/"):
+        pos = 0
+        while True:
+            tag, pos = text.extract(page, "<img ", ">", pos)
+            if not tag:
+                self.not_found()
+            if 'class="pic' in tag:
+                break
+        url = text.extr(tag, 'src="', '"')
+        filename = text.extr(tag, 'alt="', '"')
+        if not url:
             self.not_found()
-        filename, pos = text.extract(page, ' alt="', '"', pos)
         return url, filename
 
 

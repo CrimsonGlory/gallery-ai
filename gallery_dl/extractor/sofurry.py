@@ -35,7 +35,12 @@ class SofurryExtractor(Extractor):
         for submission_id in posts:
             url = f"{self.root}/s/{submission_id}.data"
             data = self._unpack(self.request_json(url))
-            post = data["routes/submission.$id"]["data"]["submission"]
+            for key in data:
+                if key.endswith("routes/submission.$id"):
+                    post = data[key]["data"]["submission"]
+                    break
+            else:
+                raise KeyError("routes/submission.$id")
 
             files = post["content"]
             post["count"] = len(files)
