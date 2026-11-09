@@ -257,6 +257,16 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://x.com/korindo/verified_followers",
+    "#class"   : twitter.TwitterFollowersExtractor,
+},
+
+{
+    "#url"     : "https://x.com/korindo/followers_you_follow",
+    "#class"   : twitter.TwitterFollowersExtractor,
+},
+
+{
     "#url"     : "https://twitter.com/search?q=nature",
     "#class"   : twitter.TwitterSearchExtractor,
     "#range"   : "1-20",
