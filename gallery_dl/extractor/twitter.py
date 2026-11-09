@@ -1133,12 +1133,19 @@ class TwitterFollowingExtractor(TwitterExtractor):
 class TwitterFollowersExtractor(TwitterExtractor):
     """Extractor for a user's followers"""
     subcategory = "followers"
-    pattern = USER_PATTERN + r"/followers(?!\w)"
+    pattern = USER_PATTERN + r"/(verified_)?followers(_you_follow)?(?!\w)"
     example = "https://x.com/USER/followers"
 
     def items(self):
         self.login()
-        return self._users_result(self.api.user_followers(self.user))
+        user, verified, known = self.groups
+        if verified is not None:
+            followers = self.api.user_followers_verified(user)
+        elif known is not None:
+            followers = self.api.user_followers_known(user)
+        else:
+            followers = self.api.user_followers(user)
+        return self._users_result(followers)
 
 
 class TwitterCommunityExtractor(TwitterExtractor):
