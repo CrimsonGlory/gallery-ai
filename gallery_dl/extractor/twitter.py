@@ -943,6 +943,7 @@ class TwitterUserExtractor(Dispatch, TwitterExtractor):
             (TwitterWithRepliesExtractor, base + "with_replies"),
             (TwitterRepostsExtractor    , base + "reposts"),
             (TwitterHighlightsExtractor , base + "highlights"),
+            (TwitterArticlesExtractor   , base + "articles"),
         ), ("tweets",), (
             ("with-replies", "replies", None),
             ("media", "photos", f"{base}media?filter=photo"),
@@ -990,6 +991,20 @@ class TwitterHighlightsExtractor(TwitterExtractor):
 
     def tweets(self):
         return self.api.user_highlights(self.user)
+
+
+class TwitterArticlesExtractor(TwitterExtractor):
+    """Extractor for Tweets from a user's Articles timeline"""
+    subcategory = "articles"
+    pattern = USER_PATTERN + r"/articles(?!\w)"
+    example = "https://x.com/USER/articles"
+
+    def tweets(self):
+        for tweet in self.api.user_articles(self.user):
+            tid = tweet["legacy"]["conversation_id_str"]
+            for tweet in self.api.tweet_detail(tid):
+                yield tweet
+                break
 
 
 class TwitterMediaExtractor(TwitterExtractor):
@@ -1570,6 +1585,21 @@ class TwitterAPI():
 
     def user_highlights(self, handle):
         endpoint = "/graphql/clDqp0dS11B6eNOEF6oYhQ/UserHighlightsTweets"
+        variables = {
+            "userId": self._user_id(handle),
+            "count": self.extractor.config("limit", 50),
+            "includePromotedContent": False,
+            "withVoice": True,
+        }
+        field_toggles = {
+            "withPayments": False,
+            "withArticlePlainText": False,
+        }
+        return self._pagination_tweets(
+            endpoint, variables, field_toggles=field_toggles)
+
+    def user_articles(self, handle):
+        endpoint = "/graphql/9Yf6bKYpvNL8ungvkqMlTw/UserArticlesTweets"
         variables = {
             "userId": self._user_id(handle),
             "count": self.extractor.config("limit", 50),

@@ -824,4 +824,9 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
     "#class"   : twitter.TwitterNotificationsExtractor,
 },
 
+{
+    "#url"     : "https://x.com/worldlibertyfi/articles",
+    "#class"   : twitter.TwitterArticlesExtractor,
+},
+
 )

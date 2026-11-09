@@ -1912,7 +1912,8 @@ Consider all listed sites to potentially be NSFW.
 <tr id="twitter" title="twitter">
     <td>Twitter</td>
     <td>https://x.com/<br>https://twitter.com/</td>
-    <td><span title="https://x.com/USER/photo">Avatars</span> |
+    <td><span title="https://x.com/USER/articles">Articles</span> |
+        <span title="https://x.com/USER/photo">Avatars</span> |
         <span title="https://x.com/USER/header_photo">Backgrounds</span> |
         <span title="https://x.com/i/history">Bookmarks</span> |
         <span title="https://x.com/i/communities">Communities</span> |
