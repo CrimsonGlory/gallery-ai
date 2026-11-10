@@ -1474,6 +1474,10 @@ class TwitterAPI():
             "auto_translation_is_enabled": True,
             "responsive_web_enhance_cards_enabled": False,
         }
+        self.field_toggles = {
+            "withPayments": False,
+            "withArticlePlainText": False,
+        }
 
     def tweet_result_by_rest_id(self, tweet_id):
         endpoint = "/graphql/Ie01-ypGXi_wKj5mymj_Gw/TweetResultByRestId"
@@ -1552,12 +1556,7 @@ class TwitterAPI():
             "withQuickPromoteEligibilityTweetFields": False,
             "withVoice": True,
         }
-        field_toggles = {
-            "withPayments": False,
-            "withArticlePlainText": False,
-        }
-        return self._pagination_tweets(
-            endpoint, variables, field_toggles=field_toggles)
+        return self._pagination_tweets(endpoint, variables)
 
     def user_replies(self, handle):
         endpoint = "/graphql/e2U1WlALwVhjkDBJnkcLnA/UserRepliesTimeline"
@@ -1568,12 +1567,7 @@ class TwitterAPI():
             "withQuickPromoteEligibilityTweetFields": False,
             "withVoice": True,
         }
-        field_toggles = {
-            "withPayments": False,
-            "withArticlePlainText": False,
-        }
-        return self._pagination_tweets(
-            endpoint, variables, field_toggles=field_toggles)
+        return self._pagination_tweets(endpoint, variables)
 
     def user_reposts(self, handle):
         endpoint = "/graphql/q5tCz6UCo5FOK8DSqsjS2A/UserRepostsTimeline"
@@ -1583,12 +1577,7 @@ class TwitterAPI():
             "includePromotedContent": False,
             "withVoice": True,
         }
-        field_toggles = {
-            "withPayments": False,
-            "withArticlePlainText": False,
-        }
-        return self._pagination_tweets(
-            endpoint, variables, field_toggles=field_toggles)
+        return self._pagination_tweets(endpoint, variables)
 
     def user_highlights(self, handle):
         endpoint = "/graphql/clDqp0dS11B6eNOEF6oYhQ/UserHighlightsTweets"
@@ -1598,12 +1587,7 @@ class TwitterAPI():
             "includePromotedContent": False,
             "withVoice": True,
         }
-        field_toggles = {
-            "withPayments": False,
-            "withArticlePlainText": False,
-        }
-        return self._pagination_tweets(
-            endpoint, variables, field_toggles=field_toggles)
+        return self._pagination_tweets(endpoint, variables)
 
     def user_articles(self, handle):
         endpoint = "/graphql/9Yf6bKYpvNL8ungvkqMlTw/UserArticlesTweets"
@@ -1613,12 +1597,7 @@ class TwitterAPI():
             "includePromotedContent": False,
             "withVoice": True,
         }
-        field_toggles = {
-            "withPayments": False,
-            "withArticlePlainText": False,
-        }
-        return self._pagination_tweets(
-            endpoint, variables, field_toggles=field_toggles)
+        return self._pagination_tweets(endpoint, variables)
 
     def user_media(self, handle):
         return itertools.chain(
@@ -1635,12 +1614,7 @@ class TwitterAPI():
             "withBirdwatchNotes": False,
             "withVoice": True,
         }
-        field_toggles = {
-            "withPayments": False,
-            "withArticlePlainText": False,
-        }
-        return self._pagination_tweets(
-            endpoint, variables, field_toggles=field_toggles)
+        return self._pagination_tweets(endpoint, variables)
 
     def user_media_videos(self, handle):
         endpoint = "/graphql/pPxk1XFyAcJJ28hNFCLjTA/UserVideoTimeline"
@@ -1652,12 +1626,7 @@ class TwitterAPI():
             "withBirdwatchNotes": False,
             "withVoice": True,
         }
-        field_toggles = {
-            "withPayments": False,
-            "withArticlePlainText": False,
-        }
-        return self._pagination_tweets(
-            endpoint, variables, field_toggles=field_toggles)
+        return self._pagination_tweets(endpoint, variables)
 
     def user_likes(self, handle):
         endpoint = "/graphql/a6ZbplAY_XzbVt5jy_Ko_Q/Likes"
@@ -1669,12 +1638,7 @@ class TwitterAPI():
             "withBirdwatchNotes": False,
             "withVoice": True,
         }
-        field_toggles = {
-            "withPayments": False,
-            "withArticlePlainText": False,
-        }
-        return self._pagination_tweets(
-            endpoint, variables, field_toggles=field_toggles)
+        return self._pagination_tweets(endpoint, variables)
 
     def user_bookmarks(self):
         endpoint = "/graphql/jbqsfdzI0EMFHAtpEC6vyA/Bookmarks"
@@ -2185,6 +2149,8 @@ class TwitterAPI():
             features = self.features_pagination
         if features:
             params["features"] = self._json_dumps(features)
+        if field_toggles is None and path is None:
+            field_toggles = self.field_toggles
         if field_toggles:
             params["fieldToggles"] = self._json_dumps(field_toggles)
 
