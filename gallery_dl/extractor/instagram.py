@@ -539,8 +539,9 @@ class InstagramExtractor(Extractor):
     def _init_cursor(self):
         cursor = self.config("cursor", True)
         if cursor is True:
-            return None
+            cursor = None
         elif not cursor:
+            cursor = None
             self._update_cursor = util.identity
         return cursor
 
@@ -1258,6 +1259,7 @@ class InstagramAPI():
 
     def _load_graphql(self, result, fieldname=None):
         if (pos := result.find("{")) > 0:
+            # remove 'for (;;);' guard
             result = result[pos:]
 
         try:
@@ -1266,7 +1268,7 @@ class InstagramAPI():
                     data["data"][fieldname])
         except ValueError as exc:
             msg = f"Failed to load API data ({exc.__class__.__name__}: {exc})"
-        except KeyError:
+        except Exception:
             if err := data.get("errors"):
                 msg = f'"{err[0]["message"]}"'
             elif err := data.get("errorDescription"):
