@@ -12,7 +12,7 @@ __tests__ = (
     "#url"     : "https://blep.art/posts/145107",
     "#category": ("E621", "blep", "post"),
     "#class"   : e621.E621PostExtractor,
-    "#results" : "https://blep.art/data/86/59/86598080fb2979334b5534a83635fb6b.jpg",
+    "#results" : "https://cdn.blep.art/data/86/59/86598080fb2979334b5534a83635fb6b.jpg",
 
     "approver_id"     : 1,
     "change_seq"      : 1368318,
@@ -21,7 +21,7 @@ __tests__ = (
     "date"            : "dt:2025-12-31 16:32:08",
     "duration"        : None,
     "extension"       : "jpg",
-    "fav_count"       : 15,
+    "fav_count"       : range(15, 100),
     "filename"        : "86598080fb2979334b5534a83635fb6b",
     "has_notes"       : False,
     "id"              : 145107,
@@ -184,7 +184,7 @@ Steps: 25, baseModel: Illustrious, CFG scale: 6, Sampler: DPM++ 2M, Seed: 150815
         "height": 1856,
         "md5"   : "86598080fb2979334b5534a83635fb6b",
         "size"  : 408831,
-        "url"   : "https://blep.art/data/86/59/86598080fb2979334b5534a83635fb6b.jpg",
+        "url"   : "https://cdn.blep.art/data/86/59/86598080fb2979334b5534a83635fb6b.jpg",
         "width" : 1280,
     },
     "flags"           : {
@@ -196,9 +196,9 @@ Steps: 25, baseModel: Illustrious, CFG scale: 6, Sampler: DPM++ 2M, Seed: 150815
         "status_locked": False,
     },
     "preview"         : {
-        "alt"   : "https://blep.art/data/preview/86/59/86598080fb2979334b5534a83635fb6b.webp",
+        "alt"   : "https://cdn.blep.art/data/preview/86/59/86598080fb2979334b5534a83635fb6b.webp",
         "height": 371,
-        "url"   : "https://blep.art/data/preview/86/59/86598080fb2979334b5534a83635fb6b.jpg",
+        "url"   : "https://cdn.blep.art/data/preview/86/59/86598080fb2979334b5534a83635fb6b.jpg",
         "width" : 256,
     },
     "relationships"   : {
@@ -208,11 +208,11 @@ Steps: 25, baseModel: Illustrious, CFG scale: 6, Sampler: DPM++ 2M, Seed: 150815
         "parent_id"   : None,
     },
     "sample"          : {
-        "alt"       : "https://blep.art/data/sample/86/59/86598080fb2979334b5534a83635fb6b.webp",
+        "alt"       : "https://cdn.blep.art/data/sample/86/59/86598080fb2979334b5534a83635fb6b.webp",
         "alternates": {},
         "has"       : True,
         "height"    : 1233,
-        "url"       : "https://blep.art/data/sample/86/59/86598080fb2979334b5534a83635fb6b.jpg",
+        "url"       : "https://cdn.blep.art/data/sample/86/59/86598080fb2979334b5534a83635fb6b.jpg",
         "width"     : 850,
     },
     "score"           : {
@@ -226,7 +226,7 @@ Steps: 25, baseModel: Illustrious, CFG scale: 6, Sampler: DPM++ 2M, Seed: 150815
     "#url"     : "https://blep.art/posts?tags=yan",
     "#category": ("E621", "blep", "tag"),
     "#class"   : e621.E621TagExtractor,
-    "#pattern" : r"https://blep\.art/data/.+",
+    "#pattern" : r"https://cdn\.blep\.art/data/.+",
     "#count"   : range(40, 100),
 
     "approver_id"     : int,
@@ -257,12 +257,12 @@ Steps: 25, baseModel: Illustrious, CFG scale: 6, Sampler: DPM++ 2M, Seed: 150815
     "#category": ("E621", "blep", "pool"),
     "#class"   : e621.E621PoolExtractor,
     "#results" : (
-        "https://blep.art/data/7e/78/7e782d2fc5fe29f9014e1ba3cef939d6.jpg",
-        "https://blep.art/data/38/50/3850101b5b3e617c6779f6d4fb5fcde8.jpg",
-        "https://blep.art/data/1d/bf/1dbf94c775812f577e036d40bafb8b62.jpg",
-        "https://blep.art/data/8c/3c/8c3c30c0aae03cde14cab593ed498a70.jpg",
-        "https://blep.art/data/98/98/9898b84b189240fd280239279135238c.jpg",
-        "https://blep.art/data/54/c5/54c5ffb4cbdd22ed307f63807b0b451a.jpg",
+        "https://cdn.blep.art/data/7e/78/7e782d2fc5fe29f9014e1ba3cef939d6.jpg",
+        "https://cdn.blep.art/data/38/50/3850101b5b3e617c6779f6d4fb5fcde8.jpg",
+        "https://cdn.blep.art/data/1d/bf/1dbf94c775812f577e036d40bafb8b62.jpg",
+        "https://cdn.blep.art/data/8c/3c/8c3c30c0aae03cde14cab593ed498a70.jpg",
+        "https://cdn.blep.art/data/98/98/9898b84b189240fd280239279135238c.jpg",
+        "https://cdn.blep.art/data/54/c5/54c5ffb4cbdd22ed307f63807b0b451a.jpg",
     ),
 
     "pool"            : {
