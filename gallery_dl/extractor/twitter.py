@@ -595,7 +595,7 @@ class TwitterExtractor(Extractor):
                 media := legacy["extended_entities"].get("media")):
             self._extract_media_source(tdata, media[0])
         if tdata["retweet_id"]:
-            tdata["content"] = f"RT @{author['name']}: {tdata['content']}"
+            tdata["content"] = f"RT @{author.get('name')}: {tdata['content']}"
             tdata["date_original"] = self._tweetid_to_datetime(
                 tdata["retweet_id"])
 
