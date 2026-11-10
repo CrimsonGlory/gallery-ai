@@ -156,6 +156,8 @@ class GirlswithmuscleSearchExtractor(GirlswithmuscleExtractor):
         page = response.text
 
         match = text.re(r"Page (\d+) of (\d+)").search(page)
+        if match is None:
+            raise self.exc.AbortExtraction("Unable to parse search pagination")
         current, total = match.groups()
         current, total = text.parse_int(current), text.parse_int(total)
 

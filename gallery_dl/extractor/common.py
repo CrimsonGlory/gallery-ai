@@ -209,6 +209,13 @@ class Extractor():
                 ):
                     if encoding:
                         response.encoding = encoding
+                    if code < 400 and fatal and fatal is not ...:
+                        challenge = util.detect_challenge(response)
+                        if challenge is not None:
+                            exc = exception.ChallengeError(
+                                challenge, response)
+                            self.status |= exc.code
+                            raise exc
                     return response
                 if notfound is not None and code == 404:
                     if notfound is True:

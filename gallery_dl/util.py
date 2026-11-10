@@ -393,6 +393,9 @@ def detect_challenge(response):
     content = getattr(response, "content", None) or b""
     if b"<title>NG Guard</title>" in content or b"/_guard/assets/" in content:
         return "NG Guard challenge"
+    if (b'id="anubis_challenge"' in content or
+            b"/.within.website/x/cmd/anubis/" in content):
+        return "Anubis challenge"
 
     server = response.headers.get("server") if response.headers else None
     if not server:

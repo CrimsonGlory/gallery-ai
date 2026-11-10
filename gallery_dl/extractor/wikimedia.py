@@ -274,13 +274,15 @@ class WikimediaArticleExtractor(WikimediaExtractor):
 
         if self.prefix == "file":
             return {
-                "titles": self.path,
+                "titles"   : self.path,
+                "redirects": 1,
             }
 
         return {
             "generator": "images",
             "gimlimit" : self.per_page,
             "titles"   : self.path,
+            "redirects": 1,
         }
 
     def prepare_info(self, info):

@@ -19,6 +19,13 @@ class ScatbooruExtractor(gelbooru_v01.GelbooruV01Extractor):
     category = "scatbooru"
     root = "https://scatbooru.co.uk"
 
+    def request(self, url, **kwargs):
+        response = super().request(url, **kwargs)
+        if (getattr(response, "text", "") or "").lstrip().startswith(
+                "Search timeout"):
+            raise self.exc.AbortExtraction("Search timed out")
+        return response
+
     def _parse_post(self, post_id):
         url = f"{self.root}/?page=post&s=view&id={post_id}"
         extr = text.extract_from(self.request(url).text)

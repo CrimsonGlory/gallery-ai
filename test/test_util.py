@@ -731,6 +731,18 @@ class TestOther(unittest.TestCase):
         self.assertIsNone(util.detect_challenge(response(403)))
         self.assertIsNone(util.detect_challenge(
             response(418, server="nginx", body=challenge_js)))
+        self.assertEqual(
+            util.detect_challenge(response(
+                200, server="nginx",
+                body=b'<script id="anubis_challenge" type="application/json">',
+            )),
+            "Anubis challenge")
+        self.assertEqual(
+            util.detect_challenge(response(
+                200, server=None,
+                body=b'src="/.within.website/x/cmd/anubis/static/js/main.mjs"',
+            )),
+            "Anubis challenge")
 
     def test_bencode(self):
         self.assertEqual(util.bencode(0), "")

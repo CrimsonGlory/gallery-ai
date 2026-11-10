@@ -215,7 +215,7 @@ __tests__ = (
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
     "#archive" : False,
-    "#pattern" : r"(?:ytdl:)?https://(?:t1\.pawchive\.pw/.+|file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+)",
+    "#pattern" : r"(?:ytdl:)?https://(?:t\d+\.pawchive\.pw/.+|file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+)",
     "#count"   : range(2, 8),
 
     "added"         : "iso:dt",
@@ -245,7 +245,7 @@ __tests__ = (
     "#comment" : "'deferred' m3u8 video",
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
-    "#pattern" : r"ytdl:https://t1.pawchive.pw/v/09434376121e8e85/master.m3u8\?e=\d+&s=\w+",
+    "#pattern" : r"ytdl:https://t\d+.pawchive.pw/v/09434376121e8e85/master.m3u8\?e=\d+&s=\w+",
     "#count"   : 1,
 
     "content"       : "<p>RIP 🤯</p>",
@@ -286,7 +286,7 @@ __tests__ = (
     "#comment" : "'deferred' zip archive (zip may lack temp_url)",
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
-    "#pattern" : r"https://(?:file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+|t1\.pawchive\.pw/f/[0-9a-f]+/.+\?e=\d+&s=\w+)",
+    "#pattern" : r"https://(?:file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+|t\d+\.pawchive\.pw/f/[0-9a-f]+/.+\?e=\d+&s=\w+)",
     "#count"   : range(1, 30),
 
     "content"       : """<p>2026年8月中に投稿した通常投稿のフルバージョンとなります。</p><p>ファイルには合計621枚の画像が含まれます。ファイル形式はzip/pdfとなります。</p><p>（サンプル画像は<a href="https://www.pixiv.net/users/103255821">Pixiv</a>でご覧いただけます。）</p><p>----------------------------------------</p><p>This is the full version of regular posts posted during August 2026.</p><p>The file contains a total of 621 images.The file formats are zip or pdf.</p><p>[You can see sample images on <a href="https://www.pixiv.net/users/103255821">Pixiv</a>.]</p><p>----------------------------------------</p><p>キャラクター/Girls：</p><p>ニコ・ロビン/Nico Robin/ルーシィ・ハートフィリア/Lucy Heartfilia/エルザ・スカーレット/Erza Scarlet/ティファ ロックハート/Tifa Lockhart/シャウラ/Shaula/井上織姫/Inoue Orihime/松本乱菊/Matsumoto Rangiku/八百万百/Yaoyorozu Momo/地獄のフブキ/Fubuki/ヨル・フォージャー/Yor Forger/綾瀬桃/Ayase Momo/宮本麗/Miyamoto Rei/薙切えりな/Nakiri Erina/黒川あかね/Kurokawa Akane/釘崎野薔薇/Kugisaki Nobara</p><p></p>""",
@@ -336,7 +336,7 @@ __tests__ = (
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
     "#options" : {"deferred": "only"},
-    "#pattern" : r"https://t1\.pawchive\.pw/f/[0-9a-f]+/.+\?e=\d+&s=\w+",
+    "#pattern" : r"https://t\d+\.pawchive\.pw/f/[0-9a-f]+/.+\?e=\d+&s=\w+",
     "#count"   : range(1, 20),
 
     "deferred": True,
@@ -352,7 +352,7 @@ __tests__ = (
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
     "#results" : "https://file.pawchive.pw/data/18f/78/8f781dc6e3cf5b643e5802d48d43404dcbcde51703845bd4563b11269f87f609.zip",
-    "#pattern" : r"https://(?:file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+|t1\.pawchive\.pw/f/[0-9a-f]+/.+)",
+    "#pattern" : r"https://(?:file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+|t\d+\.pawchive\.pw/f/[0-9a-f]+/.+)",
     "#count"   : range(1, 300),
 
     "date"     : "dt:2026-07-29 01:36:00",
@@ -369,7 +369,7 @@ __tests__ = (
     "#comment" : "'deferred' files marked as 'preview_only'",
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
-    "#pattern" : r"https://(?:file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+|t1\.pawchive\.pw/f/[0-9a-f]+/.+\?e=\d+&s=\w+)",
+    "#pattern" : r"https://(?:file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+|t\d+\.pawchive\.pw/f/[0-9a-f]+/.+\?e=\d+&s=\w+)",
     "#count"   : range(1, 10),
 
     "count"         : int,

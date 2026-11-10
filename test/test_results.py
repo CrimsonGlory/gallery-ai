@@ -92,7 +92,8 @@ _ENV_HTTP = re.compile(
 _ENV_ABORT = re.compile(
     r"\b(401|403|429|50[0-9])\b|"
     r"Cloudflare|DDoS-Guard|CAPTCHA|WAF|Bot check|challenge|"
-    r"Rate limit|PersistedQueryNotFound",
+    r"Rate limit|PersistedQueryNotFound|"
+    r"timed out",
     re.I,
 )
 _ENV_EXCEPTIONS = (
