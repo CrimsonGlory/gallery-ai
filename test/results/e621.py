@@ -224,6 +224,12 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://e621.net/popular",
+    "#category": ("E621", "e621", "popular"),
+    "#class"   : e621.E621PopularExtractor,
+},
+
+{
     "#url"     : "https://e621.net/explore/posts/popular?date=2019-06-01&scale=month",
     "#category": ("E621", "e621", "popular"),
     "#class"   : e621.E621PopularExtractor,
