@@ -200,6 +200,7 @@ class TwitterExtractor(Extractor):
 
     def _extract_media(self, tweet, entities, files):
         flags_tweet = None
+        num_ytdl = 0
 
         for media in entities:
 
@@ -234,7 +235,9 @@ class TwitterExtractor(Extractor):
                 if self.videos_ytdl:
                     url = (f"ytdl:{self.root}/i/web/status/"
                            f"{tweet.get('id_str') or tweet['rest_id']}")
-                    file = {"url": url, "extension": "mp4"}
+                    file = {"url": url, "extension": "mp4",
+                            "_ytdl_index": num_ytdl}
+                    num_ytdl += 1
                 elif self.videos_files:
                     video_info = media["video_info"]
                     variant = max(

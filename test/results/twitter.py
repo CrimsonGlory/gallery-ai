@@ -735,6 +735,12 @@ The Washington Post writes, "Three weeks after the toxic train derailment in Ohi
 },
 
 {
+    "#url"     : "https://x.com/PrimeTobirama/status/1577759019724333058",
+    "#comment" : "multiple videos",
+    "#class"   : twitter.TwitterTweetExtractor,
+},
+
+{
     "#url"     : "https://twitter.com/playpokemon/status/1263832915173048321/quotes",
     "#class"   : twitter.TwitterQuotesExtractor,
     "#pattern" : twitter.TwitterSearchExtractor.pattern,
