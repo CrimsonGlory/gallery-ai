@@ -7675,6 +7675,20 @@ Note
     This requires 2 additional HTTP requests per user.
 
 
+extractor.twitter.ondemand
+--------------------------
+Type
+    ``string``
+Default
+    ``"/i/jf/"``
+Example
+    * ``"/home"``
+    * ``"/explore"``
+Description
+    Webpage path to load when collecting data during
+    client transaction key initialization.
+
+
 extractor.twitter.pinned
 ------------------------
 Type
