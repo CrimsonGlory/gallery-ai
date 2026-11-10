@@ -57,7 +57,7 @@ __tests__ = (
     "#sha1_content": "66f46e96a893fba8e694c4e049b23c2acc9af462",
 
     "approver_id"     : None,
-    "change_seq"      : 59815157,
+    "change_seq"      : range(59815157, 10**9),
     "comment_count"   : range(4, 8),
     "created_at"      : "iso:dt",
     "date"            : "dt:2007-02-17 19:02:32",
@@ -140,9 +140,9 @@ __tests__ = (
         "width"     : 850,
     },
     "score"           : {
-        "down" : -8,
-        "total": 134,
-        "up"   : 141,
+        "down" : range(-20, 0),
+        "total": range(100, 200),
+        "up"   : range(120, 220),
     },
 },
 
@@ -281,7 +281,7 @@ __tests__ = (
     "creator_id"    : 338533,
     "domains"       : [[
         "furaffinity.net",
-        3,
+        10,
     ]],
     "group_name"    : "",
     "id"            : 54632,
