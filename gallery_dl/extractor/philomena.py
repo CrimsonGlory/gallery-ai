@@ -124,9 +124,14 @@ class PhilomenaGalleryExtractor(PhilomenaExtractor):
 
     def metadata(self):
         try:
-            return {"gallery": self.api.gallery(self.groups[-1])}
+            gallery = self.api.gallery(self.groups[-1])
         except IndexError:
             raise self.exc.NotFoundError("gallery")
+        # Philomena renamed gallery.user / user_id to creator / creator_id
+        if "user" not in gallery:
+            gallery["user"] = gallery.get("creator")
+            gallery["user_id"] = gallery.get("creator_id")
+        return {"gallery": gallery}
 
     def posts(self):
         gallery_id = "gallery_id:" + self.groups[-1]

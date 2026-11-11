@@ -197,6 +197,8 @@ I must Know the Artist!\
         "spoiler_warning": "",
         "thumbnail_id"   : 1,
         "title"          : "The Very First Gallery",
+        "creator"        : "DeliciousBlackInk",
+        "creator_id"     : 365446,
         "user"           : "DeliciousBlackInk",
         "user_id"        : 365446,
     },

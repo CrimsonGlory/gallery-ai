@@ -129,6 +129,8 @@ class HentaihereMangaExtractor(HentaihereBase, MangaExtractor):
             extr = text.extract_from(opt)
             chapter_id = text.parse_int(extr("", '"'))
             url = extr('data-read="', '"')
+            if url and url[0] == "/":
+                url = self.root + url
             chapter, sep, minor = extr(">Chapter ", " - ").partition(".")
 
             title = extr("", "<")
