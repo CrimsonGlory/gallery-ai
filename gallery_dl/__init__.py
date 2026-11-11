@@ -32,6 +32,8 @@ def main():
             except Exception as exc:
                 config.log.error(exc)
         if args.config_load:
+            if args.config_strict:
+                os.environ["GDL_CONFIG_STRICT"] = "1"
             config.load()
         if args.configs_extra:
             config.load(args.configs_extra, strict=True)
