@@ -151,6 +151,7 @@
     --config-type TYPE          Set filetype of default configuration files
                                 (json, yaml, toml)
     --config-ignore             Do not load default configuration files
+    --config-strict             Exit on invalid default configuration files
     --config-create             Create a basic configuration file
     --config-status             Show configuration file status
     --config-open               Open configuration file in external application
