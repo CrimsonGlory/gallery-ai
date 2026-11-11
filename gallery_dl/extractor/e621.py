@@ -153,7 +153,7 @@ class E621PostExtractor(E621Extractor, danbooru.DanbooruPostExtractor):
 
 class E621PopularExtractor(E621Extractor, danbooru.DanbooruPopularExtractor):
     """Extractor for popular images from e621"""
-    pattern = BASE_PATTERN + r"/explore/posts/popular(?:\?([^#]*))?"
+    pattern = BASE_PATTERN + r"/(?:explore/posts/)?popular(?:\?([^#]*))?"
     example = "https://e621.net/explore/posts/popular"
 
     def posts(self):

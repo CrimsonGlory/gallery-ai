@@ -279,4 +279,16 @@ Steps: 25, baseModel: Illustrious, CFG scale: 6, Sampler: DPM++ 2M, Seed: 150815
     },
 },
 
+{
+    "#url"     : "https://blep.art/popular",
+    "#category": ("E621", "blep", "popular"),
+    "#class"   : e621.E621PopularExtractor,
+},
+
+{
+    "#url"     : "https://blep.art/explore/posts/popular",
+    "#category": ("E621", "blep", "popular"),
+    "#class"   : e621.E621PopularExtractor,
+},
+
 )
