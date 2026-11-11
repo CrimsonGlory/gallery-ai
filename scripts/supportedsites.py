@@ -244,6 +244,7 @@ CATEGORY_MAP = {
     "tumblrgallery"  : "TumblrGallery",
     "turboimagehost" : "TurboImageHost.com",
     "turbo"          : "turbo.cr",
+    "tw6"            : "JAEGER SIXTH",
     "vanillarock"    : "もえぴりあ",
     "vanlifetrader"  : "Vanlife Trader",
     "vidyart2"       : "/v/idyart2",

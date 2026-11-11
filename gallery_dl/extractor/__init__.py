@@ -250,6 +250,7 @@ modules = [
     "tumblrgallery",
     "tungsten",
     "turbo",
+    "tw6",
     "twibooru",
     "twitter",
     "urlgalleries",

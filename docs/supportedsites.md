@@ -974,6 +974,14 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://www.iwara.tv/video/ID">Videos</span></td>
     <td>Supported</td>
 </tr>
+<tr id="tw6" title="tw6">
+    <td>JAEGER SIXTH</td>
+    <td>https://tw6.jp/</td>
+    <td><span title="https://tw6.jp/gallery/?id=12345">Posts</span> |
+        <span title="https://tw6.jp/gallery/search?word=QUERY">Search Results</span> |
+        <span title="https://tw6.jp/gallery/master/?master_id=12345">User Profiles</span></td>
+    <td></td>
+</tr>
 <tr id="joyreactor" title="joyreactor">
     <td>JoyReactor</td>
     <td>https://joyreactor.com/<br>https://joyreactor.cc/</td>
