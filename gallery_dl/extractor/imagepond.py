@@ -57,7 +57,18 @@ class ImagepondFileExtractor(ImagepondExtractor):
     def items(self):
         url = self.root + self.groups[0]
         response = self.request(url)
-        extr = text.extract_from(response.text)
+        page = response.text
+
+        if 'property="og:type"' not in page:
+            # /videos/ID is an embed player that links back to /i/ID
+            item_url = text.extr(
+                text.extr(page, 'class="embed-link"', "</div>"),
+                'href="', '"')
+            if item_url:
+                response = self.request(item_url)
+                page = response.text
+
+        extr = text.extract_from(page)
 
         title = text.unescape(extr('property="og:title" content="', '"'))
         type = extr('property="og:type" content="', '"')
@@ -66,7 +77,8 @@ class ImagepondFileExtractor(ImagepondExtractor):
         if not type:
             # 'Content Expired' pages have no metadata,
             # but their thumbnail URL still redirects to the original file
-            url = self.request_location(f"{self.root}/i/{file_id}/thumb/300")
+            url = self.request_location(
+                f"{self.root}/i/{file_id}/thumb/300", fatal=False)
 
             name = text.filename_from_url(url)
             if ("_thumb." in name or text.re(r"thumb_\d+_").match(name) or

@@ -92,11 +92,18 @@ class SankakucomplexTagExtractor(SankakucomplexExtractor):
         data = {"_extractor": SankakucomplexArticleExtractor}
 
         while True:
-            url = f"{self.root}/{self.path}/page/{pnum}/"
+            # WordPress 301s /page/1/ to the canonical tag URL
+            if pnum == 1:
+                url = f"{self.root}/{self.path}/"
+            else:
+                url = f"{self.root}/{self.path}/page/{pnum}/"
             response = self.request(url, fatal=False)
             if response.status_code >= 400:
                 return
-            for url in util.unique_sequence(text.extract_iter(
-                    response.text, 'data-direct="', '"')):
+            urls = list(util.unique_sequence(text.extract_iter(
+                response.text, 'data-direct="', '"')))
+            if not urls:
+                return
+            for url in urls:
                 yield Message.Queue, url, data
             pnum += 1

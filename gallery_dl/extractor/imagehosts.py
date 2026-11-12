@@ -299,24 +299,40 @@ class ImagetwistGalleryExtractor(ImagehostImageExtractor):
         page = self.request(url).text
 
         extr = text.extract_from(page)
+        title = text.unescape(extr('id="it-gallery-title"', "<"))
+        if ">" in title:
+            title = title.partition(">")[2]
+        else:
+            title = text.unescape(extr('page_main_title">', "<"))
         data = {
             "_extractor"   : ImagetwistImageExtractor,
-            "gallery_title": text.unescape(extr('page_main_title">', "<")),
+            "gallery_title": title,
             "gallery_id"   : (self.groups[2] or self.groups[3] or
                               extr("fld_id=", "&")),
         }
         del extr
 
         while True:
-            gallery = text.extr(page, 'class="gallerys', "</div")
-            for path in text.extract_iter(gallery, ' href="', '"'):
-                yield Message.Queue, root + path, data
+            urls = list(text.extract_iter(
+                page, 'class="it-pg__card" href="', '"'))
+            if urls:
+                for href in urls:
+                    yield Message.Queue, href, data
+            else:
+                gallery = text.extr(page, 'class="gallerys', "</div")
+                for path in text.extract_iter(gallery, ' href="', '"'):
+                    yield Message.Queue, text.urljoin(root + "/", path), data
+
+            nxt = text.extr(page, 'rel="next" href="', '"')
+            if nxt:
+                page = self.request(
+                    text.urljoin(root + "/", text.unescape(nxt))).text
+                continue
 
             pos = page.find("&#187;</a>")
             if pos < 0:
                 break
             qs = text.unescape(text.rextr(page, "href='", "'", pos))
-
             page = self.request(f"{root}/{qs}").text
 
 

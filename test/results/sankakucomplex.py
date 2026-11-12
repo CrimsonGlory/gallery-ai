@@ -46,12 +46,18 @@ __tests__ = (
 },
 
 {
-    "#url"     : "https://www.sankakucomplex.com/tag/cosplay/",
+    "#url"     : "https://news.sankakucomplex.com/tag/cosplay/",
     "#category": ("", "sankakucomplex", "tag"),
     "#class"   : sankakucomplex.SankakucomplexTagExtractor,
     "#pattern" : sankakucomplex.SankakucomplexArticleExtractor.pattern,
     "#range"   : "1-50",
     "#count"   : 50,
+},
+
+{
+    "#url"     : "https://www.sankakucomplex.com/tag/cosplay/",
+    "#category": ("", "sankakucomplex", "tag"),
+    "#class"   : sankakucomplex.SankakucomplexTagExtractor,
 },
 
 {

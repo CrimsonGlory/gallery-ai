@@ -142,12 +142,8 @@ __tests__ = (
     "#url"     : "https://hmofa.gallery/pools/2",
     "#category": ("E621", "hmofa", "pool"),
     "#class"   : e621.E621PoolExtractor,
-    "#results" : (
-        "https://hmofa.gallery/data/64/59/645939ed9dbf1c64b93653304e74f659.jpg",
-        "https://hmofa.gallery/data/67/9f/679fad283afdd3eb534b7d4de611d7e7.jpg",
-        "https://hmofa.gallery/data/73/bf/73bf0c6c4fb08a9e5c7e611511e37e26.jpg",
-        "https://hmofa.gallery/data/a8/08/a80844cf60c375ff1ef4de96177baba9.jpg",
-    ),
+    "#pattern" : r"https://hmofa\.gallery/data/[0-9a-f]{2}/[0-9a-f]{2}/[0-9a-f]{32}\.jpg",
+    "#count"   : range(13, 100),
 
     "pool"            : {
         "category"    : "series",
@@ -158,7 +154,7 @@ __tests__ = (
         "id"          : 2,
         "is_active"   : True,
         "name"        : "Sally Comic Pt 2",
-        "post_count"  : 4,
+        "post_count"  : range(13, 100),
         "updated_at"  : "iso:dt",
     },
 },

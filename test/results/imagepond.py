@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import imagepond
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -77,36 +78,18 @@ __tests__ = (
 
 {
     "#url"     : "https://www.imagepond.net/i/IlvZPNmu",
-    "#comment" : "expired item page",
+    "#comment" : "expired item page; thumbnail recovery now returns 410",
     "#category": ("chevereto", "imagepond", "file"),
     "#class"   : imagepond.ImagepondFileExtractor,
-    "#results" : "https://media.imagepond.net/media/images/9Hri7tmHQQki_768x0_1_1GDtDTWw.jpg",
-
-    "album"    : "",
-    "album_id" : "",
-    "date"     : "type:NullDatetime",
-    "extension": "jpg",
-    "filename" : "9Hri7tmHQQki_768x0_1_1GDtDTWw",
-    "id"       : "IlvZPNmu",
-    "mime"     : "image/jpg",
-    "title"    : "",
-    "type"     : "image",
-    "url"      : "https://media.imagepond.net/media/images/9Hri7tmHQQki_768x0_1_1GDtDTWw.jpg",
-    "user"     : "",
+    "#exception": exception.AbortExtraction,
 },
 
 {
     "#url"     : "https://www.imagepond.net/i/voCUUYAj",
-    "#comment" : "expired video item page",
+    "#comment" : "expired video item page; thumbnail recovery now returns 410",
     "#category": ("chevereto", "imagepond", "file"),
     "#class"   : imagepond.ImagepondFileExtractor,
-    "#results" : "https://media.imagepond.net/media/videos/20260820_221249_TfNxuyl0.mp4",
-
-    "extension": "mp4",
-    "filename" : "20260820_221249_TfNxuyl0",
-    "id"       : "voCUUYAj",
-    "mime"     : "video/mp4",
-    "type"     : "video",
+    "#exception": exception.AbortExtraction,
 },
 
 {
