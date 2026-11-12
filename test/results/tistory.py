@@ -105,4 +105,40 @@ __tests__ = (
     "#count"   : 50,
 },
 
+{
+    "#url"     : "http://cfile7.uf.tistory.com/original/02422B4E51876F2C200ABC",
+    "#class"   : tistory.TistoryDirectLinkExtractor,
+    "#results" : "http://cfile7.uf.tistory.com/original/02422B4E51876F2C200ABC",
+},
+
+{
+    "#url"     : "http://cfile7.uf.tistory.com/image/02422B4E51876F2C200ABC",
+    "#class"   : tistory.TistoryDirectLinkExtractor,
+    "#results" : "http://cfile7.uf.tistory.com/image/02422B4E51876F2C200ABC",
+},
+
+{
+    "#url"     : "http://cfile7.uf.tistory.com/attach/02422B4E51876F2C200ABC",
+    "#class"   : tistory.TistoryDirectLinkExtractor,
+    "#results" : "http://cfile7.uf.tistory.com/attach/02422B4E51876F2C200ABC",
+},
+
+{
+    "#url"     : "http://cfile7.uf.tistory.com/media/02422B4E51876F2C200ABC",
+    "#class"   : tistory.TistoryDirectLinkExtractor,
+    "#results" : "http://cfile7.uf.tistory.com/media/02422B4E51876F2C200ABC",
+},
+
+{
+    "#url"     : "https://t1.daumcdn.net/cfile/tistory/21747B4B574C16920A?original",
+    "#class"   : tistory.TistoryDirectLinkExtractor,
+    "#results" : "https://t1.daumcdn.net/cfile/tistory/21747B4B574C16920A?original",
+},
+
+{
+    "#url"     : "http://cfile208.uf.daum.net/original/233F654453F6F5220CD5AE",
+    "#class"   : tistory.TistoryDirectLinkExtractor,
+    "#results" : "http://cfile208.uf.daum.net/original/233F654453F6F5220CD5AE",
+},
+
 )

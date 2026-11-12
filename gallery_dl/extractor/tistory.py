@@ -114,3 +114,23 @@ class TistoryArticleExtractor(TistoryExtractor):
         for article["num"], file in enumerate(files, 1):
             file.update(article)
             yield Message.Url, file["file_url"], file
+
+
+class TistoryDirectLinkExtractor(TistoryExtractor):
+    subcategory = "direct-link"
+    pattern = (r"(?:https?://)?(?:"
+               r"cfile\d+\.\w+\.(?:tistory\.com|daum\.net)"
+               r"/(?:original|image|attach|media)"
+               r"|t\d+\.daumcdn\.net/cfile/tistory"
+               r")/\w+")
+    example = "http://cfile1.uf.tistory.com/original/0246813579ACEBDF"
+
+    def items(self):
+        url = text.ensure_http_scheme(self.url, "http://")
+        data = text.nameext_from_url(url)
+
+        if not data["extension"]:
+            data["extension"] = "jpg"  # guess extension
+
+        yield Message.Directory, "", data
+        yield Message.Url, url, data

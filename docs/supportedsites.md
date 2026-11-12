@@ -1863,7 +1863,8 @@ Consider all listed sites to potentially be NSFW.
     <td>Tistory</td>
     <td>https://www.tistory.com/</td>
     <td><span title="https://USER.tistory.com/12345">Articles</span> |
-        <span title="https://USER.tistory.com/">Blogs</span></td>
+        <span title="https://USER.tistory.com/">Blogs</span> |
+        <span title="http://cfile1.uf.tistory.com/original/0246813579ACEBDF">Direct Links</span></td>
     <td></td>
 </tr>
 <tr id="tmohentai" title="tmohentai">
