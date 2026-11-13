@@ -49,9 +49,51 @@ class Tw6UserExtractor(Tw6Extractor):
     example = "https://tw6.jp/gallery/master/?master_id=12345"
 
     def posts(self):
-        self.kwdict["master_id"] = master_id = self.groups[0]
+        import itertools
+        files = self.config("files", True)
+        self.kwdict["master_id"] = self.groups[0]
+
+        if not files:
+            return ()
+        elif files.__class__ is str:
+            files = files.split(",")
+        elif files.__class__ is not list:
+            return itertools.chain(self.posts_profile(), self.posts_gallery())
+
+        genmap = {"profile": self.posts_profile,
+                  "gallery": self.posts_gallery}
+        return itertools.chain(*[genmap[ft]() for ft in files])
+
+    def posts_profile(self):
+        master_id = self.groups[0]
+        url = f"{self.root}/gallery/master/?master_id={master_id}"
+        page = self.request(url).text
+
+        if name := text.extr(page, 'data-value="master_id:', '"'):
+            self.kwdict["master_name"] = text.unescape(name)
+
+        files = []
+        if top := text.extr(page, 'class="top-img', '</'):
+            files.append({
+                "character_name": "master",
+                "illust_id": f"m{master_id}_top",
+                "image_url": text.unescape(text.extr(top, 'src="', '"')),
+                "alt"      : text.unescape(text.extr(top, 'alt="', '"')),
+            })
+        if desc := text.rextr(page, "</h1>", "<hr>"):
+            num = 0
+            for img in text.extract_iter(desc, "<img", ">"):
+                num += 1
+                files.append({
+                    "character_name": "master",
+                    "illust_id": f"m{master_id}_p{num:>02}",
+                    "image_url": text.unescape(text.extr(img, 'src="', '"')),
+                })
+        return files
+
+    def posts_gallery(self):
         return self._pagination({
-            "master_id": master_id,
+            "master_id": self.groups[0],
             "goods"    : "all",
         })
 

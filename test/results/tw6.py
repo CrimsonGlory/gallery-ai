@@ -12,6 +12,7 @@ __tests__ = (
     "#url"     : "https://tw6.jp/gallery/master/?master_id=4199",
     "#class"   : tw6.Tw6UserExtractor,
     "#pattern" : r"https://cdn\.tw6\.jp/i/tw6/(basic|thumb_grid)/\d+/\d+_\w+\.(jpg|png)",
+    "#options" : {"files": "gallery"},
     "#count"   : range(170, 300),
 
     "category_id"     : {1, 2, 4, 5, 9, 19, 22, 24, 30},
@@ -33,6 +34,38 @@ __tests__ = (
     "purchase_status" : 0,
     "purchase_text"   : "",
     "type"            : "illust",
+},
+
+{
+    "#url"     : "https://tw6.jp/gallery/master/?master_id=4199",
+    "#class"   : tw6.Tw6UserExtractor,
+    "#options" : {"files": "profile"},
+    "#results" : (
+        "https://cdn.tw6.jp/i/illust_master/tw6_banner/04199.png?1787963119",
+        "https://cdn.tw6.jp/i/illust_master/sample/04199.png?1787963119",
+    ),
+
+    "?alt"          : "かじゃねこ",
+    "character_name": "master",
+    "extension"     : "png",
+    "illust_id"     : r"re:m4199_(top|p01)$",
+    "master_id"     : "4199",
+    "master_name"   : "かじゃねこ",
+},
+
+{
+    "#url"     : "https://tw6.jp/gallery/master/?master_id=00129",
+    "#comment" : "empty",
+    "#class"   : tw6.Tw6UserExtractor,
+    "#results" : "https://cdn.tw6.jp/img/tw6/gallery/default_master_top_img.png",
+
+    "alt"           : "泉",
+    "character_name": "master",
+    "extension"     : "png",
+    "filename"      : "default_master_top_img",
+    "illust_id"     : "m00129_top",
+    "master_id"     : "00129",
+    "master_name"   : "泉",
 },
 
 {

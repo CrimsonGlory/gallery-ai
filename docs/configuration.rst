@@ -7380,6 +7380,19 @@ Description
     See `Filters <https://twibooru.org/filters>`__ for details.
 
 
+extractor.tw6.files
+-------------------
+Type
+    ``list`` of ``strings``
+Default
+    ``["profile", "gallery"]``
+Description
+    Determines the type and order of files to download.
+Available Types
+    * ``profile``
+    * ``gallery``
+
+
 extractor.twibooru.svg
 ----------------------
 Type
