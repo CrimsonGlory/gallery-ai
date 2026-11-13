@@ -217,8 +217,8 @@ Steps: 25, baseModel: Illustrious, CFG scale: 6, Sampler: DPM++ 2M, Seed: 150815
     },
     "score"           : {
         "down" : 0,
-        "total": 55,
-        "up"   : 55,
+        "total": int,
+        "up"   : int,
     },
 },
 

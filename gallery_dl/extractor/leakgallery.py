@@ -84,7 +84,12 @@ class LeakgalleryUserExtractor(LeakgalleryExtractor):
     def items(self):
         creator, mtype, msort = self.groups
         base = f"https://api.leakgallery.com/profile/{creator}/"
-        params = {"type": mtype or "All", "sort": msort or "MostRecent"}
+        params = {
+            "type": mtype or "All",
+            "sort": msort or "MostRecent",
+            "fake": "true",
+            "tag": "0",
+        }
         return self._pagination(creator, base, params, creator)
 
 
@@ -119,35 +124,7 @@ class LeakgalleryPostExtractor(LeakgalleryExtractor):
 
     def items(self):
         creator, post_id = self.groups
-        url = f"https://leakgallery.com/{creator}/{post_id}"
-
-        try:
-            page = self.request(url).text
-            video_urls = text.re(
-                r"https://cdn\.leakgallery\.com/content[^/?#]*/"
-                r"(?!profile_pic/)[^/?#]+/"
-                r"(?:compressed_)?watermark_[^\"]+\."
-                r"(?:mp4|mov|m4a|webm)"
-            ).findall(page)
-            image_urls = text.re(
-                r"https://cdn\.leakgallery\.com/content[^/?#]*/"
-                r"(?!profile_pic/)[^/?#]+/"
-                r"watermark_[^\"]+\.(?:jpe?g|png)"
-            ).findall(page)
-
-            seen = set()
-            for url in video_urls + image_urls:
-                if url in seen:
-                    continue
-                seen.add(url)
-                data = {
-                    "id": post_id,
-                    "creator": creator,
-                    "url": url,
-                }
-                text.nameext_from_url(url, data)
-                yield Message.Directory, "", data
-                yield Message.Url, url, data
-        except Exception as exc:
-            self.log.error("Failed to extract post page %s/%s: %s",
-                           creator, post_id, exc)
+        media = self.request_json(
+            f"https://api.leakgallery.com/media/{post_id}")
+        media["id"] = post_id
+        return self._yield_media_items((media,), creator)

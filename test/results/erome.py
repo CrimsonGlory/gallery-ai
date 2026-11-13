@@ -31,7 +31,7 @@ __tests__ = (
     "#count"   : 6,
 
     "album_id": "TdbZ4ogi",
-    "date"    : "dt:2024-03-18 00:01:56",
+    "date"    : "type:datetime",
     "count"   : 6,
     "num"     : int,
     "title"   : "82e78cfbb461ad87198f927fcb1fda9a1efac9ff.",

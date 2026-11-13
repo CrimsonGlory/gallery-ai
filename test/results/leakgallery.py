@@ -12,7 +12,7 @@ __tests__ = (
 {
     "#url"    : "https://leakgallery.com/sophieraiin/12240",
     "#class"  : leakgallery.LeakgalleryPostExtractor,
-    "#pattern": r"https://cdn\.leakgallery\.com/content-videos/(?:sophieraiin/)?watermark_745_sophieraiin_241\.mp4",
+    "#pattern": r"https://cdn\.leakgallery\.com/content-videos/sophieraiin/[\w-]+\.mp4",
 
     "id"     : "12240",
     "creator": "sophieraiin",

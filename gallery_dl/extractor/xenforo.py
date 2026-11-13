@@ -328,6 +328,12 @@ class XenforoExtractor(BaseExtractor):
         main = data.get("mainEntity", data)
         url = main.get("url") or main.get("@id") or ""
 
+        section = main.get("articleSection")
+        if not section:
+            part = main.get("isPartOf")
+            if part.__class__ is dict:
+                section = part.get("name")
+
         self.kwdict["thread"] = thread = self._parse_author(main["author"], {
             "id"   : url[url.rfind(".")+1:-1],
             "url"  : url,
@@ -335,16 +341,34 @@ class XenforoExtractor(BaseExtractor):
             "date" : self.parse_datetime_iso(main["datePublished"]),
             "tags" : (main["keywords"].split(", ")
                       if "keywords" in main else ()),
-            "section": main["articleSection"],
+            "section": section or "",
             "path" : path,
         })
 
-        stats = main["interactionStatistic"]
-        if stats.__class__ is list:
-            thread["views"] = stats[0]["userInteractionCount"]
-            thread["posts"] = stats[1]["userInteractionCount"]
+        stats = main.get("interactionStatistic")
+        thread["views"] = -1
+        thread["posts"] = -1
+        if stats is None:
+            pass
+        elif stats.__class__ is list:
+            views = posts = None
+            for stat in stats:
+                itype = stat.get("interactionType") or ""
+                if itype.__class__ is dict:
+                    itype = itype.get("@type") or ""
+                count = stat.get("userInteractionCount")
+                if itype.endswith("ViewAction"):
+                    views = count
+                elif itype.endswith("CommentAction"):
+                    posts = count
+            if views is not None:
+                thread["views"] = views
+            if posts is not None:
+                thread["posts"] = posts
+            elif len(stats) >= 2:
+                thread["views"] = stats[0]["userInteractionCount"]
+                thread["posts"] = stats[1]["userInteractionCount"]
         else:
-            thread["views"] = -1
             thread["posts"] = stats["userInteractionCount"]
 
         return thread

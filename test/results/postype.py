@@ -110,8 +110,9 @@ __tests__ = (
 
 {
     "#url"     : "https://www.postype.com/@myosi-15/post/23058789",
-    "#comment" : "'.zip' file download (gh#9788)",
+    "#comment" : "'.zip' file download (gh#9788); subscriber-only login wall",
     "#class"   : postype.PostypePostExtractor,
+    "#auth"    : True,
     "#pattern" : (
         r"https://\w+.cloudfront.net/2026/08/29/20/06/b08aae2509800520257249154.gif",
         r"https://\w+.cloudfront.net/2026/08/29/20/06/2a69b212545112078901861048.zip\?filename=%EC%B5%9C_images.zip&Expires=\d+&Signature=.+",
