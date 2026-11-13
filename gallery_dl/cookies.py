@@ -428,7 +428,7 @@ def _webkit_parse_cookies_record(data, cookies, host=None):
 # chromium
 
 def _chromium_cookies_database(profile, config):
-    if profile is None:
+    if not profile:
         search_root = config["directory"]
     elif _is_path(profile):
         search_root = profile
