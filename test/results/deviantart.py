@@ -916,6 +916,12 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://www.deviantart.com/digipixi/art/Bone-Deep-1367517035",
+    "#comment" : "literature - mature, no images",
+    "#class"   : deviantart.DeviantartDeviationExtractor,
+},
+
+{
     "#url"     : "https://www.deviantart.com/stash/09z3557z648",
     "#comment" : "sta.sh journal (#6207)",
     "#class"   : deviantart.DeviantartStashExtractor,

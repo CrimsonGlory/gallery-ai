@@ -426,7 +426,8 @@ class DeviantartExtractor(Extractor):
                     "</div></section></div></div>")):
                 return {"html": html}
 
-            if (pos := page.find(' data-editor-viewer="1"')) >= 0:
+            if (pos := page.find(' data-editor-viewer="1"')) >= 0 and \
+                    page.find(' data-editor-viewer="1"', pos+24) >= 0:
                 if html := text.rextr(
                         page, ">", '</div></div></div><div class="', pos):
                     return {"html": html}
