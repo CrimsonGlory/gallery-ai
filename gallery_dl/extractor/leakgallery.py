@@ -14,9 +14,22 @@ BASE_PATTERN = r"(?:https?://)?(?:www\.)?leakgallery\.com"
 
 class LeakgalleryExtractor(Extractor):
     category = "leakgallery"
+    root = "https://leakgallery.com"
     directory_fmt = ("{category}", "{creator}")
     filename_fmt = "{id}_{filename}.{extension}"
     archive_fmt = "{creator}_{id}"
+
+    def _init(self):
+        token = self.cache(self._extract_app_token, _key=None, _exp=600)
+        if token:
+            self.session.headers["X-App-Token"] = token
+
+    def _extract_app_token(self):
+        page = self.request(self.root + "/").text
+        token = text.extr(page, '"APP_TOKEN":"', '"')
+        if not token:
+            self.log.warning("Unable to extract APP_TOKEN")
+        return token
 
     def _yield_media_items(self, medias, creator=None, seen=None):
         if seen is None:
