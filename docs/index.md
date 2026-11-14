@@ -6,4 +6,5 @@
   - ### [gallery-dl.conf](gallery-dl.conf)
   - ### [gallery-dl-example.conf](gallery-dl-example.conf)
 - ## [String Formatting](formatting.md)
+- ## [Input Files](inputfiles.md)
 - ## [Environment Variables](environment.md)
