@@ -1,5 +1,88 @@
 # Changelog
 
+## 1.32.20 - 2026-11-14
+### Extractors
+- **Additions**
+  - [E621] support `blep.art` ([`cb#597`](https://codeberg.org/mikf/gallery-dl/issues/597))
+  - [E621] support `hmofa.gallery` ([`cb#597`](https://codeberg.org/mikf/gallery-dl/issues/597))
+  - [E621] support `floofgens.net` ([`gh#9885`](https://github.com/mikf/gallery-dl/issues/9885) [`pr#625`](https://codeberg.org/mikf/gallery-dl/pulls/625))
+  - [onlyhaven] add `dm` & `user-dms` extractors ([`cb#481`](https://codeberg.org/mikf/gallery-dl/issues/481))
+  - [shimmie2] support `bittersweetcandybowl.com/candybooru` ([`cb#590`](https://codeberg.org/mikf/gallery-dl/issues/590))
+  - [twitter] add `reposts` & `articles` extractors
+  - [tw6] add support ([`cb#606`](https://codeberg.org/mikf/gallery-dl/issues/606) [`gh#9306`](https://github.com/mikf/gallery-dl/issues/9306))
+  - [tistory] add support ([`cb#619`](https://codeberg.org/mikf/gallery-dl/issues/619) [`gh#285`](https://github.com/mikf/gallery-dl/issues/285) [`gh#286`](https://github.com/mikf/gallery-dl/issues/286))
+- **Removals**
+  - [shimmie2] remove `booru.cavemanon.xyz`
+  - [twitter] remove `timeline` extractor
+- **E621**
+  - accept `/popular` URLs ([`pr#617`](https://codeberg.org/mikf/gallery-dl/pulls/617))
+- **deviantart**
+  - fix extraction of mature-rated `literature` posts ([`cb#623`](https://codeberg.org/mikf/gallery-dl/issues/623))
+  - improve folder name matching ([`gh#9876`](https://github.com/mikf/gallery-dl/issues/9876))
+- **facebook**
+  - fix `username` extraction when logged in
+- **girlswithmuscle**
+  - detect `Anubis` challenge pages ([`cb#618`](https://codeberg.org/mikf/gallery-dl/issues/618))
+- **imagechest**
+  - fix galleries with more than 40 files
+  - improve error handling
+- **imagepond**
+  - support plural `/videos/` URL pattern ([`pr#602`](https://codeberg.org/mikf/gallery-dl/pulls/602))
+- **imxto**
+  - fix & refactor file extraction ([`cb#604`](https://codeberg.org/mikf/gallery-dl/issues/604) [`cb#608`](https://codeberg.org/mikf/gallery-dl/issues/608) [`gh#9873`](https://github.com/mikf/gallery-dl/issues/9873))
+- **instagram**
+  - detect subscriber-only stories via audience fallback ([`pr#599`](https://codeberg.org/mikf/gallery-dl/pulls/599))
+  - fix `base64` decode issue in share links ([`pr#585`](https://codeberg.org/mikf/gallery-dl/pulls/585))
+  - fix issues with `"cursor": false` ([`gh#9874`](https://github.com/mikf/gallery-dl/issues/9874))
+  - improve error messages ([`gh#9872`](https://github.com/mikf/gallery-dl/issues/9872))
+  - remove `for (;;);` guards in API responses ([`gh#9872`](https://github.com/mikf/gallery-dl/issues/9872))
+- **iwara**
+  - support `ecchi.iwara.tv` URLs ([`gh#9861`](https://github.com/mikf/gallery-dl/issues/9861))
+- **livedoor**
+  - support `USER.livedoor.blog` URLs
+- **luscious**
+  - update GraphQL queries ([`cb#587`](https://codeberg.org/mikf/gallery-dl/issues/587) [`gh#9868`](https://github.com/mikf/gallery-dl/issues/9868))
+  - warn about 1000 file limit for guest users ([`cb#275`](https://codeberg.org/mikf/gallery-dl/issues/275))
+- **onlyhaven**
+  - add `include` option ([`cb#481`](https://codeberg.org/mikf/gallery-dl/issues/481))
+  - fix download URLs ([`cb#588`](https://codeberg.org/mikf/gallery-dl/issues/588) [`gh#9857`](https://github.com/mikf/gallery-dl/issues/9857))
+  - fix pagination ([`gh#9857`](https://github.com/mikf/gallery-dl/issues/9857))
+- **pawchive**
+  - fix `hash` extraction ([`cb#610`](https://codeberg.org/mikf/gallery-dl/issues/610) [`gh#9878`](https://github.com/mikf/gallery-dl/issues/9878))
+- **reddit**
+  - support video comment embeds
+- **tiktok**
+  - skip video-only DASH formats ([`gh#9764`](https://github.com/mikf/gallery-dl/issues/9764) [`pr#614`](https://codeberg.org/mikf/gallery-dl/pulls/614))
+- **tw6**
+  - add `files` option ([`cb#606`](https://codeberg.org/mikf/gallery-dl/issues/606))
+- **twitter**
+  - update API endpoint query hashes & parameters
+  - improve `ondemand.s.…a.js` key extraction ([`cb#603`](https://codeberg.org/mikf/gallery-dl/issues/603) [`gh#9867`](https://github.com/mikf/gallery-dl/issues/9867))
+  - support `/verified_followers` & `/followers_you_follow`
+  - fix `IndexError` when using guest token ([`gh#9867`](https://github.com/mikf/gallery-dl/issues/9867))
+  - prevent potential `KeyError: 'name'` on retweets ([`cb#474`](https://codeberg.org/mikf/gallery-dl/issues/474))
+  - prevent playlist downloads with `"videos": "ytdl"` ([`cb#615`](https://codeberg.org/mikf/gallery-dl/issues/615))
+  - refactor `background` extractor logic ([`cb#598`](https://codeberg.org/mikf/gallery-dl/issues/598))
+### Downloaders
+- **http**
+  - add `sleep-retries` option ([`gh#9870`](https://github.com/mikf/gallery-dl/issues/9870))
+  - include `429` in `retry-codes` default ([`gh#9837`](https://github.com/mikf/gallery-dl/issues/9837))
+- **ytdl**
+  - restore `_ytdl_index` functionality ([`cb#615`](https://codeberg.org/mikf/gallery-dl/issues/615))
+### Post Processors
+- **metadata**
+  - add `errors` option ([`cb#589`](https://codeberg.org/mikf/gallery-dl/issues/589))
+### Cookies
+- fix Firefox 142+ `expiry` timestamps ([`gh#9855`](https://github.com/mikf/gallery-dl/issues/9855))
+- fix handling of empty Chromium profile paths ([`gh#9882`](https://github.com/mikf/gallery-dl/issues/9882))
+### Documentation
+- document input file format ([`gh#9154`](https://github.com/mikf/gallery-dl/issues/9154))
+- document supported environment variables
+### Options
+- add `--config-strict` ([`cb#575`](https://codeberg.org/mikf/gallery-dl/issues/575))
+### Miscellaneous
+- allow accessing `extractor`/`job`/`path`/`keywords` values in `unsupportedfile` formats
+
 ## 1.32.19 - 2026-10-31
 ### Extractors
 - **Additions**
