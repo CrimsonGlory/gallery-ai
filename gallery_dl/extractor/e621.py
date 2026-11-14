@@ -106,6 +106,10 @@ BASE_PATTERN = E621Extractor.update({
         "root": "https://hmofa.gallery",
         "pattern": r"hmofa\.gallery",
     },
+    "floofgens": {
+        "root": "https://floofgens.net",
+        "pattern": r"floofgens\.net",
+    },
 })
 
 

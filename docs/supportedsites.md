@@ -2356,6 +2356,18 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://hmofa.gallery/posts?tags=TAG">Tag Searches</span></td>
     <td></td>
 </tr>
+<tr id="floofgens" title="floofgens">
+    <td>Floofgens</td>
+    <td>https://floofgens.net/</td>
+    <td><span title="https://floofgens.net/artists/12345">Artists</span> |
+        <span title="https://floofgens.net/artists?QUERY">Artist Searches</span> |
+        <span title="https://floofgens.net/favorites">Favorites</span> |
+        <span title="https://floofgens.net/pools/12345">Pools</span> |
+        <span title="https://floofgens.net/explore/posts/popular">Popular Images</span> |
+        <span title="https://floofgens.net/posts/12345">Posts</span> |
+        <span title="https://floofgens.net/posts?tags=TAG">Tag Searches</span></td>
+    <td></td>
+</tr>
 
 <tr id="gelbooru_v01" title="gelbooru_v01">
     <td colspan="4"><strong>Gelbooru Beta 0.1.11</strong></td>
