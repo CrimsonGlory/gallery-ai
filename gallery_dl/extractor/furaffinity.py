@@ -132,7 +132,7 @@ class FuraffinityExtractor(Extractor):
         else:
             # old site layout
             data["scraps"] = (
-                "/scraps/" in extr('class="minigallery-title', "</a>"))
+                'href="/scraps/' in extr('<!-- actions bar -->', "<table"))
             data["title"] = text.unescape(extr("<h2>", "</h2>"))
             data["artist_url"] = extr('title="', '"').strip()
             data["artist"] = extr(">", "<")
