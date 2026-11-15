@@ -575,6 +575,22 @@ class FappicImageExtractor(ImagehostImageExtractor):
         return url, text.re(r"^Porn[ -]Pic(?:s|ture)[ -]").sub("", filename)
 
 
+class FastpicImageExtractor(ImagehostImageExtractor):
+    """Extractor for single images from fastpic.org"""
+    category = "fastpic"
+    pattern = (r"(?:https?://)?((?:www\.)?fastpic\.org"
+               r"/view/\d+/\d+/\d+/(\w{10,})\.[\w\.]+)")
+    example = "https://fastpic.org/view/1/2000/1000/abcde12345.EXT.html"
+
+    def _cookies(self):
+        return self.request(self.page_url).cookies
+
+    def get_info(self, page):
+        if url := text.extr(page, '<template><img src="', '"'):
+            return text.unescape(url), None
+        self.not_found()
+
+
 class PicstateImageExtractor(ImagehostImageExtractor):
     """Extractor for single images from picstate.com"""
     category = "picstate"

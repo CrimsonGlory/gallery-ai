@@ -79,6 +79,7 @@ CATEGORY_MAP = {
     "fanbox"         : "pixivFANBOX",
     "fappic"         : "Fappic.com",
     "fashionnova"    : "Fashion Nova",
+    "fastpic"        : "FastPic",
     "fikfap"         : "FikFap",
     "filester"       : "filester.me",
     "fitnakedgirls"  : "FitNakedGirls",
