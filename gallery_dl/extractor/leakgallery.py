@@ -20,6 +20,16 @@ class LeakgalleryExtractor(Extractor):
     archive_fmt = "{creator}_{id}"
 
     def _init(self):
+        self._app_token_ready = False
+
+    def request_json(self, url, **kwargs):
+        self._ensure_app_token()
+        return Extractor.request_json(self, url, **kwargs)
+
+    def _ensure_app_token(self):
+        if self._app_token_ready:
+            return
+        self._app_token_ready = True
         token = self.cache(self._extract_app_token, _key=None, _exp=600)
         if token:
             self.session.headers["X-App-Token"] = token

@@ -36,7 +36,7 @@ __tests__ = (
     "tags_copyright"  : [],
     "tags_invalid"    : [],
     "tags_lore"       : [],
-    "updated_at"      : "2026-11-13T22:50:26.848-05:00",
+    "updated_at"      : "iso:dt",
     "uploader_id"     : 1,
     "uploader_name"   : "Floof",
     "vote"            : 0,

@@ -264,7 +264,7 @@ __tests__ = (
     "title"         : " [Full Reaction] To Be Hero X Episode 6",
     "type"          : "attachment",
     "user"          : "38478982",
-    "username"      : "JDanime",
+    "username"      : "JDanime Reactions",
     "tags"          : [
         "to be hero x",
         "uncut",
@@ -343,7 +343,7 @@ __tests__ = (
     "id"      : "174641691",
     "title"   : "20261107 ニコ・ロビン Nico Robin",
     "user"    : "11321390",
-    "username": "AI Chaya",
+    "username": "Chaya",
 },
 
 {
@@ -361,7 +361,7 @@ __tests__ = (
     "original" : True,
     "title"    : "Furina | Genshin Impact | 271p",
     "user"     : "172320970",
-    "username" : "Stormia",
+    "username" : "StormiaArt",
 },
 
 {
