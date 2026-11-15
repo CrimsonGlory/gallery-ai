@@ -2,8 +2,9 @@
 # Daily unit + live extractor suite: Docker, log results, Grok-fix, commit, push.
 #
 # Runs scripts/run_tests.py then test/test_results.py in Docker. If anything
-# failed, launches one always-approve Grok session. Commits are made by Grok;
-# this wrapper pushes when the branch is ahead of origin.
+# failed, launches one always-approve Grok session. Grok (or the Python
+# wrapper, if Grok still writes a combined commit) creates one commit per
+# independent fix. This wrapper pushes when the branch is ahead of origin.
 #
 # Crontab (once a day). Live suite is ~3h; schedule after release.sh and hold
 # the pull_upstream lock so the hourly merge cannot start mid-run:

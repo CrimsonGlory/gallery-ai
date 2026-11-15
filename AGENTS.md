@@ -30,7 +30,7 @@ docker run --rm --entrypoint python3 \
   gallery-ai:latest test/test_results.py
 ```
 
-Daily cron (`./daily_test.sh`, same pattern as yt-ai): unit suite, then the live suite, Grok-fix failures, commit, push. Holds the `pull_upstream` lock so the hourly merge cannot start mid-run. Live suite is ~3 hours.
+Daily cron (`./daily_test.sh`, same pattern as yt-ai): unit suite, then the live suite, Grok-fix failures, **one commit per independent fix**, push. Holds the `pull_upstream` lock so the hourly merge cannot start mid-run. Live suite is ~3 hours.
 
 ```bash
 ./daily_test.sh --dry-run

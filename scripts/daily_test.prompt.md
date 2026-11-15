@@ -1,6 +1,6 @@
 You are working in the gallery-ai git checkout at the current working directory.
 
-The daily test run failed. Fix **every listed failing test**, then **commit**. Do not wait for a human. Do not push (the wrapper script pushes after you finish).
+The daily test run failed. Fix **every listed failing test**, and **commit each independent fix separately**. Do not wait for a human. Do not push (the wrapper script pushes after you finish).
 
 Today's date: __TODAY__
 Current branch: `__BRANCH__`
@@ -57,9 +57,9 @@ __FAILURE_EXCERPTS__
 
 1. Make every listed failure pass, or mark a **gone URL** with `#exception` after you proved it (see below).
 2. Re-run **only** the failing unit modules / live result modules. Do **not** re-run the full live suite — it takes ~3 hours. Tomorrow's cron will.
-3. Commit the fixes. Never push.
+3. Commit **each independent fix as its own commit** (usually one commit per results module / extractor). Never one combined daily-test commit. Never push.
 
-A PARTIAL result (some tests fixed and committed, some remaining) is acceptable. An empty commit is not.
+A PARTIAL result (some tests fixed and committed, some remaining) is acceptable. An empty commit is not. A combined catch-all commit is not.
 
 If you cannot reproduce a failure (transient 5xx / timeout / DNS) after **two** retries of that single test, leave it and note it as remaining. Do not skip a test because it flaked once.
 
@@ -90,7 +90,7 @@ docker run --rm --entrypoint python3 \
 
 ### 1. Classify each failure
 
-Work through the list **one test / one results module at a time**.
+Work through the list **one independent fix at a time**. After a re-run passes, **commit that fix** (section 4) before starting the next failure. Typical unit of work is one `test/results/<module>.py` (and its extractor, if you had to change it).
 
 | Kind | What to do |
 | --- | --- |
@@ -137,8 +137,9 @@ Read the traceback in the log. unittest `assertEqual(expected, actual)` so `A !=
 - Extractor logic: keep extra URL patterns and result tests this fork already has.
 - Fixture-only: types/ranges/regex/`?` optional keys for fields that drift; `#exception` for gone URLs.
 - Do not regenerate `docs/supportedsites.md` unless you added or removed an extractor module.
+- Then commit this fix (section 4) before touching the next failure.
 
-### 4. Commit
+### 4. Commit after each independent fix
 
 __COMMIT_INSTRUCTION__
 
@@ -149,6 +150,7 @@ __COMMIT_INSTRUCTION__
 - Do not re-run the full live suite.
 - Do not push.
 - Do not invent a fake pass.
+- A combined catch-all commit is not a valid result.
 
 ## When you are done
 
@@ -158,6 +160,6 @@ Print exactly this block (fill it in):
 STATUS: FIXED | PARTIAL | FAILED | BLOCKED
 FIXED: <comma-separated test names or modules now passing, or none>
 REMAINING: <comma-separated still-failing tests, or none>
-COMMIT: <commit sha, or none>
+COMMITS: <comma-separated shas, or none>
 NOTES: <2-5 sentences: what was wrong, what you changed, what you left>
 ```

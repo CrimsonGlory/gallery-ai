@@ -3,7 +3,9 @@
 
 Runs ``scripts/run_tests.py`` then ``test/test_results.py`` in Docker. Parses
 unittest output, then launches one ``grok`` process when anything failed.
-Grok commits; this script pushes when the branch is ahead of origin.
+Grok is told to create **one commit per independent fix** (usually one
+results module / extractor). If it still writes a combined commit, this
+script splits it. This script then pushes when the branch is ahead of origin.
 
 Intended to be run once a day from cron via ./daily_test.sh (flock + logs).
 
@@ -42,6 +44,40 @@ FAILED_PAREN_RE = re.compile(r"^FAILED \((.*)\)$")
 OK_RE = re.compile(r"^OK(?: \((.*)\))?$")
 COUNT_PAIR_RE = re.compile(r"(\w+)=(\d+)")
 SEP_RE = re.compile(r"^={10,}\s*$")
+FIX_BULLET_RE = re.compile(r"^-\s+([^:]+):\s+(.+)$", re.M)
+RESULTS_IMPORT_RE = re.compile(
+    r"^from gallery_dl\.extractor(?:\.(\w+))? import (\w+)",
+    re.M,
+)
+COMBINED_SUBJECT_RE = re.compile(
+    r"^\[daily-test\] Fix \d+ failing tests?$",
+    re.I,
+)
+
+SHARED_EXTRACTOR_STEMS = {
+    "common",
+    "__init__",
+}
+SHARED_PATHS = {
+    "README.rst",
+    "README.md",
+    "CHANGELOG.md",
+    "docs/supportedsites.md",
+}
+COMMITTABLE_PREFIXES = (
+    "gallery_dl/",
+    "test/",
+)
+COMMITTABLE_FILES = SHARED_PATHS | {
+    "AGENTS.md",
+}
+SKIP_SUFFIXES = {
+    ".pyc", ".pyo", ".part", ".log",
+    ".jpg", ".jpeg", ".png", ".gif", ".webp", ".avif",
+    ".mp4", ".webm", ".mkv", ".zip", ".rar", ".7z",
+}
+
+_RESULTS_IMPORT_CACHE: dict[str, str | None] = {}
 
 
 def eprint(*args, **kwargs):
@@ -50,7 +86,7 @@ def eprint(*args, **kwargs):
 
 def parse_args(argv=None):
     p = argparse.ArgumentParser(
-        description="Run Docker unit+live tests, Grok-fix failures, push.",
+        description="Run Docker unit+live tests, Grok-fix failures (one commit per fix), push.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
@@ -74,7 +110,7 @@ def parse_args(argv=None):
     p.add_argument("--no-grok", action="store_true",
                    help="Never invoke Grok, even if tests failed")
     p.add_argument("--no-commit", action="store_true",
-                   help="Tell Grok not to commit (default: commit on success)")
+                   help="Do not commit (default: one commit per independent fix)")
     p.add_argument("--no-push", action="store_true",
                    help="Do not git push after the run")
     p.add_argument("--rebuild-image", action="store_true",
@@ -122,6 +158,392 @@ def git_out(args: list[str]) -> str:
 
 def merge_in_progress() -> bool:
     return (REPO / ".git" / "MERGE_HEAD").exists()
+
+
+def _norm_path(path: str) -> str:
+    return path.replace("\\", "/").lstrip("./")
+
+
+def is_committable_path(path: str) -> bool:
+    """Source / docs we may commit; never downloads, logs, or tmp."""
+    norm = _norm_path(path)
+    if not norm or norm.startswith("tmp/") or "/__pycache__/" in f"/{norm}/":
+        return False
+    suffix = Path(norm).suffix.lower()
+    if suffix in SKIP_SUFFIXES:
+        return False
+    if norm in COMMITTABLE_FILES:
+        return True
+    return any(norm.startswith(prefix) for prefix in COMMITTABLE_PREFIXES)
+
+
+def _is_extractor_path(path: str) -> bool:
+    norm = _norm_path(path)
+    if not norm.startswith("gallery_dl/extractor/") or not norm.endswith(".py"):
+        return False
+    if "/utils/" in norm:
+        return False
+    return Path(norm).stem not in SHARED_EXTRACTOR_STEMS
+
+
+def _is_results_path(path: str) -> bool:
+    norm = _norm_path(path)
+    return norm.startswith("test/results/") and norm.endswith(".py")
+
+
+def results_import_stem(path: str) -> str | None:
+    """Extractor module imported by a ``test/results/*.py`` file, if any."""
+    norm = _norm_path(path)
+    if norm in _RESULTS_IMPORT_CACHE:
+        return _RESULTS_IMPORT_CACHE[norm]
+    stem = None
+    full = REPO / norm
+    if full.is_file():
+        try:
+            text = full.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            text = ""
+        match = RESULTS_IMPORT_RE.search(text)
+        if match:
+            stem = match.group(1) or match.group(2)
+    _RESULTS_IMPORT_CACHE[norm] = stem
+    return stem
+
+
+def group_key_for_path(path: str) -> str:
+    """Group files so each independent fix becomes its own commit."""
+    norm = _norm_path(path)
+    if _is_extractor_path(norm):
+        return f"ie:{Path(norm).stem}"
+    if _is_results_path(norm):
+        return f"ie:{Path(norm).stem}"
+    if norm.startswith("test/test_") and norm.endswith(".py"):
+        name = Path(norm).stem
+        if name.startswith("test_"):
+            return f"lib:{name[5:]}"
+        return f"test:{Path(norm).name}"
+    if norm.startswith("gallery_dl/extractor/"):
+        return "core"
+    if norm.startswith("gallery_dl/") and norm.endswith(".py"):
+        return f"lib:{Path(norm).stem}"
+    if norm in SHARED_PATHS:
+        return "shared"
+    return "core"
+
+
+def coalesce_groups(groups: dict[str, list[str]]) -> dict[str, list[str]]:
+    """Attach a lone extractor file to the one results module that imports it.
+
+    ``xenforo.py`` + ``test/results/celebforum.py`` become one celebforum
+    commit. ``e621.py`` + floofgens + blep stay separate: two results
+    modules import that extractor, so the extractor file keeps its own
+    commit.
+    """
+    groups = {key: list(paths) for key, paths in groups.items()}
+    extractor_only: dict[str, str] = {}
+    for key, paths in groups.items():
+        if not key.startswith("ie:"):
+            continue
+        extractor_paths = [p for p in paths if _is_extractor_path(p)]
+        other = [p for p in paths if not _is_extractor_path(p)]
+        if extractor_paths and not other:
+            extractor_only[key.split(":", 1)[1]] = key
+
+    importers: dict[str, list[str]] = {}
+    for key, paths in groups.items():
+        for path in paths:
+            if not _is_results_path(path):
+                continue
+            imported = results_import_stem(path)
+            if imported:
+                importers.setdefault(imported, []).append(key)
+
+    for stem, ext_key in extractor_only.items():
+        dests = []
+        for key in importers.get(stem, []):
+            if key != ext_key and key not in dests:
+                dests.append(key)
+        if len(dests) == 1 and ext_key in groups and dests[0] in groups:
+            groups[dests[0]].extend(groups.pop(ext_key))
+    return groups
+
+
+def group_paths(paths: list[str]) -> dict[str, list[str]]:
+    groups: dict[str, list[str]] = {}
+    for path in paths:
+        if not is_committable_path(path):
+            continue
+        groups.setdefault(group_key_for_path(path), []).append(path)
+    return coalesce_groups(groups)
+
+
+def primary_groups(paths: list[str]) -> set[str]:
+    return {key for key in group_paths(paths) if key != "shared"}
+
+
+def parse_fix_bullets(message: str) -> dict[str, str]:
+    """Parse ``- ExtractorName: what changed`` lines from a commit body."""
+    out: dict[str, str] = {}
+    for match in FIX_BULLET_RE.finditer(message or ""):
+        name = match.group(1).strip()
+        text = match.group(2).strip()
+        if name and text:
+            out[name] = text
+    return out
+
+
+def match_bullet(stem: str, bullets: dict[str, str]) -> tuple[str | None, str]:
+    stem_raw = stem.lower()
+    stem_cmp = stem_raw.replace("_", "").replace("-", "")
+    for name, text in bullets.items():
+        n = name.lower()
+        n_cmp = n.replace("_", "").replace("-", "")
+        if n == stem_raw or n_cmp == stem_cmp:
+            return name, text
+    return None, ""
+
+
+def commits_since(old_head: str) -> list[str]:
+    if not old_head:
+        return []
+    proc = git(["log", "--format=%H %s", f"{old_head}..HEAD"])
+    if proc.returncode != 0:
+        return []
+    return [ln.strip() for ln in (proc.stdout or "").splitlines() if ln.strip()]
+
+
+def _paths_from_git(args: list[str]) -> list[str]:
+    proc = git(args)
+    if proc.returncode != 0:
+        return []
+    return [ln.strip() for ln in (proc.stdout or "").splitlines() if ln.strip()]
+
+
+def changed_source_paths_since(old_head: str) -> list[str]:
+    paths: set[str] = set()
+    for args in (
+        ["diff", "--name-only", old_head],
+        ["diff", "--name-only", "--cached", old_head],
+        ["ls-files", "--others", "--exclude-standard"],
+    ):
+        paths.update(_paths_from_git(args))
+    return sorted(p for p in paths if is_committable_path(p))
+
+
+def uncommitted_source_paths() -> list[str]:
+    paths: set[str] = set()
+    for args in (
+        ["diff", "--name-only"],
+        ["diff", "--name-only", "--cached"],
+        ["ls-files", "--others", "--exclude-standard"],
+    ):
+        paths.update(_paths_from_git(args))
+    return sorted(p for p in paths if is_committable_path(p))
+
+
+def commit_file_list(sha: str) -> list[str]:
+    proc = git(["diff-tree", "--no-commit-id", "--name-only", "-r", sha])
+    if proc.returncode != 0:
+        return []
+    return [ln.strip() for ln in (proc.stdout or "").splitlines() if ln.strip()]
+
+
+def _looks_combined_subject(subject: str) -> bool:
+    text = subject.strip()
+    if COMBINED_SUBJECT_RE.match(text):
+        return True
+    lowered = text.lower()
+    return "," in text or " and " in lowered
+
+
+def commits_are_already_split(old_head: str) -> bool:
+    """True when each new commit is already one independent fix."""
+    proc = git(["log", "--format=%H %s", f"{old_head}..HEAD"])
+    if proc.returncode != 0:
+        return False
+    rows = [ln.strip() for ln in (proc.stdout or "").splitlines() if ln.strip()]
+    if not rows:
+        return False
+    for line in rows:
+        sha, _, subject = line.partition(" ")
+        if _looks_combined_subject(subject):
+            return False
+        if len(primary_groups(commit_file_list(sha))) > 1:
+            return False
+    return True
+
+
+def bullets_from_existing(commit_lines: list[str]) -> dict[str, str]:
+    """Recover extractor names/bodies from Grok's combined or split commits."""
+    bullets: dict[str, str] = {}
+    for line in commit_lines:
+        sha, _, subject = line.partition(" ")
+        with contextlib.suppress(RuntimeError):
+            bullets.update(parse_fix_bullets(
+                git_out(["log", "-1", "--format=%B", sha])))
+        match = re.match(r"\[daily-test\] Fix (.+)$", subject.strip())
+        if not match:
+            continue
+        name = match.group(1).strip()
+        if name and not _looks_combined_subject(subject):
+            if not any(k.lower() == name.lower() for k in bullets):
+                bullets[name] = ""
+    return bullets
+
+
+def stage_paths(paths: list[str]) -> bool:
+    added = False
+    for path in paths:
+        full = REPO / path
+        if full.exists():
+            proc = git(["add", "--", path])
+        else:
+            proc = git(["add", "-u", "--", path])
+        if proc.returncode != 0:
+            eprint(f"warning: git add {path} failed: {(proc.stderr or '').strip()}")
+            continue
+        added = True
+    return added
+
+
+def display_name_for_group(key: str, files: list[str]) -> str:
+    result_stems = [
+        Path(_norm_path(p)).stem for p in files if _is_results_path(p)
+    ]
+    unique = list(dict.fromkeys(result_stems))
+    if len(unique) == 1:
+        return unique[0]
+    if key.startswith("ie:") or key.startswith("lib:") or key.startswith("test:"):
+        return key.split(":", 1)[1]
+    if key == "core":
+        return "core"
+    return "site metadata"
+
+
+def message_for_group(key: str, files: list[str],
+                      bullets: dict[str, str]) -> tuple[str, str]:
+    display = display_name_for_group(key, files)
+    name, body = match_bullet(display, bullets)
+    if not body and key.startswith("ie:"):
+        name, body = match_bullet(key.split(":", 1)[1], bullets)
+    display = name or display
+    if key.startswith("ie:"):
+        return (
+            f"[daily-test] Fix {display}",
+            body or f"Fix the failing {display} test.",
+        )
+    if key.startswith("lib:") or key.startswith("test:"):
+        return (
+            f"[daily-test] Fix {display}",
+            body or f"Fix failing tests in {display}.",
+        )
+    if key == "core":
+        return "[daily-test] Fix core", "Fix failing core / shared-library tests."
+    return (
+        "[daily-test] Update changelog and site metadata",
+        "Record supported-sites or docs updates for the daily-test fixes.",
+    )
+
+
+def commit_path_groups(paths: list[str], bullets: dict[str, str]) -> list[str]:
+    groups = group_paths(paths)
+    shared = groups.pop("shared", [])
+    primary_keys = list(groups)
+    if shared and len(primary_keys) == 1:
+        groups[primary_keys[0]].extend(shared)
+        shared = []
+    elif shared:
+        groups["shared"] = shared
+
+    def sort_key(k: str) -> tuple[int, str]:
+        if k.startswith("ie:"):
+            return (0, k)
+        if k.startswith("lib:"):
+            return (1, k)
+        if k.startswith("test:"):
+            return (2, k)
+        if k == "core":
+            return (3, k)
+        return (4, k)
+
+    created: list[str] = []
+    for key in sorted(groups, key=sort_key):
+        files = sorted(set(groups[key]))
+        if not stage_paths(files):
+            continue
+        staged = (git(["diff", "--cached", "--name-only"]).stdout or "").strip()
+        if not staged:
+            continue
+        subject, body = message_for_group(key, files, bullets)
+        msg = f"{subject}\n\n{body}" if body else subject
+        proc = git(["commit", "-m", msg])
+        if proc.returncode != 0:
+            eprint(
+                f"warning: git commit failed for {key}: "
+                f"{(proc.stderr or proc.stdout or '').strip()}")
+            git(["reset", "-q", "HEAD"])
+            continue
+        try:
+            full = git_out(["rev-parse", "HEAD"])
+            short = git_out(["rev-parse", "--short", "HEAD"])
+        except RuntimeError as exc:
+            eprint(f"warning: {exc}")
+            continue
+        created.append(f"{full} {subject}")
+        eprint(f"+ commit {short} {subject}")
+    return created
+
+
+def finalize_per_fix_commits(old_head: str) -> list[str]:
+    """Ensure Grok's work is one commit per independent fix.
+
+    If Grok already committed that way, leave those commits. If it wrote
+    one combined commit (or left a dirty tree), split by extractor /
+    results module.
+    """
+    if merge_in_progress():
+        eprint("warning: merge in progress; not splitting commits")
+        return commits_since(old_head)
+
+    existing = commits_since(old_head)
+    leftover = uncommitted_source_paths()
+    bullets = bullets_from_existing(existing)
+
+    if commits_are_already_split(old_head) and not leftover:
+        eprint(f"Grok already created {len(existing)} per-fix commit(s)")
+        return existing
+
+    if commits_are_already_split(old_head) and leftover:
+        eprint(
+            f"Grok created {len(existing)} per-fix commit(s); "
+            "committing leftovers separately")
+        return existing + commit_path_groups(leftover, bullets)
+
+    try:
+        head_now = git_out(["rev-parse", "HEAD"])
+    except RuntimeError as exc:
+        eprint(f"warning: {exc}")
+        return existing
+
+    if head_now != old_head:
+        eprint("Splitting combined daily-test commit(s) into per-fix commits")
+        proc = git(["reset", "--soft", old_head])
+        if proc.returncode != 0:
+            eprint(
+                f"warning: git reset --soft failed: "
+                f"{(proc.stderr or '').strip()}")
+            return existing
+        proc = git(["reset", "-q", "HEAD"])
+        if proc.returncode != 0:
+            eprint(
+                f"warning: git reset (unstage) failed: "
+                f"{(proc.stderr or '').strip()}")
+            return commits_since(old_head)
+
+    paths = changed_source_paths_since(old_head)
+    if not paths:
+        return commits_since(old_head)
+    return commit_path_groups(paths, bullets)
 
 
 def last_lines(text: str, n: int = 16) -> str:
@@ -451,15 +873,31 @@ def build_prompt(
 ) -> str:
     if do_commit:
         commit_instruction = (
-            "- After you have actually re-run the failing modules you claim to "
-            "have fixed, git-add **only** those files (extractor(s), "
-            "`test/results/*.py`, `test/test_*.py`, `gallery_dl/http.py` if you "
-            "touched it) and create **one** commit:\n"
-            "  `[daily-test] Fix <N> failing tests`\n"
-            "  Body: bullet per extractor/test, complete sentences.\n"
-            "- A second commit is OK if unit and live are separate. "
-            "Do not `git add -A`. Do not amend. Do not push.\n"
-            "- If you fixed nothing, do not commit."
+            "- Commit **immediately after each independent fix**, before "
+            "starting the next failing test. Do not wait until the end. "
+            "Do not squash. Do not make one combined commit.\n"
+            "- One commit per independent fix. That usually means **one "
+            "commit per results module** (and its extractor, if you touched "
+            "it). Two failing tests for the same `test/results/<module>.py` "
+            "share one commit. Unrelated modules never share a commit. A "
+            "shared core/utils fix that unblocks several tests is one "
+            "commit; leftover site-specific edits still get their own "
+            "commits.\n"
+            "- After you have actually re-run the modules you claim to have "
+            "fixed, git-add **only** the files for this fix (the extractor "
+            "and/or `test/results/<module>.py`, `test/test_*.py`, "
+            "`gallery_dl/http.py` if you touched it for this fix) and "
+            "commit:\n"
+            "  Subject: `[daily-test] Fix <module>`\n"
+            "    (unit test: `[daily-test] Fix <test module>`)\n"
+            "  Body: 1-3 complete sentences: what failed and what you changed.\n"
+            "- Example: leakgallery and floofgens both fail → two commits, "
+            "`[daily-test] Fix leakgallery` and `[daily-test] Fix floofgens`. "
+            "Never `[daily-test] Fix 2 failing tests`.\n"
+            "- Do not `git add -A`. Do not amend. Do not push. If you later "
+            "touch a file from an earlier commit, make a new commit.\n"
+            "- If you fixed nothing, do not commit. Do not create a leftover "
+            "catch-all commit at the end."
         )
     else:
         commit_instruction = (
@@ -785,11 +1223,23 @@ def main(argv=None) -> int:
     else:
         grok_exit = 1 if rc == 0 else rc
 
+    if args.no_commit:
+        commits = commits_since(head)
+    else:
+        commits = finalize_per_fix_commits(head)
+    if commits:
+        eprint(f"Commits ({len(commits)}):")
+        for line in commits:
+            eprint(f"  {line}")
+    else:
+        eprint("Commits: none")
+
     return finish(status, grok_exit, {
         "elapsed_s": elapsed,
         "log": str(grok_log),
         "prompt": str(prompt_file),
         "failed_tests": (unit.get("all_failed") or []) + (live.get("all_failed") or []),
+        "commits": commits,
     })
 
 
