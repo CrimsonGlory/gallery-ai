@@ -3469,6 +3469,12 @@ Consider all listed sites to potentially be NSFW.
     <td><span title="https://fappic.com/abcde12345/NAME.EXT">individual Images</span></td>
     <td></td>
 </tr>
+<tr id="fastpic" title="fastpic">
+    <td>FastPic</td>
+    <td>https://fastpic.org/</td>
+    <td><span title="https://fastpic.org/view/1/2000/1000/abcde12345.EXT.html">individual Images</span></td>
+    <td></td>
+</tr>
 <tr id="imagetwist" title="imagetwist">
     <td>ImageTwist</td>
     <td>https://imagetwist.com/</td>
