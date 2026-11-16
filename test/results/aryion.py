@@ -102,6 +102,7 @@ __tests__ = (
         "subscribestar",
     ],
     "date"       : "dt:2019-02-16 19:30:34",
+    "date_uploaded": "dt:2019-02-16 19:30:00",
     "path"       : [],
     "views"      : int,
     "favorites"  : int,
@@ -135,6 +136,7 @@ __tests__ = (
 
     "artist"     : "Dotil",
     "date"       : "dt:2026-03-17 05:15:48",
+    "date_uploaded": "dt:2026-03-17 06:15:00",
     "description": "Patreon request",
     "width"      : 4141,
     "height"     : 2331,
