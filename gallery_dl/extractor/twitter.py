@@ -499,8 +499,6 @@ class TwitterExtractor(Extractor):
         else:
             author = tweet["user"]
         author = self._transform_user(author)
-        user = self._transform_user(tweet["user"]) \
-            if "user" in tweet else author
 
         if tweet_id >= 300_000_000_000_000:
             date = self._tweetid_to_datetime(tweet_id)
@@ -528,7 +526,9 @@ class TwitterExtractor(Extractor):
             "source_id"     : 0,
             "date"          : date,
             "author"        : author,
-            "user"          : self._user or user,
+            "user"          : self._user or (
+                self._transform_user(tweet["user"])
+                if "user" in tweet else author),
             "lang"          : legacy["lang"],
             "source"        : text.extr(source, ">", "<") if source else "",
             "sensitive"     : tget("possibly_sensitive"),
