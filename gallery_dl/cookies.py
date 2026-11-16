@@ -453,17 +453,18 @@ def _chromium_cookies_database(profile, config):
 
 
 def _chromium_profile(directory, profile):
-    path = os.path.join(directory, profile)
-    if os.path.isdir(path):
-        return path
     state = os.path.join(directory, "Local State")
     try:
         with open(state, encoding="utf-8") as fp:
             cache = util.json_loads(fp.read())["profile"]["info_cache"]
-    except OSError:
-        return path
-    return os.path.join(directory, next(
-        (d for d, p in cache.items() if p["name"] == profile), profile))
+        for dir, data in cache.items():
+            if profile == data["name"]:
+                profile = dir
+                break
+    except Exception as exc:
+        _log_debug("Error while searching profile '%s' (%s: %s)",
+                   profile, exc.__class__.__name__, exc)
+    return os.path.join(directory, profile)
 
 
 def _chromium_browser_settings(browser_name):
