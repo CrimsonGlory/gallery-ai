@@ -526,7 +526,9 @@ class TwitterExtractor(Extractor):
             "source_id"     : 0,
             "date"          : date,
             "author"        : author,
-            "user"          : self._user or author,
+            "user"          : self._user or (
+                self._transform_user(tweet["user"])
+                if "user" in tweet else author),
             "lang"          : legacy["lang"],
             "source"        : text.extr(source, ">", "<") if source else "",
             "sensitive"     : tget("possibly_sensitive"),
@@ -974,6 +976,12 @@ class TwitterUserExtractor(Dispatch, TwitterExtractor):
         if user_id is not None:
             user = "id:" + user_id
 
+        default = ["tweets"]
+        if self.config("retweets", False):
+            default.append("reposts")
+        if self.config("replies", True):
+            default.append("with-replies")
+
         base = f"{self.root}/{user}/"
         return self._dispatch_extractors((
             (TwitterInfoExtractor       , base + "info"),
@@ -985,10 +993,10 @@ class TwitterUserExtractor(Dispatch, TwitterExtractor):
             (TwitterRepostsExtractor    , base + "reposts"),
             (TwitterHighlightsExtractor , base + "highlights"),
             (TwitterArticlesExtractor   , base + "articles"),
-        ), ("tweets",), (
+        ), default, (
             ("with-replies", "replies", None),
-            ("media", "photos", f"{base}media?filter=photo"),
-            ("media", "videos", f"{base}media?filter=video"),
+            ("media", "photos", base + "media?filter=photo"),
+            ("media", "videos", base + "media?filter=video"),
         ))
 
 
