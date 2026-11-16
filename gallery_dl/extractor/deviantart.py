@@ -670,6 +670,8 @@ class DeviantartExtractor(Extractor):
     def _user_details(self, name):
         try:
             return self.cache(self.api.user_profile, name)["user"]
+        except self.exc.HttpError:
+            raise
         except Exception:
             return None
 
@@ -778,6 +780,8 @@ class DeviantartBackgroundExtractor(DeviantartExtractor):
         try:
             return (self.cache(self.api.user_profile, self.user.lower())
                     ["cover_deviation"]["cover_deviation"],)
+        except self.exc.HttpError:
+            raise
         except Exception:
             return ()
 
@@ -1287,6 +1291,7 @@ class DeviantartOAuthAPI():
         self.exc = extractor.exc
         self.headers = {"dA-minor-version": "20210526"}
         self._warn_429 = True
+        self._429_tries = 0
 
         self.delay = extractor.config("wait-min", 0)
         self.delay_min = max(2, self.delay)
@@ -1592,11 +1597,15 @@ class DeviantartOAuthAPI():
         """Call an API endpoint"""
         url = "https://www.deviantart.com/api/v1/oauth2" + endpoint
         kwargs["fatal"] = None
+        retries = self.extractor._retries
 
         if public is None:
             public = self.public
 
         while True:
+            if self._429_tries > retries:
+                raise self.exc.HttpError(
+                    f"'429 Too Many Requests' for '{url}'")
             if self.delay:
                 self.extractor.sleep(self.delay, "api")
 
@@ -1642,6 +1651,9 @@ class DeviantartOAuthAPI():
                             "credentials to prevent this error: "
                             "https://gdl-org.github.io/docs/configuration.html"
                             "#extractor-deviantart-client-id-client-secret")
+                self._429_tries += 1
+                if self._429_tries > retries:
+                    raise self.exc.HttpError(response=response)
             else:
                 if log:
                     self.log.error(msg)
