@@ -10,13 +10,13 @@
 import os
 import sys
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import time
 import string
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from gallery_dl import extractor, util, dt, config, cache  # noqa E402
+from gallery_dl import extractor, util, dt, config, cache, exception  # noqa E402
 from gallery_dl.extractor import mastodon  # noqa E402
 from gallery_dl.extractor.common import Extractor, Message  # noqa E402
 from gallery_dl.extractor.directlink import DirectlinkExtractor  # noqa E402
@@ -683,6 +683,90 @@ class TestGofile(unittest.TestCase):
         self.assertEqual(len(files), 1)
         self.assertEqual(files[0]["filename"], "notes")
         self.assertEqual(files[0]["extension"], "")
+
+
+class TestDeviantartAPI(unittest.TestCase):
+
+    def setUp(self):
+        self.extr = extractor.find(
+            "https://www.deviantart.com/shimoda7/art/For-the-sake-10073852")
+        self.extr.initialize()
+
+    def tearDown(self):
+        config.clear()
+
+    def _response(self, status=429, reason="Too Many Requests"):
+        response = Mock()
+        response.status_code = status
+        response.reason = reason
+        response.url = "https://www.deviantart.com/api/v1/oauth2/deviation/x"
+        response.text = "{}"
+        response.content = b"{}"
+        response.json.return_value = {}
+        return response
+
+    def test_oauth_429_stops_after_retries(self):
+        """Persistent API 429s must raise HttpError instead of retrying forever."""
+        self.extr._retries = 2
+        response = self._response()
+        calls = []
+
+        def fake_request(url, **kwargs):
+            calls.append(url)
+            if len(calls) > 8:
+                self.fail("429 retry did not stop")
+            return response
+
+        with patch.object(self.extr.api, "authenticate"), \
+                patch.object(self.extr, "request", side_effect=fake_request), \
+                patch.object(self.extr, "sleep"):
+            with self.assertRaises(exception.HttpError) as cm:
+                self.extr.api._call("/deviation/x")
+
+        self.assertEqual(cm.exception.status, 429)
+        self.assertIn("'429 ", str(cm.exception))
+        self.assertEqual(len(calls), 3)
+
+    def test_oauth_429_no_retry(self):
+        self.extr._retries = 0
+        response = self._response()
+        calls = []
+
+        def fake_request(url, **kwargs):
+            calls.append(url)
+            if len(calls) > 2:
+                self.fail("429 retry did not stop")
+            return response
+
+        with patch.object(self.extr.api, "authenticate"), \
+                patch.object(self.extr, "request", side_effect=fake_request), \
+                patch.object(self.extr, "sleep"):
+            with self.assertRaises(exception.HttpError):
+                self.extr.api._call("/deviation/x")
+
+        self.assertEqual(len(calls), 1)
+
+    def test_oauth_429_budget_shared_across_calls(self):
+        self.extr._retries = 0
+        response = self._response()
+        calls = []
+
+        def fake_request(url, **kwargs):
+            calls.append(url)
+            if len(calls) > 2:
+                self.fail("429 retry did not stop")
+            return response
+
+        with patch.object(self.extr.api, "authenticate"), \
+                patch.object(self.extr, "request", side_effect=fake_request), \
+                patch.object(self.extr, "sleep"):
+            with self.assertRaises(exception.HttpError):
+                self.extr.api._call("/user/profile/x")
+            with self.assertRaises(exception.HttpError) as cm:
+                self.extr.api._call("/deviation/x")
+
+        self.assertEqual(len(calls), 1)
+        self.assertIn("'429 ", str(cm.exception))
 
 
 if __name__ == "__main__":
