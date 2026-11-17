@@ -328,6 +328,10 @@ class XenforoExtractor(BaseExtractor):
         main = data.get("mainEntity", data)
         url = main.get("url") or main.get("@id") or ""
 
+        section = main.get("articleSection")
+        if section is None and (part := main.get("isPartOf")):
+            section = part["name"]
+
         self.kwdict["thread"] = thread = self._parse_author(main["author"], {
             "id"   : url[url.rfind(".")+1:-1],
             "url"  : url,
@@ -335,7 +339,7 @@ class XenforoExtractor(BaseExtractor):
             "date" : self.parse_datetime_iso(main["datePublished"]),
             "tags" : (main["keywords"].split(", ")
                       if "keywords" in main else ()),
-            "section": main["articleSection"],
+            "section": section,
             "path" : path,
         })
 
