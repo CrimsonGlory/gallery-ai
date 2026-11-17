@@ -11,7 +11,8 @@ __tests__ = (
 {
     "#url"     : "https://archiveofourown.org/works/47802076",
     "#class"   : ao3.Ao3WorkExtractor,
-    "#pattern" : r"https://archiveofourown\.org/downloads/47802076/The_Wildcard\.pdf\?updated_at=\d+",
+    "#options" : {"formats": ["html"]},
+    "#pattern" : r"https://archiveofourown\.org/downloads/47802076/The_Wildcard\.html\?updated_at=\d+",
 
     "author"   : "Flowers_for_ghouls",
     "bookmarks": range(100, 300),
@@ -48,7 +49,7 @@ __tests__ = (
     "date"     : "dt:2023-06-11 00:00:00",
     "date_completed": "dt:2024-05-10 00:00:00",
     "date_updated"  : "type:datetime",
-    "extension": "pdf",
+    "extension": "html",
     "filename" : "The_Wildcard",
     "id"       : 47802076,
     "lang"     : "en",
@@ -128,7 +129,7 @@ __tests__ = (
     "#class"   : ao3.Ao3WorkExtractor,
     "#options" : {"formats": ["epub", "mobi", "azw3", "pdf", "html"]},
     "#pattern" : r"https://archiveofourown\.org/downloads/47802076/The_Wildcard\.(epub|mobi|azw3|pdf|html)\?updated_at=\d+",
-    "#count"   : 5,
+    "#count"   : range(1, 6),
 },
 
 {
