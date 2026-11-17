@@ -5,6 +5,7 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import pixnet
+from gallery_dl import exception
 
 
 __tests__ = (
@@ -12,41 +13,78 @@ __tests__ = (
     "#url"     : "https://albertayu773.pixnet.net/album/photo/159443828",
     "#category": ("", "pixnet", "image"),
     "#class"   : pixnet.PixnetImageExtractor,
-    "#sha1_url"     : "156564c422138914c9fa5b42191677b45c414af4",
-    "#sha1_metadata": "19971bcd056dfef5593f4328a723a9602be0f087",
-    "#sha1_content" : "0e097bdf49e76dd9b9d57a016b08b16fa6a33280",
+    "#results" : "https://pimg.1px.tw/albertayu773/1522072078-2378081213.jpg",
+
+    "blog"     : "albertayu773",
+    "extension": "jpg",
+    "filename" : "0 (7)",
+    "id"       : 159443828,
+    "user"     : "日本美少女學園",
+},
+
+{
+    "#url"     : "https://albertayu773.pixnet.net/albums/15078995/photos/159443828",
+    "#category": ("", "pixnet", "image"),
+    "#class"   : pixnet.PixnetImageExtractor,
 },
 
 {
     "#url"     : "https://albertayu773.pixnet.net/album/set/15078995",
     "#category": ("", "pixnet", "set"),
     "#class"   : pixnet.PixnetSetExtractor,
-    "#sha1_url"     : "6535712801af47af51110542f4938a7cef44557f",
-    "#sha1_metadata": "bf25d59e5b0959cb1f53e7fd2e2a25f2f67e5925",
+    "#pattern" : r"https://pimg\.1px\.tw/albertayu773/[^/?#]+\.jpg",
+    "#count"   : 11,
+
+    "blog"        : "albertayu773",
+    "folder_id"   : "",
+    "folder_title": "",
+    "set_id"      : 15078995,
+    "set_title"   : "2018 NEWS(16月份)",
+    "user"        : "日本美少女學園",
+},
+
+{
+    "#url"     : "https://albertayu773.pixnet.net/albums/15078995",
+    "#category": ("", "pixnet", "set"),
+    "#class"   : pixnet.PixnetSetExtractor,
 },
 
 {
     "#url"     : "https://anrine910070.pixnet.net/album/set/5917493",
+    "#comment" : "private blog",
     "#category": ("", "pixnet", "set"),
     "#class"   : pixnet.PixnetSetExtractor,
-    "#sha1_url"     : "b3eb6431aea0bcf5003432a4a0f3a3232084fc13",
-    "#sha1_metadata": "bf7004faa1cea18cf9bd856f0955a69be51b1ec6",
+    "#exception": exception.AuthorizationError,
 },
 
 {
     "#url"     : "https://sky92100.pixnet.net/album/set/17492544",
-    "#comment" : "password-protected",
+    "#comment" : "password-protected set gone after album redesign",
     "#category": ("", "pixnet", "set"),
     "#class"   : pixnet.PixnetSetExtractor,
-    "#count"   : 0,
+    "#exception": exception.NotFoundError,
+},
+
+{
+    "#url"     : "https://sky92100.pixnet.net/albums/219087151",
+    "#category": ("", "pixnet", "set"),
+    "#class"   : pixnet.PixnetSetExtractor,
+    "#pattern" : r"https://pimg\.1px\.tw/sky92100/.+",
+    "#count"   : range(70, 90),
 },
 
 {
     "#url"     : "https://albertayu773.pixnet.net/album/folder/1405768",
     "#category": ("", "pixnet", "folder"),
     "#class"   : pixnet.PixnetFolderExtractor,
-    "#pattern" : pixnet.PixnetSetExtractor.pattern,
-    "#count"   : ">= 15",
+    "#pattern" : r"https://albertayu773\.pixnet\.net/albums/\d+",
+    "#count"   : ">= 10",
+},
+
+{
+    "#url"     : "https://albertayu773.pixnet.net/albums?folderId=1405768",
+    "#category": ("", "pixnet", "folder"),
+    "#class"   : pixnet.PixnetFolderExtractor,
 },
 
 {
@@ -68,19 +106,33 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://albertayu773.pixnet.net/albums",
+    "#category": ("", "pixnet", "user"),
+    "#class"   : pixnet.PixnetUserExtractor,
+},
+
+{
     "#url"     : "https://albertayu773.pixnet.net/album/list",
     "#category": ("", "pixnet", "user"),
     "#class"   : pixnet.PixnetUserExtractor,
-    "#pattern" : pixnet.PixnetFolderExtractor.pattern,
+    "#pattern" : r"https://albertayu773\.pixnet\.net/albums\?folderId=\d+",
     "#count"   : ">= 30",
 },
 
 {
     "#url"     : "https://anrine910070.pixnet.net/album/list",
+    "#comment" : "private blog",
     "#category": ("", "pixnet", "user"),
     "#class"   : pixnet.PixnetUserExtractor,
-    "#pattern" : pixnet.PixnetSetExtractor.pattern,
-    "#count"   : ">= 14",
+    "#exception": exception.AuthorizationError,
+},
+
+{
+    "#url"     : "https://sky92100.pixnet.net/albums",
+    "#category": ("", "pixnet", "user"),
+    "#class"   : pixnet.PixnetUserExtractor,
+    "#pattern" : r"https://sky92100\.pixnet\.net/albums/\d+",
+    "#count"   : ">= 8",
 },
 
 )

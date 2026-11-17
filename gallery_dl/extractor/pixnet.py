@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2016-2023 Mike Fährmann
+# Copyright 2016-2026 Mike Fährmann
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -12,6 +12,12 @@ from .common import Extractor, Message
 from .. import text
 
 BASE_PATTERN = r"(?:https?://)?(?!www\.)([\w-]+)\.pixnet.net"
+GALLERY_ITEM_RE = text.re(
+    r'<a href="([^"]+)" data-photo-id="(\d+)" data-title="([^"]*)"'
+    r'[^>]*class="gallery-item"')
+NEXT_LIST_RE = text.re(r'<a href="([^"]+)" class="next">»</a>')
+NEXT_SET_RE = text.re(
+    r'<a href="([^"]+)" data-slot="pagination-link"')
 
 
 class PixnetExtractor(Extractor):
@@ -22,42 +28,110 @@ class PixnetExtractor(Extractor):
 
     def __init__(self, match):
         Extractor.__init__(self, match)
-        self.blog, self.item_id = self.groups
+        self.blog = self.groups[0]
+        self.item_id = next((g for g in self.groups[1:] if g), "")
         self.root = f"https://{self.blog}.pixnet.net"
 
     def items(self):
-        url = self.url_fmt.format(self.root, self.item_id)
-        page = self.request(url, encoding="utf-8").text
-        user = text.extr(page, '<meta name="author" content="', '";')
-        data = {
-            "blog": self.blog,
-            "user": user.rpartition(" (")[0],
-        }
+        url = self._page_url()
+        page = self._request_page(url)[1]
+        data = self._user_data(page)
 
-        for info in self._pagination(page):
-            url, pos = text.extract(info, ' href="', '"')
-            alt, pos = text.extract(info, ' alt="', '"', pos)
+        folders = self._folders(page)
+        if folders:
+            for fid, title in folders:
+                item = {
+                    "id"        : text.parse_int(fid),
+                    "title"     : title,
+                    "_extractor": PixnetFolderExtractor,
+                }
+                item.update(data)
+                yield Message.Queue, (
+                    f"{self.root}/albums?folderId={fid}"), item
+            return
+
+        for set_url, title, set_id in self._iter_sets(url, page):
             item = {
-                "id"        : text.parse_int(url.rpartition("/")[2]),
-                "title"     : text.unescape(alt),
-                "_extractor": (PixnetFolderExtractor if "/folder/" in url else
-                               PixnetSetExtractor),
+                "id"        : set_id,
+                "title"     : title,
+                "_extractor": PixnetSetExtractor,
             }
             item.update(data)
-            yield Message.Queue, url, item
+            yield Message.Queue, set_url, item
 
-    def _pagination(self, page):
+    def _page_url(self):
+        return self.url_fmt.format(self.root, self.item_id)
+
+    def _request_page(self, url, notfound=True):
+        response = self.request(url, encoding="utf-8", notfound=notfound)
+        page = response.text
+        if "這是一個私密的部落格" in page:
+            raise self.exc.AuthorizationError("Private blog")
+        if 'name="albumpass">' in page:
+            raise self.exc.AbortExtraction(
+                f"Album {self.item_id} is password-protected.")
+        return response, page
+
+    def _user_data(self, page):
+        user = (text.extr(page, '<meta name="author" content="', '"') or
+                text.extr(page, '<meta name="article:author" content="', '"'))
+        return {
+            "blog": self.blog,
+            "user": user,
+        }
+
+    def _folders(self, page):
+        select = text.extr(page, 'name="folderId"', "</select>")
+        if not select:
+            return ()
+        folders = []
+        for opt in text.extract_iter(select, '<option value="', "</option>"):
+            fid, _, title = opt.partition('"')
+            if fid.isdigit():
+                folders.append((fid, text.unescape(title).strip()))
+        return folders
+
+    def _iter_sets(self, url, page):
+        needle = f'<a href="{self.root}/albums/'
         while True:
-            yield from text.extract_iter(page, '<li id="', '</li>')
+            for info in text.extract_iter(page, needle, "</a>"):
+                album_id, _, rest = info.partition('"')
+                if not album_id.isdigit():
+                    continue
+                title = text.extr(rest, 'data-slot="card-title"', "</div>")
+                title = text.unescape(text.extr(title, ">", "")).strip()
+                yield (f"{self.root}/albums/{album_id}",
+                       title, text.parse_int(album_id))
 
-            pnext = text.extr(page, 'class="nextBtn"', '>')
-            if pnext is None and 'name="albumpass">' in page:
-                raise self.exc.AbortExtraction(
-                    f"Album {self.item_id} is password-protected.")
-            if "href" not in pnext:
+            url = self._next_url(page, url)
+            if not url:
                 return
-            url = self.root + text.extr(pnext, 'href="', '"')
-            page = self.request(url, encoding="utf-8").text
+            page = self._request_page(url)[1]
+
+    def _iter_photos(self, url, page):
+        while True:
+            for photo_url, photo_id, title in GALLERY_ITEM_RE.findall(page):
+                yield photo_url, photo_id, text.unescape(title)
+
+            url = self._next_url(page, url)
+            if not url:
+                return
+            page = self._request_page(url)[1]
+
+    def _next_url(self, page, url):
+        nxt = NEXT_LIST_RE.search(page)
+        if nxt:
+            return text.unescape(nxt[1])
+
+        current = text.parse_int(text.extr(
+            url.replace("?", "&") + "&", "page=", "&"), 1)
+        for href in NEXT_SET_RE.findall(page):
+            href = text.unescape(href)
+            page_n = text.parse_int(text.extr(
+                href.replace("?", "&") + "&", "page=", "&"), 0)
+            if page_n == current + 1:
+                return href
+        return None
 
 
 class PixnetImageExtractor(PixnetExtractor):
@@ -65,26 +139,36 @@ class PixnetImageExtractor(PixnetExtractor):
     subcategory = "image"
     filename_fmt = "{id}.{extension}"
     directory_fmt = ("{category}", "{blog}")
-    pattern = BASE_PATTERN + r"/album/photo/(\d+)"
+    pattern = BASE_PATTERN + r"/(?:album/photo/|albums/\d+/photos/)(\d+)"
     example = "https://USER.pixnet.net/album/photo/12345"
 
     def items(self):
-        url = "https://api.pixnet.cc/oembed"
-        params = {
-            "url": (f"https://{self.blog}.pixnet.net"
-                    f"/album/photo/{self.item_id}"),
-            "format": "json",
-        }
+        response, page = self._request_page(self.url, notfound="image")
+        photo_id = self.item_id
+        needle = f'data-photo-id="{photo_id}"'
+        album_url = response.url
+        if "/photos/" in album_url:
+            album_url = album_url.split("/photos/")[0]
 
-        data = self.request_json(url, params=params)
-        data["id"] = text.parse_int(
-            data["url"].rpartition("/")[2].partition("-")[0])
-        data["filename"], _, data["extension"] = data["title"].rpartition(".")
-        data["blog"] = self.blog
-        data["user"] = data.pop("author_name")
+        while needle not in page:
+            nxt = self._next_url(page, album_url)
+            if not nxt:
+                raise self.exc.NotFoundError("image")
+            album_url = nxt
+            page = self._request_page(nxt, notfound="image")[1]
+
+        pos = page.find(needle)
+        photo_url = text.extr(page[max(0, pos-400):pos], 'href="', '"')
+        if not photo_url:
+            raise self.exc.NotFoundError("image")
+        title = text.unescape(text.extr(
+            page, needle + ' data-title="', '"'))
+        data = text.nameext_from_name(title, self._user_data(page))
+        data["id"] = text.parse_int(photo_id)
+        data["url"] = photo_url
 
         yield Message.Directory, "", data
-        yield Message.Url, data["url"], data
+        yield Message.Url, photo_url, data
 
 
 class PixnetSetExtractor(PixnetExtractor):
@@ -92,58 +176,71 @@ class PixnetSetExtractor(PixnetExtractor):
     subcategory = "set"
     directory_fmt = ("{category}", "{blog}",
                      "{folder_id} {folder_title}", "{set_id} {set_title}")
-    pattern = BASE_PATTERN + r"/album/set/(\d+)"
+    pattern = BASE_PATTERN + r"/(?:album/set/|albums/)(\d+)/?(?:$|[?#])"
     example = "https://USER.pixnet.net/album/set/12345"
 
     def items(self):
-        url = f"{self.root}/album/set/{self.item_id}"
-        page = self.request(url, encoding="utf-8").text
+        url = f"{self.root}/albums/{self.item_id}"
+        response, page = self._request_page(url)
+        if f'"album_id":"{self.item_id}"' not in page:
+            raise self.exc.NotFoundError("set")
         data = self.metadata(page)
 
         yield Message.Directory, "", data
-        for num, info in enumerate(self._pagination(page), 1):
-            url, pos = text.extract(info, ' href="', '"')
-            src, pos = text.extract(info, ' src="', '"', pos)
-            alt, pos = text.extract(info, ' alt="', '"', pos)
-
-            photo = {
-                "id": text.parse_int(url.rpartition("/")[2].partition("#")[0]),
-                "url": src.replace("_s.", "."),
+        num = 0
+        for photo_url, photo_id, title in self._iter_photos(response.url, page):
+            num += 1
+            photo = text.nameext_from_name(title, {
+                "id" : text.parse_int(photo_id),
+                "url": photo_url,
                 "num": num,
-                "filename": alt,
-                "extension": src.rpartition(".")[2],
-            }
+            })
             photo.update(data)
-            yield Message.Url, photo["url"], photo
+            yield Message.Url, photo_url, photo
 
     def metadata(self, page):
-        user , pos = text.extract(page, '<meta name="author" content="', '";')
-        _    , pos = text.extract(page, 'id="breadcrumb"', '', pos)
-        fid  , pos = text.extract(page, '/folder/', '"', pos)
-        fname, pos = text.extract(page, '>', '<', pos)
-        sid  , pos = text.extract(page, '/set/', '"', pos)
-        sname, pos = text.extract(page, '>', '<', pos)
-        return {
-            "blog": self.blog,
-            "user": user.rpartition(" (")[0],
-            "folder_id"   : text.parse_int(fid, ""),
-            "folder_title": text.unescape(fname).strip(),
-            "set_id"      : text.parse_int(sid),
-            "set_title"   : text.unescape(sname),
-        }
+        data = self._user_data(page)
+        title = text.unescape(text.extr(
+            text.extr(page, "<h2", "</h2>"), ">", "")).strip()
+        if title.endswith(" 的相簿照片"):
+            title = title[:-6]
+        if not title:
+            title = text.unescape(text.extr(
+                page, '<meta property="og:title" content="', '"'))
+            title = title.split(" | ", 1)[0]
+        data["folder_id"] = ""
+        data["folder_title"] = ""
+        data["set_id"] = text.parse_int(self.item_id)
+        data["set_title"] = title.strip()
+        return data
 
 
 class PixnetFolderExtractor(PixnetExtractor):
     """Extractor for all sets in a pixnet folder"""
     subcategory = "folder"
-    url_fmt = "{}/album/folder/{}"
-    pattern = BASE_PATTERN + r"/album/folder/(\d+)"
+    url_fmt = "{}/albums?folderId={}"
+    pattern = (BASE_PATTERN +
+               r"/(?:album/folder/(\d+)|albums/?\?(?:[^#]*&)?folderId=(\d+))")
     example = "https://USER.pixnet.net/album/folder/12345"
+
+    def items(self):
+        url = self._page_url()
+        page = self._request_page(url)[1]
+        data = self._user_data(page)
+        for set_url, title, set_id in self._iter_sets(url, page):
+            item = {
+                "id"        : set_id,
+                "title"     : title,
+                "folder_id" : text.parse_int(self.item_id),
+                "_extractor": PixnetSetExtractor,
+            }
+            item.update(data)
+            yield Message.Queue, set_url, item
 
 
 class PixnetUserExtractor(PixnetExtractor):
     """Extractor for all sets and folders of a pixnet user"""
     subcategory = "user"
-    url_fmt = "{}{}/album/list"
-    pattern = BASE_PATTERN + r"()(?:/blog|/album(?:/list)?)?/?(?:$|[?#])"
+    url_fmt = "{}/albums"
+    pattern = BASE_PATTERN + r"()(?:/blog|/albums?|/album/list)?/?(?:$|[?#])"
     example = "https://USER.pixnet.net/"
