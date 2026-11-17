@@ -9,7 +9,7 @@
 """Extractors for https://cum.st/"""
 
 from .common import Extractor, Message, Dispatch
-from .. import text, util
+from .. import text, util, dt
 
 BASE_PATTERN = r"(?:https?://)?(?:www\.)?cum\.st"
 USER_PATTERN = BASE_PATTERN + r"/creators/([^/?#]+)/([^/?#]+)"
@@ -21,7 +21,8 @@ class OnlyhavenExtractor(Extractor):
     root = "https://cum.st"
     root_dl = "https://cdn.cum.st/media"
     directory_fmt = ("{category}", "{service}", "{user}")
-    filename_fmt = "{id}_{title[:180]}_{num:>02}_{filename[:180]}.{extension}"
+    filename_fmt = ("{id}_{title!W:X64/.../}_{num:>02}_"
+                    "{filename[:180]}.{extension}")
     archive_fmt = "{service}_{user}_{id}_{num}"
     cookies_domain = ".cum.st"
 
@@ -50,18 +51,18 @@ class OnlyhavenExtractor(Extractor):
 
         for post in self.posts():
             post["_http_headers"] = headers
-            post["date"] = self.parse_timestamp(
-                post.get("published") or post.get("added") or 0)
             service = post["service"]
             post["user"] = creator_id = \
                 post.get("creatorId") or self.creator_id
-            if chtml := post.get("captionHtml"):
-                post["title"] = text.unescape(text.remove_html(
-                    chtml.partition("\n")[0]))
+            if ts := post.get("published") or post.get("added"):
+                post["date"] = dt.parse_ts(ts)
             else:
-                post["title"] = (post.get(
-                    "caption") or post.get("contentText") or "").partition(
-                    "\n")[0].strip()
+                post["date"] = dt.NONE
+            if chtml := post.get("captionHtml"):
+                post["title"] = text.unescape(text.remove_html(chtml))
+            else:
+                post["title"] = \
+                    post.get("caption") or post.get("contentText") or ""
 
             if creator_info is not None:
                 key = f"{service}_{creator_id}"
