@@ -14,27 +14,23 @@ BASE_PATTERN = r"(?:https?://)?(?:www\.)?leakgallery\.com"
 
 class LeakgalleryExtractor(Extractor):
     category = "leakgallery"
-    root = "https://leakgallery.com"
     directory_fmt = ("{category}", "{creator}")
     filename_fmt = "{id}_{filename}.{extension}"
     archive_fmt = "{creator}_{id}"
-
-    def _init(self):
-        self._app_token_ready = False
+    root = "https://leakgallery.com"
+    root_api = "https://api.leakgallery.com"
 
     def request_json(self, url, **kwargs):
-        self._ensure_app_token()
+        token = self.cache(self._extract_app_token, _key=None, _exp=720)
+        if token:
+            headers = kwargs.get("headers")
+            if not headers:
+                kwargs["headers"] = headers = {}
+            headers["X-App-Token"] = token
         return Extractor.request_json(self, url, **kwargs)
 
-    def _ensure_app_token(self):
-        if self._app_token_ready:
-            return
-        self._app_token_ready = True
-        token = self.cache(self._extract_app_token, _key=None, _exp=600)
-        if token:
-            self.session.headers["X-App-Token"] = token
-
     def _extract_app_token(self):
+        self.log.debug("Refreshing APP_TOKEN")
         page = self.request(self.root + "/").text
         token = text.extr(page, '"APP_TOKEN":"', '"')
         if not token:
@@ -106,7 +102,7 @@ class LeakgalleryUserExtractor(LeakgalleryExtractor):
 
     def items(self):
         creator, mtype, msort = self.groups
-        base = f"https://api.leakgallery.com/profile/{creator}/"
+        base = f"{self.root_api}/profile/{creator}/"
         params = {
             "type": mtype or "All",
             "sort": msort or "MostRecent",
@@ -124,7 +120,7 @@ class LeakgalleryTrendingExtractor(LeakgalleryExtractor):
 
     def items(self):
         period = self.groups[0] or "Last-Hour"
-        base = f"https://api.leakgallery.com/popular/media/{period}/"
+        base = f"{self.root_api}/popular/media/{period}/"
         return self._pagination("trending", base)
 
 
@@ -135,7 +131,7 @@ class LeakgalleryMostlikedExtractor(LeakgalleryExtractor):
     example = "https://leakgallery.com/most-liked"
 
     def items(self):
-        base = "https://api.leakgallery.com/most-liked/"
+        base = self.root_api + "/most-liked/"
         return self._pagination("most-liked", base)
 
 
@@ -148,6 +144,6 @@ class LeakgalleryPostExtractor(LeakgalleryExtractor):
     def items(self):
         creator, post_id = self.groups
         media = self.request_json(
-            f"https://api.leakgallery.com/media/{post_id}")
+            f"{self.root_api}/media/{post_id}")
         media["id"] = post_id
         return self._yield_media_items((media,), creator)
