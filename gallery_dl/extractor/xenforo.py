@@ -548,7 +548,7 @@ BASE_PATTERN = XenforoExtractor.update({
 
 class XenforoPostExtractor(XenforoExtractor):
     subcategory = "post"
-    pattern = (BASE_PATTERN + r"(/(?:index\.php\?)?th(?:reads|ema)"
+    pattern = (BASE_PATTERN + r"(/(?:index\.php\?)?th(?:reads?|ema)"
                r"/[^/?#]+/(?:page-\d+)?#?post-|/posts/)(\d+)")
     example = "https://simpcity.cr/threads/TITLE.12345/post-54321"
 
@@ -569,7 +569,7 @@ class XenforoPostExtractor(XenforoExtractor):
 
 class XenforoThreadExtractor(XenforoExtractor):
     subcategory = "thread"
-    pattern = (BASE_PATTERN + r"(/(?:index\.php\?)?th(?:reads|ema)"
+    pattern = (BASE_PATTERN + r"(/(?:index\.php\?)?th(?:reads?|ema)"
                r"/(?:[^/?#]+\.)?\d+)(?:/page-(\d+))?")
     example = "https://simpcity.cr/threads/TITLE.12345/"
 
@@ -609,7 +609,8 @@ class XenforoForumExtractor(XenforoExtractor):
 
     def items(self):
         extract_threads = text.re(
-            r'(/(?:index\.php\?)?threads/[^"]+)"[^>]+data-xf-init=').findall
+            r'(/(?:index\.php\?)?th(?:reads?|ema)/[^"]+)'
+            r'"[^>]+data-xf-init=').findall
 
         data = {"_extractor": XenforoThreadExtractor}
         path = self.groups[-2]

@@ -9,14 +9,13 @@ from gallery_dl.extractor import xenforo
 
 __tests__ = (
 {
-    "#url"     : "https://celebforum.cc/thema/addison-vodka.84947/post-885855",
-    "#category": ("xenforo", "celebforum", "post"),
+    "#url"     : "https://celebforum.cc/thread/addison-vodka.84947/post-885855",    "#category": ("xenforo", "celebforum", "post"),
     "#class"   : xenforo.XenforoPostExtractor,
     "#results" : (
-        "https://celebforum.to/data/assets/videos/notregistered.mp4",
-        "https://celebforum.to/attachments/e2vurqbi2i-png.5293040/",
-        "https://celebforum.to/attachments/wxt4sxsity-png.5293043/",
-        "https://celebforum.to/attachments/echvvlmtcl-png.5293045/",
+        "https://celebforum.cc/data/assets/videos/notregistered.mp4",
+        "https://celebforum.cc/attachments/e2vurqbi2i-png.5293040/",
+        "https://celebforum.cc/attachments/wxt4sxsity-png.5293043/",
+        "https://celebforum.cc/attachments/echvvlmtcl-png.5293045/",
     ),
 
     "count"       : 4,
@@ -30,25 +29,25 @@ __tests__ = (
         "author"     : "kamikaze-770807",
         "author_id"  : "post-88585",
         "author_slug": "",
-        "author_url" : "/threads/addison-vodka.84947/post-885855",
+        "author_url" : "/thread/addison-vodka.84947/post-885855",
         "count"      : 4,
         "date"       : "dt:2024-09-15 08:08:16",
         "id"         : "885855",
         "content"    : str,
     },
     "thread"      : {
-        "author"     : str,
-        "author_id"  : "",
-        "author_slug": str,
-        "author_url" : "",
+        "author"     : "Orvoug",
+        "author_id"  : "95761",
+        "author_slug": "orvoug",
+        "author_url" : "https://celebforum.cc/members/orvoug.95761/",
         "date"       : "dt:2024-01-29 19:56:27",
         "id"         : "84947",
         "posts"      : int,
         "section"    : "Pornostars",
         "tags"       : (),
         "title"      : "Addison Vodka",
-        "url"        : "https://celebforum.to/threads/addison-vodka.84947/",
-        "views"      : -1,
+        "url"        : "https://celebforum.cc/thread/addison-vodka.84947/",
+        "views"      : int,
         "path": [
             "Forums",
             "NSFW",
@@ -56,6 +55,12 @@ __tests__ = (
         ],
 
     },
+},
+
+{
+    "#url"     : "https://celebforum.cc/thema/addison-vodka.84947/post-885855",
+    "#category": ("xenforo", "celebforum", "post"),
+    "#class"   : xenforo.XenforoPostExtractor,
 },
 
 {
@@ -93,18 +98,18 @@ __tests__ = (
         "content"    : str
     },
     "thread"      : {
-        "author"     : str,
-        "author_id"  : "",
-        "author_slug": str,
-        "author_url" : "",
+        "author"     : "Orvoug",
+        "author_id"  : "95761",
+        "author_slug": "orvoug",
+        "author_url" : "https://celebforum.cc/members/orvoug.95761/",
         "date"       : "dt:2024-01-29 19:56:27",
         "id"         : "84947",
         "posts"      : int,
         "section"    : "Pornostars",
         "tags"       : (),
         "title"      : "Addison Vodka",
-        "url"        : "https://celebforum.to/threads/addison-vodka.84947/",
-        "views"      : -1,
+        "url"        : "https://celebforum.cc/thread/addison-vodka.84947/",
+        "views"      : range(90, 500),
     },
 },
 
