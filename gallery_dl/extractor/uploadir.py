@@ -28,7 +28,8 @@ class UploadirFileExtractor(Extractor):
 
     def items(self):
         url = f"{self.root}/u/{self.file_id}"
-        response = self.request(url, method="HEAD", allow_redirects=False)
+        response = self.request(
+            url, method="HEAD", allow_redirects=False, notfound="file")
 
         if 300 <= response.status_code < 400:
             url = response.headers["Location"]
