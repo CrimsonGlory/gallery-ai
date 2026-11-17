@@ -247,7 +247,7 @@ __tests__ = (
     "service"         : "onlyfans",
     "sha256"          : "cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666",
     "storageKey"      : "cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666",
-    "title"           : "**(🍼) ****Lifetime Breeding 5+ Hours Vault ** Master Breeder Chance: 3/3! [ 🟩 🟩 🟩 ]",
+    "title"           : "**(🍼) ****Lifetime Breeding 5+ Hours Vault ** Master Breeder Chance: 3/3! [ 🟩 🟩 🟩 ] ┌───────────────────────────┐ │ ⠀ 💎 ENDER CHEST 💎 │ [🔓 OPEN] ⠀ │ └────────────┬──────────────┘ ⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀▼ ⠀ ⠀ ⠀⠀ 100% BOOST UP TO RECEIVE: Limited Edition SweetieFox Painting ⠀ ⠀ ⠀ ⠀ ⠀⠀ ⠀ ⠀ ⠀ ⠀+ Master Breeder: 35+ Hours Worth ⠀ ⠀ Unlock → Send a 🔓 → Claim It All",
     "url"             : "https://cdn.cum.st/media/cf168e0f8b2f719e8199a881ee02bce87ad8471768f83cecc58f768105403666/original.mp4",
     "user"            : "32696630",
     "username"        : "sweetiefox_of",
