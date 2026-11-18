@@ -387,6 +387,14 @@ class TwitterExtractor(Extractor):
 
     def _extract_article(self, tweet, files):
         article = tweet["article"]["article_results"]["result"]
+
+        if "media_entities" not in article and self._article_media or \
+                "content_state" not in article and (
+                self._article_html or self._article_doc):
+            tid = tweet["legacy"]["conversation_id_str"]
+            tweet = next(self.api.tweet_detail(tid))
+            article = tweet["article"]["article_results"]["result"]
+
         if self._article_meta:
             tweet["article"] = {
                 "id": article.get("rest_id"),
@@ -1011,11 +1019,7 @@ class TwitterArticlesExtractor(TwitterExtractor):
     example = "https://x.com/USER/articles"
 
     def tweets(self):
-        for tweet in self.api.user_articles(self.user):
-            tid = tweet["legacy"]["conversation_id_str"]
-            for tweet in self.api.tweet_detail(tid):
-                yield tweet
-                break
+        return self.api.user_articles(self.user)
 
 
 class TwitterMediaExtractor(TwitterExtractor):
