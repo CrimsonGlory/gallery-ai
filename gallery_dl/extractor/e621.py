@@ -34,20 +34,17 @@ class E621Extractor(danbooru.DanbooruExtractor):
 
         data = self.metadata()
         for post in self.posts():
-            if "file" in post:
-                file = post["file"]
-            else:
-                files = post["files"]
-                file = files["meta"]
-                file.update(files["original"])
+            if "files" in post:
+                self._update_post(post)
+
+            file = post["file"]
 
             if not file["url"]:
                 md5 = file["md5"]
                 file["url"] = (f"https://static1.{self.root[8:]}/data"
                                f"/{md5[0:2]}/{md5[2:4]}/{md5}.{file['ext']}")
 
-            if notes and (post.get("has_notes") or
-                          "has" in post and post["has"].get("notes")):
+            if notes and post.get("has_notes"):
                 post["notes"] = self._get_notes(post["id"])
 
             if pools and post["pools"]:
@@ -79,6 +76,67 @@ class E621Extractor(danbooru.DanbooruExtractor):
     def import_blacklist(self):
         url = f"{self.root}/users/{self._get_auth_info()[0]}.json"
         return self.request_json(url)["blacklisted_tags"].splitlines()
+
+    def _pagination(self, endpoint, params, prefix=None):
+        params["mode"] = "extended"
+        return danbooru.DanbooruExtractor._pagination(
+            self, endpoint, params, prefix)
+
+    def _update_post(self, post):
+        """Convert a post from the 'v2' API layout to the previous one"""
+        files = post.pop("files")
+        has = post.pop("has")
+        meta = files["meta"]
+
+        file = {
+            "md5" : meta["md5"],
+            "ext" : meta["ext"],
+            "size": meta["size"],
+        }
+        file.update(files["original"])
+        post["file"] = file
+        post["duration"] = meta.get("duration")
+
+        preview = files["preview"]
+        post["preview"] = {
+            "url"   : preview["jpg"],
+            "alt"   : preview["webp"],
+            "width" : preview["width"],
+            "height": preview["height"],
+        }
+
+        if has.get("sample"):
+            sample = files["sample"]
+            post["sample"] = {
+                "url"       : sample["jpg"],
+                "alt"       : sample["webp"],
+                "width"     : sample["width"],
+                "height"    : sample["height"],
+                "alternates": files.get("video") or {},
+                "has"       : True,
+            }
+        else:
+            post["sample"] = {
+                "url"       : None,
+                "alt"       : None,
+                "width"     : file["width"],
+                "height"    : file["height"],
+                "alternates": {},
+                "has"       : False,
+            }
+
+        stats = post.pop("stats")
+        post["score"]         = stats["score"]
+        post["fav_count"]     = stats["fav_count"]
+        post["comment_count"] = stats["comment_count"]
+        post["is_favorited"]  = stats["is_favorited"]
+        post["vote"]          = stats["vote"]
+
+        post["has_notes"] = has.get("notes")
+
+        relationships = post["relationships"]
+        relationships["has_children"]        = has.get("children")
+        relationships["has_active_children"] = has.get("active_children")
 
     def _get_notes(self, id):
         return self.request_json(
@@ -159,7 +217,7 @@ class E621PostExtractor(E621Extractor, danbooru.DanbooruPostExtractor):
     def posts(self):
         pid = self.groups[-2] or int(self.groups[-1], 32)
         url = f"{self.root}/posts/{pid}.json"
-        post = self.request_json(url)
+        post = self.request_json(url, params={"mode": "extended"})
         return (post["post"] if "post" in post else post,)
 
 
