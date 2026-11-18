@@ -34,14 +34,20 @@ class E621Extractor(danbooru.DanbooruExtractor):
 
         data = self.metadata()
         for post in self.posts():
-            file = post["file"]
+            if "file" in post:
+                file = post["file"]
+            else:
+                files = post["files"]
+                file = files["meta"]
+                file.update(files["original"])
 
             if not file["url"]:
                 md5 = file["md5"]
                 file["url"] = (f"https://static1.{self.root[8:]}/data"
                                f"/{md5[0:2]}/{md5[2:4]}/{md5}.{file['ext']}")
 
-            if notes and post.get("has_notes"):
+            if notes and (post.get("has_notes") or
+                          "has" in post and post["has"].get("notes")):
                 post["notes"] = self._get_notes(post["id"])
 
             if pools and post["pools"]:
@@ -52,12 +58,13 @@ class E621Extractor(danbooru.DanbooruExtractor):
             post["extension"] = file["ext"]
             post["date"] = self.parse_datetime_iso(post["created_at"])
 
-            tags = []
-            for category, tags_cat in post["tags"].items():
-                post["tags_" + category] = tags_cat
-                tags.extend(tags_cat)
-            tags.sort()
-            post["tags"] = tags
+            if post["tags"].__class__ is dict:
+                tags = []
+                for category, tags_cat in post["tags"].items():
+                    post["tags_" + category] = tags_cat
+                    tags.extend(tags_cat)
+                tags.sort()
+                post["tags"] = tags
 
             post.update(data)
             yield Message.Directory, "", post
@@ -152,7 +159,8 @@ class E621PostExtractor(E621Extractor, danbooru.DanbooruPostExtractor):
     def posts(self):
         pid = self.groups[-2] or int(self.groups[-1], 32)
         url = f"{self.root}/posts/{pid}.json"
-        return (self.request_json(url)["post"],)
+        post = self.request_json(url)
+        return (post["post"] if "post" in post else post,)
 
 
 class E621PopularExtractor(E621Extractor, danbooru.DanbooruPopularExtractor):
