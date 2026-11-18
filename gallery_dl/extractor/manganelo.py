@@ -17,6 +17,20 @@ class ManganeloExtractor(BaseExtractor):
     basecategory = "manganelo"
     request_interval = (0.5, 1.5)
 
+    def _jsonld(self, page, type):
+        for raw in text.extract_iter(
+                page, 'type="application/ld+json">', "</script>"):
+            try:
+                data = util.json_loads(raw)
+            except Exception:
+                continue
+            if data.get("@type") == type:
+                return data
+            main = data.get("mainEntity")
+            if main and main.get("@type") == type:
+                return main
+        return None
+
 
 BASE_PATTERN = ManganeloExtractor.update({
     "nelomanga": {
@@ -33,7 +47,7 @@ BASE_PATTERN = ManganeloExtractor.update({
     },
     "mangakakalot": {
         "root"   : "https://www.mangakakalot.gg",
-        "pattern": r"(?:www\.)?(?:mangakakalot\.gg|kakamanga\.com)",
+        "pattern": r"(?:www\.)?(?:mangakakalot\.gg|(?:kaka|kata)manga\.com)",
     },
 })
 
@@ -50,37 +64,69 @@ class ManganeloChapterExtractor(ManganeloExtractor, ChapterExtractor):
     def metadata(self, page):
         extr = text.extract_from(page)
 
-        data = {
-            "date"        : self.parse_datetime_iso(extr(
-                '"datePublished": "', '"')[:19]),
-            "date_updated": self.parse_datetime_iso(extr(
-                '"dateModified": "', '"')[:19]),
-            "manga_id"    : text.parse_int(extr("comic_id =", ";")),
-            "chapter_id"  : text.parse_int(extr("chapter_id =", ";")),
-            "manga"       : extr("comic_name =", ";").strip('" '),
-            "lang"        : "en",
-            "language"    : "English",
+        if "comic_id =" in page:
+            data = {
+                "date"        : self.parse_datetime_iso(extr(
+                    '"datePublished": "', '"')[:19]),
+                "date_updated": self.parse_datetime_iso(extr(
+                    '"dateModified": "', '"')[:19]),
+                "manga_id"    : text.parse_int(extr("comic_id =", ";")),
+                "chapter_id"  : text.parse_int(extr("chapter_id =", ";")),
+                "manga"       : extr("comic_name =", ";").strip('" '),
+                "lang"        : "en",
+                "language"    : "English",
+            }
+
+            chapter_name = extr("chapter_name =", ";").strip('" ')
+            chapter, sep, minor = chapter_name.rpartition(" ")[2].partition(".")
+            data["chapter"] = text.parse_int(chapter)
+            data["chapter_minor"] = sep + minor
+            data["author"] = extr(". Author:", " already has ").strip()
+            return data
+
+        chapter = self._jsonld(page, "Chapter") or {}
+        book = chapter.get("isPartOf") or {}
+        name = chapter.get("name") or ""
+        ch, sep, minor = name.rpartition(" ")[2].partition(".")
+        return {
+            "date"         : self.parse_datetime_iso(
+                chapter.get("datePublished") or ""),
+            "date_updated" : self.parse_datetime_iso(
+                chapter.get("dateModified") or ""),
+            "manga_id"     : text.parse_int(
+                text.extr(page, '\\"comicId\\":', ",") or
+                text.extr(page, '"comicId":', ",")),
+            "chapter_id"   : text.parse_int(
+                text.extr(page, '\\"chapterId\\":', ",") or
+                text.extr(page, '"chapterId":', ",")),
+            "manga"        : text.unescape(book.get("name") or ""),
+            "lang"         : "en",
+            "language"     : "English",
+            "chapter"      : text.parse_int(ch),
+            "chapter_minor": sep + minor,
+            "author"       : text.remove_html(text.extr(
+                page, ">Author</span>", "</span>")),
         }
-
-        chapter_name = extr("chapter_name =", ";").strip('" ')
-        chapter, sep, minor = chapter_name.rpartition(" ")[2].partition(".")
-        data["chapter"] = text.parse_int(chapter)
-        data["chapter_minor"] = sep + minor
-        data["author"] = extr(". Author:", " already has ").strip()
-
-        return data
 
     def images(self, page):
         extr = text.extract_from(page)
-        cdns = util.json_loads(extr("var cdns =", ";"))[0]
-        imgs = util.json_loads(extr("var chapterImages =", ";"))
+        raw = extr("var cdns =", ";")
+        if raw:
+            cdns = util.json_loads(raw)[0]
+            imgs = util.json_loads(extr("var chapterImages =", ";"))
 
-        if cdns[-1] != "/":
-            cdns += "/"
+            if cdns[-1] != "/":
+                cdns += "/"
+
+            return [
+                (cdns + path, None)
+                for path in imgs
+            ]
 
         return [
-            (cdns + path, None)
-            for path in imgs
+            (url, None)
+            for url in text.extract_iter(page, '<img src="', '"')
+            if "2xstorage.com/" in url and "/thumb/" not in url
         ]
 
 
@@ -100,17 +146,37 @@ class ManganeloMangaExtractor(ManganeloExtractor, MangaExtractor):
         url = extr('property="og:url" content="', '"') or self.page_url
         slug = url[url.rfind("/")+1:]
 
-        info = {
-            "manga" : text.unescape(extr("<h1>", "<")),
-            "manga_url" : url,
-            "manga_slug": slug,
-            "author": text.remove_html(extr("<li>Author(s) :", "</li>")),
-            "status": extr("<li>Status :", "<").strip(),
-            "date_updated": self.parse_datetime(extr(
-                "<li>Last updated :", "<").strip(), "%b-%d-%Y %I:%M:%S %p"),
-            "tags"  : text.split_html(extr(">Genres :", "</li>"))[::2],
-            "lang"  : "en",
-        }
+        book = self._jsonld(page, "Book")
+        if book:
+            authors = book.get("author") or ()
+            if authors.__class__ is dict:
+                authors = (authors,)
+            info = {
+                "manga" : text.unescape(book.get("name") or ""),
+                "manga_url" : url,
+                "manga_slug": slug,
+                "author": ", ".join(
+                    a["name"] for a in authors
+                    if a.__class__ is dict and "name" in a),
+                "status": text.remove_html(text.extr(
+                    page, ">Status</span>", "</span>")),
+                "date_updated": self.parse_datetime_iso(
+                    book.get("datePublished") or ""),
+                "tags"  : list(book.get("genre") or []),
+                "lang"  : "en",
+            }
+        else:
+            info = {
+                "manga" : text.unescape(extr("<h1>", "<")),
+                "manga_url" : url,
+                "manga_slug": slug,
+                "author": text.remove_html(extr("<li>Author(s) :", "</li>")),
+                "status": extr("<li>Status :", "<").strip(),
+                "date_updated": self.parse_datetime(extr(
+                    "<li>Last updated :", "<").strip(), "%b-%d-%Y %I:%M:%S %p"),
+                "tags"  : text.split_html(extr(">Genres :", "</li>"))[::2],
+                "lang"  : "en",
+            }
         info["tags"].sort()
 
         base = self.page_url.rstrip("/") + "/"

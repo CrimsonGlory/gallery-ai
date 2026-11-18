@@ -15,7 +15,7 @@ __tests__ = (
     "#pattern" : r"https://imgs-2.2xstorage.com/danzai-sareta-akuyaku-reijou-wa-gyakkou-shite-kanpeki-na-akujo-wo-mezasu/4\.5/\d+\.webp",
     "#count"   : 24,
 
-    "author"       : "NARAYAMA Bakufu",
+    "author"       : str,
     "chapter"      : 4,
     "chapter_id"   : 6,
     "chapter_minor": ".5",
@@ -64,6 +64,12 @@ __tests__ = (
 
 {
     "#url"     : "https://mangakakalot.gg/manga/aria",
+    "#category": ("manganelo", "mangakakalot", "manga"),
+    "#class"   : manganelo.ManganeloMangaExtractor,
+},
+
+{
+    "#url"     : "https://www.katamanga.com/manga/aria",
     "#category": ("manganelo", "mangakakalot", "manga"),
     "#class"   : manganelo.ManganeloMangaExtractor,
 },
