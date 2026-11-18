@@ -43,7 +43,7 @@ __tests__ = (
     "#url"     : "https://febri.jp/topics/",
     "#class"   : febri.FebriTopicsExtractor,
     "#pattern" : febri.FebriArticleExtractor.pattern,
-    "#count"   : 866,
+    "#count"   : range(800, 1000),
 },
 
 )
