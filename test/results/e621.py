@@ -105,30 +105,50 @@ __tests__ = (
         "rating_locked": False,
         "status_locked": False,
     },
-    "preview"         : {
-        "alt"   : "https://static1.e621.net/data/preview/63/0b/630b624cc581023ef9d26fd89d37a410.webp",
-        "height": 256,
-        "url"   : "https://static1.e621.net/data/preview/63/0b/630b624cc581023ef9d26fd89d37a410.jpg",
-        "width" : 256,
+    "files"           : {
+        "original": {
+            "height": 900,
+            "url"   : "https://static1.e621.net/data/63/0b/630b624cc581023ef9d26fd89d37a410.jpg",
+            "width" : 900,
+        },
+        "preview": {
+            "height": 256,
+            "jpg"   : "https://static1.e621.net/data/preview/63/0b/630b624cc581023ef9d26fd89d37a410.jpg",
+            "webp"  : "https://static1.e621.net/data/preview/63/0b/630b624cc581023ef9d26fd89d37a410.webp",
+            "width" : 256,
+        },
+        "sample": {
+            "height": 850,
+            "jpg"   : "https://static1.e621.net/data/sample/63/0b/630b624cc581023ef9d26fd89d37a410.jpg",
+            "webp"  : "https://static1.e621.net/data/sample/63/0b/630b624cc581023ef9d26fd89d37a410.webp",
+            "width" : 850,
+        },
+    },
+    "has"             : {
+        "active_children": False,
+        "children"       : False,
+        "notes"          : False,
+        "parent"         : False,
+        "sample"         : True,
     },
     "relationships"   : {
-        "children"    : [],
-        "has_active_children": False,
-        "has_children": False,
-        "parent_id"   : None,
-    },
-    "sample"          : {
-        "alt"       : "https://static1.e621.net/data/sample/63/0b/630b624cc581023ef9d26fd89d37a410.webp",
-        "alternates": {},
-        "has"       : True,
-        "height"    : 850,
-        "url"       : "https://static1.e621.net/data/sample/63/0b/630b624cc581023ef9d26fd89d37a410.jpg",
-        "width"     : 850,
+        "children" : [],
+        "parent_id": None,
     },
     "score"           : {
         "down" : int,
         "total": int,
         "up"   : int,
+    },
+    "stats"           : {
+        "comment_count": range(4, 8),
+        "fav_count"    : range(200, 500),
+        "is_favorited" : False,
+        "score"        : {
+            "down" : int,
+            "total": int,
+            "up"   : int,
+        },
     },
 },
 
