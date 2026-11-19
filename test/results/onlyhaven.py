@@ -306,13 +306,8 @@ Master Breeder Chance: 3/3! [ 🟩 🟩 🟩 ]
     "#url"     : "https://cum.st/creators/fansly/365239425979916288?tab=dms",
     "#category": ("", "onlyhaven", "fansly"),
     "#class"   : onlyhaven.OnlyhavenUserDmsExtractor,
-    "#results" : (
-        "https://cdn.cum.st/media/83827bdbe2f706ef34b145aa533ca9c9e0745a2f0a35c1bc6fd91e9502958895/original.mp4",
-        "https://cdn.cum.st/media/7c683c29bd432f737528c2f0df0b0306c0247cbb57a452abda4a33bd28b85cf6/original.png",
-        "https://cdn.cum.st/media/7358321496807980d3fc3c6bab3c3b3deaf3b9ba3806325a67e98b9283ca8e4e/original.jpeg",
-        "https://cdn.cum.st/media/51e4f41cceff3cf228a2dedfb73be0e1c51416019fdb16345952a17ce303378a/original.jpeg",
-        "https://cdn.cum.st/media/ab83cec1e3b32e210a645d317fd80e7350b09e645a914738e5214328a1fa7176/original.jpeg",
-    ),
+    "#pattern" : r"https://cdn\.cum\.st/media/[0-9a-f]{64}/original\.\w+",
+    "#count"   : range(1, 20),
 
     "bookmarked"      : int,
     "bytes"           : int,
