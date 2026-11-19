@@ -22,6 +22,17 @@ class E621Extractor(danbooru.DanbooruExtractor):
     useragent = util.USERAGENT_GALLERYDL + " (by mikf)"
     request_interval_min = 1.0
 
+    def _init(self):
+        super()._init()
+        if self.config("v1"):
+            # request API responses in the old 'v1' layout
+            self._params = {"v1": "true"}
+        elif self.config("tags", True):
+            # request tags grouped by category
+            self._params = {"mode": "extended"}
+        else:
+            self._params = None
+
     def items(self):
         if includes := self.config("metadata") or ():
             if includes.__class__ is str:
@@ -31,6 +42,8 @@ class E621Extractor(danbooru.DanbooruExtractor):
 
         notes = ("notes" in includes)
         pools = ("pools" in includes)
+
+        tags_option = self.config("tags", True)
 
         data = self.metadata()
         for post in self.posts():
@@ -58,7 +71,8 @@ class E621Extractor(danbooru.DanbooruExtractor):
             if post["tags"].__class__ is dict:
                 tags = []
                 for category, tags_cat in post["tags"].items():
-                    post["tags_" + category] = tags_cat
+                    if tags_option:
+                        post["tags_" + category] = tags_cat
                     tags.extend(tags_cat)
                 tags.sort()
                 post["tags"] = tags
@@ -78,7 +92,8 @@ class E621Extractor(danbooru.DanbooruExtractor):
         return self.request_json(url)["blacklisted_tags"].splitlines()
 
     def _pagination(self, endpoint, params, prefix=None):
-        params["mode"] = "extended"
+        if self._params:
+            params.update(self._params)
         return danbooru.DanbooruExtractor._pagination(
             self, endpoint, params, prefix)
 
@@ -217,7 +232,7 @@ class E621PostExtractor(E621Extractor, danbooru.DanbooruPostExtractor):
     def posts(self):
         pid = self.groups[-2] or int(self.groups[-1], 32)
         url = f"{self.root}/posts/{pid}.json"
-        post = self.request_json(url, params={"mode": "extended"})
+        post = self.request_json(url, params=self._params)
         return (post["post"] if "post" in post else post,)
 
 
