@@ -1873,6 +1873,13 @@ Consider all listed sites to potentially be NSFW.
     <td><span title="https://tmohentai.com/contents/12345a67b89c0">Galleries</span></td>
     <td></td>
 </tr>
+<tr id="topfaps" title="topfaps">
+    <td>Topfaps</td>
+    <td>https://topfaps.com</td>
+    <td><span title="https://topfaps.com/model/CREATOR">Models</span> |
+        <span title="https://topfaps.com/photo/12345">Posts</span></td>
+    <td></td>
+</tr>
 <tr id="toyhouse" title="toyhouse">
     <td>Toyhouse</td>
     <td>https://toyhou.se/</td>
