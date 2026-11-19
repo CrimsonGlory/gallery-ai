@@ -8,8 +8,6 @@
 
 from .common import Extractor, Message
 from .. import text, util
-import base64
-import datetime
 
 BASE_PATTERN = r"(?:https?://)?(?:www\.)?topfaps\.com"
 
@@ -23,16 +21,6 @@ class TopfapsExtractor(Extractor):
     filename_fmt = "{id}_{filename}.{extension}"
     archive_fmt = "{type}_{id}"
 
-    def _init(self):
-        self.session.headers["Referer"] = self.root + "/"
-
-    @staticmethod
-    def _parse_date(value):
-        try:
-            return datetime.datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
-        except Exception:
-            return None
-
     @staticmethod
     def _decode_stream(token):
         """Decode 'stream_url_play' into a playable URL
@@ -43,9 +31,8 @@ class TopfapsExtractor(Extractor):
         if not token:
             return None
         try:
-            token = token[::-1][16:-16]
-            token += "=" * (-len(token) % 4)
-            url = base64.b64decode(token).decode("utf-8")
+            token = token[-17:15:-1]  # token[::-1][16:-16]
+            url = util.b64decode(token + "==")
         except Exception:
             return None
         return url if url.startswith("http") else None
@@ -66,19 +53,19 @@ class TopfapsExtractor(Extractor):
         """Look for a playable stream URL in a video page"""
         # obfuscated token (same format as 'stream_url_play')
         for token in text.re(r"[A-Za-z0-9+/=]{120,}").findall(page):
-            url = self._decode_stream(token)
-            if url:
+            if url := self._decode_stream(token):
                 return url
         return None
 
     def _media_from_item(self, item, creator):
         """Build (url, kwdict) from an entry of the JSON API"""
-        is_video = item.get("type") == 1
+        is_video = (item.get("type") == 1)
         data = {
             "id"          : item["id"],
             "title"       : text.unescape(item.get("title") or ""),
             "views"       : item.get("count_views"),
-            "date"        : self._parse_date(item.get("published_date")),
+            "date"        : self.parse_datetime_iso(item.get(
+                "published_date")),
             "creator"     : creator,
             "model_id"    : item.get("model_id"),
             "product_code": item.get("product_code"),
@@ -87,20 +74,16 @@ class TopfapsExtractor(Extractor):
         }
 
         if is_video:
-            url = self._decode_stream(item.get("stream_url_play"))
-            if not url:
-                self.log.warning("%s: Unable to decode video URL",
-                                 item["id"])
-                return None, None
-            data["filename"] = str(item["id"])
-            return self._video_url(url, data), data
-
-        url = item.get("image")
-        if not url:
-            self.log.warning("%s: No image URL found", item["id"])
+            if url := self._decode_stream(item.get("stream_url_play")):
+                data["filename"] = str(item["id"])
+                return self._video_url(url, data), data
+            self.log.warning("%s: Unable to decode video URL", item["id"])
             return None, None
-        text.nameext_from_url(url, data)
-        return url, data
+
+        if url := item.get("image"):
+            return url, text.nameext_from_url(url, data)
+        self.log.warning("%s: No image URL found", item["id"])
+        return None, None
 
 
 class TopfapsModelExtractor(TopfapsExtractor):
