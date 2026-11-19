@@ -93,7 +93,7 @@ BASE_PATTERN = MisskeyExtractor.update({
     },
 })
 
-USER_PATTERN = BASE_PATTERN + r"/(?:@([^/?#]+)|users/([^/?#]+))"
+USER_PATTERN = BASE_PATTERN + r"/(@[^/?#]+|users/[^/?#]+)"
 
 
 class MisskeyUserExtractor(Dispatch, MisskeyExtractor):
@@ -104,12 +104,7 @@ class MisskeyUserExtractor(Dispatch, MisskeyExtractor):
     # example = "https://misskey.io/users/98765zwxyv"
 
     def items(self):
-        username = self.groups[-2]
-        user_id = self.groups[-1]
-        if username:
-            base = f"{self.root}/@{username}/"
-        elif user_id:
-            base = f"{self.root}/users/{user_id}/"
+        base = f"{self.root}/{self.groups[-1]}/"
         return self._dispatch_extractors((
             (MisskeyInfoExtractor      , base + "info"),
             (MisskeyAvatarExtractor    , base + "avatar"),
@@ -126,10 +121,7 @@ class MisskeyNotesExtractor(MisskeyExtractor):
     # example = "https://misskey.io/users/98765zwxyv/notes"
 
     def notes(self):
-        user_id = self.groups[-1]
-        if not user_id:
-            user_id = self.api.user_id_by_username(self.groups[-2])
-        return self.api.users_notes(user_id)
+        return self.api.users_notes(self.groups[-1])
 
 
 class MisskeyInfoExtractor(MisskeyExtractor):
@@ -140,9 +132,7 @@ class MisskeyInfoExtractor(MisskeyExtractor):
     # example = "https://misskey.io/users/98765zwxyv/info"
 
     def items(self):
-        user = self.api.users_show(
-            username=self.groups[-2],
-            user_id=self.groups[-1])
+        user = self.api.user(self.groups[-1])
         return iter(((Message.Directory, "", user.copy()),))
 
 
@@ -154,9 +144,7 @@ class MisskeyAvatarExtractor(MisskeyExtractor):
     # example = "https://misskey.io/users/98765zwxyv/avatar"
 
     def notes(self):
-        user = self.api.users_show(
-            username=self.groups[-2],
-            user_id=self.groups[-1])
+        user = self.api.user(self.groups[-1])
         url = user.get("avatarUrl")
         return (self._make_note("avatar", user, url),) if url else ()
 
@@ -169,9 +157,7 @@ class MisskeyBackgroundExtractor(MisskeyExtractor):
     # example = "https://misskey.io/users/98765zwxyv/background"
 
     def notes(self):
-        user = self.api.users_show(
-            username=self.groups[-2],
-            user_id=self.groups[-1])
+        user = self.api.user(self.groups[-1])
         url = user.get("bannerUrl")
         return (self._make_note("background", user, url),) if url else ()
 
@@ -183,10 +169,7 @@ class MisskeyFollowingExtractor(MisskeyExtractor):
     example = "https://misskey.io/@USER/following"
 
     def items(self):
-        user_id = self.groups[-1]
-        if not user_id:
-            user_id = self.api.user_id_by_username(self.groups[-2])
-        for user in self.api.users_following(user_id):
+        for user in self.api.users_following(self.groups[-1]):
             user = user["followee"]
             url = f"{self.root}/@{user['username']}"
             if (host := user["host"]) is not None:
@@ -252,31 +235,29 @@ class MisskeyAPI():
         self.extractor = extractor
         self.access_token = extractor.config("access-token")
 
-    def user_id_by_username(self, username):
-        return self.users_show(username)["id"]
-
-    def users_following(self, user_id):
+    def users_following(self, handle):
         endpoint = "/users/following"
-        data = {"userId": user_id}
+        data = {"userId": self.userid(handle)}
         return self._pagination(endpoint, data)
 
-    def users_notes(self, user_id):
+    def users_notes(self, handle):
         endpoint = "/users/notes"
-        data = {"userId": user_id}
+        data = {"userId": self.userid(handle)}
         return self._pagination(endpoint, data)
 
-    def users_show(self, username=None, user_id=None):
-        return self.extractor.cache(self._users_show_impl, username, user_id)
+    def user(self, handle):
+        return self.extractor.cache(self.users_show, handle)
 
-    def _users_show_impl(self, username, user_id):
+    def userid(self, handle):
+        return self.user(handle)["id"] if handle[0] == "@" else handle[6:]
+
+    def users_show(self, handle):
         endpoint = "/users/show"
-        if username:
-            username, _, host = username.partition("@")
+        if handle[0] == "@":
+            username, _, host = handle[1:].partition("@")
             data = {"username": username, "host": host or None}
-        elif user_id:
-            data = {"userId": user_id}
         else:
-            raise ValueError("username or user_id is required")
+            data = {"userId": handle[6:]}
         return self._call(endpoint, data)
 
     def emojis(self):
