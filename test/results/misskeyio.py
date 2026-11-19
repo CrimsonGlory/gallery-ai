@@ -22,12 +22,45 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://misskey.io/users/9bhpt59w5k",
+    "#comment" : "user ID URL",
+    "#category": ("misskey", "misskey.io", "user"),
+    "#class"   : misskey.MisskeyUserExtractor,
+    "#options" : {"include": "all"},
+    "#results" : (
+        "https://misskey.io/users/9bhpt59w5k/info",
+        "https://misskey.io/users/9bhpt59w5k/avatar",
+        "https://misskey.io/users/9bhpt59w5k/banner",
+        "https://misskey.io/users/9bhpt59w5k/notes",
+    ),
+},
+
+{
     "#url"     : "https://misskey.io/@lithla/notes",
     "#category": ("misskey", "misskey.io", "notes"),
     "#class"   : misskey.MisskeyNotesExtractor,
     "#pattern" : r"https://(media.misskeyusercontent.(jp|com)|s\d+\.arkjp\.net)/(misskey|io)/[\w-]+\.\w+",
     "#range"   : "1-50",
     "#count"   : 50,
+
+    "user": {
+        "id"      : "9bhpt59w5k",
+        "username": "lithla",
+    },
+},
+
+{
+    "#url"     : "https://misskey.io/users/9bhpt59w5k/notes",
+    "#category": ("misskey", "misskey.io", "notes"),
+    "#class"   : misskey.MisskeyNotesExtractor,
+    "#pattern" : r"https://(media.misskeyusercontent.(jp|com)|s\d+\.arkjp\.net)/(misskey|io)/[\w-]+\.\w+",
+    "#range"   : "1-50",
+    "#count"   : 50,
+
+    "user": {
+        "id"      : "9bhpt59w5k",
+        "username": "lithla",
+    },
 },
 
 {
