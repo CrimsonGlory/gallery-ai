@@ -93,16 +93,18 @@ BASE_PATTERN = MisskeyExtractor.update({
     },
 })
 
+USER_PATTERN = BASE_PATTERN + r"/(?:@([^/?#]+)|users/([^/?#]+))"
+
 
 class MisskeyUserExtractor(Dispatch, MisskeyExtractor):
     """Extractor for all images of a Misskey user"""
     subcategory = "user"
-    pattern = BASE_PATTERN + r"/(?:@([^/?#]+)|users/([^/?#]+))/?$"
+    pattern = USER_PATTERN + r"/?$"
     example = "https://misskey.io/@USER"
     # example = "https://misskey.io/users/98765zwxyv"
 
     def items(self):
-        username =  self.groups[-2]
+        username = self.groups[-2]
         user_id = self.groups[-1]
         if username:
             base = f"{self.root}/@{username}/"
@@ -119,7 +121,7 @@ class MisskeyUserExtractor(Dispatch, MisskeyExtractor):
 class MisskeyNotesExtractor(MisskeyExtractor):
     """Extractor for a Misskey user's notes"""
     subcategory = "notes"
-    pattern = BASE_PATTERN + r"/(?:@([^/?#]+)|users/([^/?#]+))/notes"
+    pattern = USER_PATTERN + r"/notes"
     example = "https://misskey.io/@USER/notes"
     # example = "https://misskey.io/users/98765zwxyv/notes"
 
@@ -133,7 +135,7 @@ class MisskeyNotesExtractor(MisskeyExtractor):
 class MisskeyInfoExtractor(MisskeyExtractor):
     """Extractor for a Misskey user's profile data"""
     subcategory = "info"
-    pattern = BASE_PATTERN + r"/(?:@([^/?#]+)|users/([^/?#]+))/info"
+    pattern = USER_PATTERN + r"/info"
     example = "https://misskey.io/@USER/info"
     # example = "https://misskey.io/users/98765zwxyv/info"
 
@@ -147,8 +149,9 @@ class MisskeyInfoExtractor(MisskeyExtractor):
 class MisskeyAvatarExtractor(MisskeyExtractor):
     """Extractor for a Misskey user's avatar"""
     subcategory = "avatar"
-    pattern = BASE_PATTERN + r"/(?:@([^/?#]+)|users/([^/?#]+))/avatar"
+    pattern = USER_PATTERN + r"/avatar"
     example = "https://misskey.io/@USER/avatar"
+    # example = "https://misskey.io/users/98765zwxyv/avatar"
 
     def notes(self):
         user = self.api.users_show(
@@ -161,7 +164,7 @@ class MisskeyAvatarExtractor(MisskeyExtractor):
 class MisskeyBackgroundExtractor(MisskeyExtractor):
     """Extractor for a Misskey user's banner image"""
     subcategory = "background"
-    pattern = BASE_PATTERN + r"/(?:@([^/?#]+)|users/([^/?#]+))/ba(?:nner|ckground)"
+    pattern = USER_PATTERN + r"/ba(?:nner|ckground)"
     example = "https://misskey.io/@USER/banner"
     # example = "https://misskey.io/users/98765zwxyv/background"
 
@@ -176,7 +179,7 @@ class MisskeyBackgroundExtractor(MisskeyExtractor):
 class MisskeyFollowingExtractor(MisskeyExtractor):
     """Extractor for followed Misskey users"""
     subcategory = "following"
-    pattern = BASE_PATTERN + r"/(?:@([^/?#]+)|users/([^/?#]+))/following"
+    pattern = USER_PATTERN + r"/following"
     example = "https://misskey.io/@USER/following"
 
     def items(self):
