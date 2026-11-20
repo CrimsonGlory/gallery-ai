@@ -107,6 +107,7 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
     def get_info(self, page):
         page = self._continue(page)
         for needle in (
+            'class="img-photo" href="',
             '<div style="text-align:center;"><a href="',
             'class="img-center"><a href="',
             'class="centred img-full" src="',
@@ -142,11 +143,24 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
 
     def metadata(self, page):
         page = getattr(self, "_page", page)
-        extr = text.extract_from(page, page.index("[ FILESIZE <"))
-        size = extr(">", "</span>").replace(" ", "")
+        if 'class="img-meta"' in page:
+            extr = text.extract_from(page, page.index('class="img-meta"'))
+            size = extr("<b>", "</b>").replace(" ", "")
+            dim = extr("<b>", "</b>")
+            width, _, height = (dim
+                                .replace("&times;", "x")
+                                .replace("\xd7", "x")
+                                .partition("x"))
+            height = height.replace("px", "").strip()
+            width = width.strip()
+            file_hash = extr("<b>", "</b>")
+        else:
+            extr = text.extract_from(page, page.index("[ FILESIZE <"))
+            size = extr(">", "</span>").replace(" ", "")
+            width, _, height = extr(">", " px</span>").partition("x")
+            file_hash = extr(">", "</span>")
         if size and size[-1] in "bB":
             size = size[:-1]
-        width, _, height = extr(">", " px</span>").partition("x")
 
         try:
             _, y, m, d, _ = self.file_url.rsplit("/", 4)
@@ -159,7 +173,7 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
             "size"  : text.parse_bytes(size),
             "width" : text.parse_int(width),
             "height": text.parse_int(height),
-            "hash"  : extr(">", "</span>"),
+            "hash"  : file_hash,
             "date"  : date,
         }
 
@@ -173,24 +187,33 @@ class ImxtoGalleryExtractor(ImagehostImageExtractor):
 
     def items(self):
         page = self.request(self.page_url).text
-        title, pos = text.extract(page, '<div class="title', '<')
+        title, pos = text.extract(page, '<h1 class="gal-title">', '</h1>')
+        if not title:
+            title, pos = text.extract(page, '<div class="title', '<')
+            if title:
+                title = title.partition(">")[2]
         data = {
             "_extractor": ImxtoImageExtractor,
-            "title": text.unescape(title.partition(">")[2]).strip(),
+            "title": text.unescape(title or "").strip(),
         }
 
         params = {"page": 1}
         while True:
-            for url in text.extract_iter(page, "<a href=", " ", pos):
+            for url in text.extract_iter(page, "<a href=", " ", pos or 0):
                 if "/i/" in url:
                     yield Message.Queue, url.strip("\"'"), data
 
-            if 'class="pagination' not in page or \
-                    'class="disabled">Last' in page:
+            has_next = (
+                'rel="next"' in page or
+                ('class="pagination' in page and
+                 'class="disabled">Last' not in page)
+            )
+            if not has_next:
                 return
 
             params["page"] += 1
             page = self.request(self.page_url, params=params).text
+            pos = 0
 
 
 class ImxtwImageExtractor(ImagehostImageExtractor):
