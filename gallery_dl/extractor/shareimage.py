@@ -14,8 +14,9 @@ class ShareimageGalleryExtractor(GalleryExtractor):
     """Extractor for image galleries from share-image.com"""
     category = "shareimage"
     root = "https://www.share-image.com"
-    pattern = r"(?:https?://)?(?:www\.)?share-image\.com(/(\d+)[^/?#]*)"
-    example = "https://www.share-image.com/12345-TITLE"
+    pattern = (r"(?:https?://)?(?:www\.)?share-image\.com"
+               r"(/(?:image/)?(\d+)[^/?#]*)")
+    example = "https://www.share-image.com/image/12345-TITLE"
 
     def metadata(self, page):
         self.schema = schema = self._extract_jsonld(page)
@@ -26,4 +27,13 @@ class ShareimageGalleryExtractor(GalleryExtractor):
         }
 
     def images(self, page):
-        return [(url, None) for url in self.schema["image"]]
+        schema = self.schema
+        images = schema.get("image")
+        if images.__class__ is str:
+            images = (images,)
+        if images:
+            return [(url, None) for url in images]
+        url = schema.get("contentUrl")
+        if url:
+            return [(url, None)]
+        raise self.exc.NotFoundError(self.subcategory)
