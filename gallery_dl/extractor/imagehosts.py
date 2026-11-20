@@ -105,6 +105,7 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
 
     def get_info(self, page):
         for needle in (
+            '<a class="img-photo" href="',
             '<div style="text-align:center;"><a href="',
             'class="img-center"><a href="',
             'class="centred img-full" src="',
@@ -116,13 +117,13 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
 
         self.file_url = url = img[:img.find('"')]
         filename = (text.extr(img, ' title="', '"') or
-                    text.extr(img, ' alt="', '"'))
-        return url, filename or None
+                    text.extr(img, ' alt="', '"') or None)
+        return url, filename
 
     def metadata(self, page):
-        extr = text.extract_from(page, page.index("[ FILESIZE <"))
-        size = extr(">", "</span>").replace(" ", "")[:-1]
-        width, _, height = extr(">", " px</span>").partition("x")
+        extr = text.extract_from(page, page.index('class="img-meta'))
+        size = extr("<b>", "<")
+        width, _, height = extr("<b>", " px<").partition("&times;")
 
         try:
             _, y, m, d, _ = self.file_url.rsplit("/", 4)
@@ -132,10 +133,10 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
             date = dt.NONE
 
         return {
-            "size"  : text.parse_bytes(size),
+            "size"  : text.parse_bytes(size.replace(" ", "")[:-1]),
             "width" : text.parse_int(width),
             "height": text.parse_int(height),
-            "hash"  : extr(">", "</span>"),
+            "hash"  : extr("<b>", "<"),
             "date"  : date,
         }
 
