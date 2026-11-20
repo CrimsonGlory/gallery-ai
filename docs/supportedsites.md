@@ -1380,7 +1380,7 @@ Consider all listed sites to potentially be NSFW.
 </tr>
 <tr id="picazor" title="picazor">
     <td>Picazor</td>
-    <td>https://picazor.com/</td>
+    <td>https://picazor.com/<br>https://picazor.one/</td>
     <td><span title="https://picazor.com/en/USERNAME">User Profiles</span></td>
     <td></td>
 </tr>

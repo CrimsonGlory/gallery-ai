@@ -15,19 +15,22 @@ __tests__ = (
     "#pattern" : r"https://picazor\.com/uploads/.+\.jpg",
     "#count"   : 50,
 
-    "count"    : 278,
-    "num"      : range(200, 278),
+    "count"    : range(1180, 2000),
+    "num"      : range(1100, 2000),
     "extension": "jpg",
     "filename" : str,
     "id"       : "re:[0-9a-f]+",
     "mime"     : "photo",
     "path"     : str,
     "user"     : "kailey-mae",
+    "userId"   : "647faf5ab6b27738234036f0",
     "visible"  : True,
-    "subject"  : {
-        "id" : "66077ba2b64e3f3d178f39ac",
-        "uri": "kailey-mae",
-    },
+},
+
+{
+    "#url"     : "https://picazor.one/en/kailey-mae",
+    "#comment" : "'.one' TLD",
+    "#class"   : picazor.PicazorUserExtractor,
 },
 
 {

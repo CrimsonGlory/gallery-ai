@@ -644,6 +644,10 @@ URL_MAP = {
         "https://a.mg-renders.net/",
         "https://h.mg-renders.net/",
     ),
+    "picazor": (
+        "https://picazor.com/",
+        "https://picazor.one/",
+    ),
     "sankaku": (
         "https://sankaku.app/",
         "https://www.sankakucomplex.com/",
