@@ -3241,6 +3241,34 @@ Note
     batch. The value cannot be less than 1.
 
 
+extractor.[E621].tags
+---------------------
+Type
+    ``bool``
+Default
+    ``true``
+Description
+    Group tags by category and provide them as ``tags_<category>``
+    metadata fields (``tags_artist``, ``tags_species``, ...).
+
+    When disabled, ``tags`` is a flat list of tag names without the
+    categorized fields.
+
+
+extractor.[E621].v1
+-------------------
+Type
+    ``bool``
+Default
+    ``false``
+Description
+    Request API responses in the old 'v1' layout by sending a
+    ``v1=true`` parameter.
+
+    Posts in the newer 'v2' layout are converted to the previous
+    structure either way, so this is normally not needed.
+
+
 extractor.erome.user.reposts
 ----------------------------
 Type
