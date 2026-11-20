@@ -46,7 +46,10 @@ class GirlsreleasedSetExtractor(GirlsreleasedExtractor):
 
     def items(self):
         url = f"{self.root}/api/0.2/set/{self.groups[0]}"
-        json = self.request_json(url)["set"]
+        payload = self.request_json(url)
+        json = payload.get("set") if payload.__class__ is dict else None
+        if not json:
+            raise self.exc.NotFoundError("set")
         data = {
             "title": json["name"] or json["id"],
             "id": json["id"],

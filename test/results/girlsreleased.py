@@ -5,35 +5,24 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import girlsreleased
+from gallery_dl import exception
 
 
 __tests__ = (
 {
-    "#url"     : "https://girlsreleased.com/set/32332",
-    "#category": ("", "girlsreleased", "set"),
-    "#class"   : girlsreleased.GirlsreleasedSetExtractor,
-    "#pattern" : r"https://imx\.to/i/\w+",
-    "#count"   : 122,
-
-    "id"        : "32332",
-    "title"     : "Monadiko",
-    "model"     : ["Mia Sollis"],
-    "site"      : "sexart.com",
-    "date"      : "dt:2014-07-27 07:57:19",
+    "#url"      : "https://girlsreleased.com/set/32332",
+    "#comment"  : "API 0.2 /set/{id} now returns a stub without set data",
+    "#category" : ("", "girlsreleased", "set"),
+    "#class"    : girlsreleased.GirlsreleasedSetExtractor,
+    "#exception": exception.NotFoundError,
 },
 
 {
-    "#url"     : "https://girlsreleased.com/set/124943",
-    "#category": ("", "girlsreleased", "set"),
-    "#class"   : girlsreleased.GirlsreleasedSetExtractor,
-    "#pattern" : r"https://(?:imx\.to/i/\w+|pixhost\.cc/show/\d+/.+)",
-    "#count"   : 79,
-
-    "id"        : "124943",
-    "title"     : "124943",
-    "model"     : ["Iveta"],
-    "site"      : "errotica-archives.com",
-    "date"      : "dt:2022-02-21 14:08:32",
+    "#url"      : "https://girlsreleased.com/set/124943",
+    "#comment"  : "API 0.2 /set/{id} now returns a stub without set data",
+    "#category" : ("", "girlsreleased", "set"),
+    "#class"    : girlsreleased.GirlsreleasedSetExtractor,
+    "#exception": exception.NotFoundError,
 },
 
 {
