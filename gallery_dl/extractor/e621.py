@@ -22,17 +22,6 @@ class E621Extractor(danbooru.DanbooruExtractor):
     useragent = util.USERAGENT_GALLERYDL + " (by mikf)"
     request_interval_min = 1.0
 
-    def _init(self):
-        super()._init()
-        if self.config("v1"):
-            # request API responses in the old 'v1' layout
-            self._params = {"v1": "true"}
-        elif self.config("tags", True):
-            # request tags grouped by category
-            self._params = {"mode": "extended"}
-        else:
-            self._params = None
-
     def items(self):
         if includes := self.config("metadata") or ():
             if includes.__class__ is str:
@@ -43,13 +32,21 @@ class E621Extractor(danbooru.DanbooruExtractor):
         notes = ("notes" in includes)
         pools = ("pools" in includes)
 
-        tags_option = self.config("tags", True)
+        tags_categories = False
+        if self.config("v1"):
+            # request API responses in the old 'v1' layout
+            self.params_extra = {"v1": "true"}
+        elif self.config("tags", True):
+            # request tags grouped by category
+            self.params_extra = {"mode": "extended"}
+            tags_categories = True
+        else:
+            self.params_extra = None
 
         data = self.metadata()
         for post in self.posts():
             if "files" in post:
-                self._update_post(post)
-
+                self._transform_post_v2(post)
             file = post["file"]
 
             if not file["url"]:
@@ -71,7 +68,7 @@ class E621Extractor(danbooru.DanbooruExtractor):
             if post["tags"].__class__ is dict:
                 tags = []
                 for category, tags_cat in post["tags"].items():
-                    if tags_option:
+                    if tags_categories:
                         post["tags_" + category] = tags_cat
                     tags.extend(tags_cat)
                 tags.sort()
@@ -92,25 +89,23 @@ class E621Extractor(danbooru.DanbooruExtractor):
         return self.request_json(url)["blacklisted_tags"].splitlines()
 
     def _pagination(self, endpoint, params, prefix=None):
-        if self._params:
-            params.update(self._params)
+        if self.params_extra:
+            params.update(self.params_extra)
         return danbooru.DanbooruExtractor._pagination(
             self, endpoint, params, prefix)
 
-    def _update_post(self, post):
+    def _transform_post_v2(self, post):
         """Convert a post from the 'v2' API layout to the previous one"""
         files = post.pop("files")
         has = post.pop("has")
         meta = files["meta"]
 
-        file = {
+        post["file"] = file = {
             "md5" : meta["md5"],
             "ext" : meta["ext"],
             "size": meta["size"],
+            **files["original"],
         }
-        file.update(files["original"])
-        post["file"] = file
-        post["duration"] = meta.get("duration")
 
         preview = files["preview"]
         post["preview"] = {
@@ -141,16 +136,17 @@ class E621Extractor(danbooru.DanbooruExtractor):
             }
 
         stats = post.pop("stats")
-        post["score"]         = stats["score"]
-        post["fav_count"]     = stats["fav_count"]
+        post["score"] = stats["score"]
+        post["fav_count"] = stats["fav_count"]
         post["comment_count"] = stats["comment_count"]
-        post["is_favorited"]  = stats["is_favorited"]
-        post["vote"]          = stats["vote"]
+        post["is_favorited"] = stats["is_favorited"]
+        post["vote"] = stats["vote"]
 
         post["has_notes"] = has.get("notes")
+        post["duration"] = meta.get("duration")
 
         relationships = post["relationships"]
-        relationships["has_children"]        = has.get("children")
+        relationships["has_children"] = has.get("children")
         relationships["has_active_children"] = has.get("active_children")
 
     def _get_notes(self, id):
@@ -232,7 +228,7 @@ class E621PostExtractor(E621Extractor, danbooru.DanbooruPostExtractor):
     def posts(self):
         pid = self.groups[-2] or int(self.groups[-1], 32)
         url = f"{self.root}/posts/{pid}.json"
-        post = self.request_json(url, params=self._params)
+        post = self.request_json(url, params=self.params_extra)
         return (post["post"] if "post" in post else post,)
 
 

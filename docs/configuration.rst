@@ -3242,7 +3242,7 @@ Note
 
 
 extractor.[E621].tags
---------------------
+---------------------
 Type
     ``bool``
 Default
