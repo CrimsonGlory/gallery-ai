@@ -35,7 +35,7 @@ class XenforoExtractor(BaseExtractor):
             r'href="([^"]*?/(?:index\.php\?)?attachments/[^"]+".*?)</a>'
             r'|<div class="bb(?:Image|Media)Wrapper[^>]*?'
             r'data-src="([^"]+".*?) />'
-            r'|(?:<a [^>]*?href="|<iframe [^>]*?src="|'
+            r'''|(?:<a [^>]*?href=["']|<iframe [^>]*?src=["']|'''
             r'''onclick="loadMedia\(this, ')([^"']+[^<]*?<)'''
             r')'
         ).findall

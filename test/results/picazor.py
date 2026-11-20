@@ -23,8 +23,15 @@ __tests__ = (
     "mime"     : {"photo", "video"},
     "path"     : str,
     "user"     : "kailey-mae",
+    "userId"   : "647faf5ab6b27738234036f0",
     "visible"  : True,
     "?subject" : dict,
+},
+
+{
+    "#url"     : "https://picazor.one/en/kailey-mae",
+    "#comment" : "'.one' TLD",
+    "#class"   : picazor.PicazorUserExtractor,
 },
 
 {

@@ -1380,7 +1380,7 @@ Consider all listed sites to potentially be NSFW.
 </tr>
 <tr id="picazor" title="picazor">
     <td>Picazor</td>
-    <td>https://picazor.com/</td>
+    <td>https://picazor.com/<br>https://picazor.one/</td>
     <td><span title="https://picazor.com/en/USERNAME">User Profiles</span></td>
     <td></td>
 </tr>
@@ -1682,7 +1682,7 @@ Consider all listed sites to potentially be NSFW.
 <tr id="shareimage" title="shareimage">
     <td>Share-Image</td>
     <td>https://www.share-image.com/</td>
-    <td><span title="https://www.share-image.com/12345-TITLE">Galleries</span></td>
+    <td><span title="https://www.share-image.com/image/12345-TITLE">Galleries</span></td>
     <td></td>
 </tr>
 <tr id="simplyhentai" title="simplyhentai">
