@@ -108,6 +108,7 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
             '<div style="text-align:center;"><a href="',
             'class="img-center"><a href="',
             'class="centred img-full" src="',
+            '<a class="img-photo" href="',
         ):
             if img := text.extr(page, needle, '>'):
                 break
@@ -120,9 +121,20 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
         return url, filename or None
 
     def metadata(self, page):
-        extr = text.extract_from(page, page.index("[ FILESIZE <"))
-        size = extr(">", "</span>").replace(" ", "")[:-1]
-        width, _, height = extr(">", " px</span>").partition("x")
+        if (pos := page.find("[ FILESIZE <")) > -1:
+            extr = text.extract_from(page, pos)
+            size = extr(">", "</span>")
+            dimensions = extr(">", " px</span>")
+            hash_ = extr(">", "</span>")
+        else:
+            extr = text.extract_from(page, page.index('<p class="img-meta">'))
+            size = extr('<b>', '</b>')
+            dimensions = extr('<b>', ' px</b>')
+            hash_ = extr("<b>", "</b>")
+
+        width, sep, height = dimensions.partition("x")
+        if not sep:
+            width, _, height = dimensions.partition("&times;")
 
         try:
             _, y, m, d, _ = self.file_url.rsplit("/", 4)
@@ -132,10 +144,10 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
             date = dt.NONE
 
         return {
-            "size"  : text.parse_bytes(size),
+            "size"  : text.parse_bytes(size.replace(" ", "")[:-1]),
             "width" : text.parse_int(width),
             "height": text.parse_int(height),
-            "hash"  : extr(">", "</span>"),
+            "hash"  : hash_,
             "date"  : date,
         }
 
