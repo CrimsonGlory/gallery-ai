@@ -150,10 +150,10 @@ class ImxtoGalleryExtractor(ImagehostImageExtractor):
 
     def items(self):
         page = self.request(self.page_url).text
-        title, pos = text.extract(page, '<div class="title', '<')
+        title, pos = text.extract(page, 'class="gal-title', '<')
         data = {
             "_extractor": ImxtoImageExtractor,
-            "title": text.unescape(title.partition(">")[2]).strip(),
+            "title": text.unescape(title[title.find(">")+1:]).strip(),
         }
 
         params = {"page": 1}
@@ -162,9 +162,8 @@ class ImxtoGalleryExtractor(ImagehostImageExtractor):
                 if "/i/" in url:
                     yield Message.Queue, url.strip("\"'"), data
 
-            if 'class="pagination' not in page or \
-                    'class="disabled">Last' in page:
-                return
+            if ' rel="next"' not in page:
+                break
 
             params["page"] += 1
             page = self.request(self.page_url, params=params).text
