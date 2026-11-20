@@ -2327,18 +2327,6 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://e926.net/posts?tags=TAG">Tag Searches</span></td>
     <td>Supported</td>
 </tr>
-<tr id="e6ai" title="e6ai">
-    <td>e6AI</td>
-    <td>https://e6ai.net/</td>
-    <td><span title="https://e6ai.net/artists/12345">Artists</span> |
-        <span title="https://e6ai.net/artists?QUERY">Artist Searches</span> |
-        <span title="https://e6ai.net/favorites">Favorites</span> |
-        <span title="https://e6ai.net/pools/12345">Pools</span> |
-        <span title="https://e6ai.net/explore/posts/popular">Popular Images</span> |
-        <span title="https://e6ai.net/posts/12345">Posts</span> |
-        <span title="https://e6ai.net/posts?tags=TAG">Tag Searches</span></td>
-    <td>Supported</td>
-</tr>
 <tr id="blep" title="blep">
     <td>Blep</td>
     <td>https://blep.art/</td>

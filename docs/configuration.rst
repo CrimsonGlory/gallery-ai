@@ -722,16 +722,18 @@ Description
     * ``ao3``
     * ``aryion``
     * ``atfbooru`` (`* <pw-apikey_>`__)
+    * ``blep`` (`* <pw-apikey_>`__)
     * ``bluesky``
     * ``booruvar`` (`* <pw-apikey_>`__)
     * ``coomer``
     * ``danbooru`` (`* <pw-apikey_>`__)
     * ``deviantart``
     * ``e621`` (`* <pw-apikey_>`__)
-    * ``e6ai`` (`* <pw-apikey_>`__)
     * ``e926`` (`* <pw-apikey_>`__)
     * ``exhentai``
+    * ``floofgens`` (`* <pw-apikey_>`__)
     * ``girlswithmuscle``
+    * ``hmofa`` (`* <pw-apikey_>`__)
     * ``horne`` (`R <pw-required_>`__)
     * ``idolcomplex``
     * ``imgbb``
