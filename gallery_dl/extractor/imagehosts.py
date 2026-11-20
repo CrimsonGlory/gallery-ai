@@ -119,8 +119,8 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
 
         self.file_url = url = img[:img.find('"')]
         filename = (text.extr(img, ' title="', '"') or
-                    text.extr(img, ' alt="', '"'))
-        return url, filename or None
+                    text.extr(img, ' alt="', '"') or None)
+        return url, filename
 
     def _continue(self, page):
         token = text.extr(page, 'name="imgToken" value="', '"')
@@ -187,8 +187,10 @@ class ImxtoGalleryExtractor(ImagehostImageExtractor):
 
     def items(self):
         page = self.request(self.page_url).text
-        title, pos = text.extract(page, '<h1 class="gal-title">', '</h1>')
-        if not title:
+        title, pos = text.extract(page, 'class="gal-title', '<')
+        if title:
+            title = title[title.find(">")+1:]
+        else:
             title, pos = text.extract(page, '<div class="title', '<')
             if title:
                 title = title.partition(">")[2]
