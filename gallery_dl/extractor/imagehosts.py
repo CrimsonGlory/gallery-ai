@@ -105,10 +105,10 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
 
     def get_info(self, page):
         for needle in (
+            '<a class="img-photo" href="',
             '<div style="text-align:center;"><a href="',
             'class="img-center"><a href="',
             'class="centred img-full" src="',
-            '<a class="img-photo" href="',
         ):
             if img := text.extr(page, needle, '>'):
                 break
@@ -117,24 +117,13 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
 
         self.file_url = url = img[:img.find('"')]
         filename = (text.extr(img, ' title="', '"') or
-                    text.extr(img, ' alt="', '"'))
-        return url, filename or None
+                    text.extr(img, ' alt="', '"') or None)
+        return url, filename
 
     def metadata(self, page):
-        if (pos := page.find("[ FILESIZE <")) > -1:
-            extr = text.extract_from(page, pos)
-            size = extr(">", "</span>")
-            dimensions = extr(">", " px</span>")
-            hash_ = extr(">", "</span>")
-        else:
-            extr = text.extract_from(page, page.index('<p class="img-meta">'))
-            size = extr('<b>', '</b>')
-            dimensions = extr('<b>', ' px</b>')
-            hash_ = extr("<b>", "</b>")
-
-        width, sep, height = dimensions.partition("x")
-        if not sep:
-            width, _, height = dimensions.partition("&times;")
+        extr = text.extract_from(page, page.index('class="img-meta'))
+        size = extr("<b>", "<")
+        width, _, height = extr("<b>", " px<").partition("&times;")
 
         try:
             _, y, m, d, _ = self.file_url.rsplit("/", 4)
@@ -147,7 +136,7 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
             "size"  : text.parse_bytes(size.replace(" ", "")[:-1]),
             "width" : text.parse_int(width),
             "height": text.parse_int(height),
-            "hash"  : hash_,
+            "hash"  : extr("<b>", "<"),
             "date"  : date,
         }
 
