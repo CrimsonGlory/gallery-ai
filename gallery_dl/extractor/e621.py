@@ -32,47 +32,44 @@ class E621Extractor(danbooru.DanbooruExtractor):
         notes = ("notes" in includes)
         pools = ("pools" in includes)
 
+        tags_categories = False
+        if self.config("v1"):
+            # request API responses in the old 'v1' layout
+            self.params_extra = {"v1": "true"}
+        elif self.config("tags", True):
+            # request tags grouped by category
+            self.params_extra = {"mode": "extended"}
+            tags_categories = True
+        else:
+            self.params_extra = None
+
         data = self.metadata()
         for post in self.posts():
-            if "file" in post:
-                file = post["file"]
-            else:
-                files = post["files"]
-                file = files["meta"].copy()
-                file.update(files["original"])
-                post["file"] = file
+            if "files" in post:
+                self._transform_post_v2(post)
+            file = post["file"]
 
             if not file["url"]:
                 md5 = file["md5"]
                 file["url"] = (f"https://static1.{self.root[8:]}/data"
                                f"/{md5[0:2]}/{md5[2:4]}/{md5}.{file['ext']}")
 
-            if notes and (post.get("has_notes") or
-                          "has" in post and post["has"].get("notes")):
+            if notes and post.get("has_notes"):
                 post["notes"] = self._get_notes(post["id"])
 
             if pools and post["pools"]:
                 post["pools"] = self.cache(
                     self._get_pools, ",".join(map(str, post["pools"])))
 
-            if stats := post.get("stats"):
-                post.setdefault("score", stats.get("score"))
-                post.setdefault("fav_count", stats.get("fav_count"))
-                post.setdefault("comment_count", stats.get("comment_count"))
-                post.setdefault("is_favorited", stats.get("is_favorited"))
-
-            if has := post.get("has"):
-                post.setdefault("has_notes", has.get("notes"))
-
             post["filename"] = file["md5"]
             post["extension"] = file["ext"]
-            post.setdefault("duration", file.get("duration"))
             post["date"] = self.parse_datetime_iso(post["created_at"])
 
             if post["tags"].__class__ is dict:
                 tags = []
                 for category, tags_cat in post["tags"].items():
-                    post["tags_" + category] = tags_cat
+                    if tags_categories:
+                        post["tags_" + category] = tags_cat
                     tags.extend(tags_cat)
                 tags.sort()
                 post["tags"] = tags
@@ -92,9 +89,65 @@ class E621Extractor(danbooru.DanbooruExtractor):
         return self.request_json(url)["blacklisted_tags"].splitlines()
 
     def _pagination(self, endpoint, params, prefix=None):
-        params = dict(params)
-        params.setdefault("mode", "extended")
-        return super()._pagination(endpoint, params, prefix)
+        if self.params_extra:
+            params.update(self.params_extra)
+        return danbooru.DanbooruExtractor._pagination(
+            self, endpoint, params, prefix)
+
+    def _transform_post_v2(self, post):
+        """Convert a post from the 'v2' API layout to the previous one"""
+        files = post.pop("files")
+        has = post.pop("has")
+        meta = files["meta"]
+
+        post["file"] = file = {
+            "md5" : meta["md5"],
+            "ext" : meta["ext"],
+            "size": meta["size"],
+            **files["original"],
+        }
+
+        preview = files["preview"]
+        post["preview"] = {
+            "url"   : preview["jpg"],
+            "alt"   : preview["webp"],
+            "width" : preview["width"],
+            "height": preview["height"],
+        }
+
+        if has.get("sample"):
+            sample = files["sample"]
+            post["sample"] = {
+                "url"       : sample["jpg"],
+                "alt"       : sample["webp"],
+                "width"     : sample["width"],
+                "height"    : sample["height"],
+                "alternates": files.get("video") or {},
+                "has"       : True,
+            }
+        else:
+            post["sample"] = {
+                "url"       : None,
+                "alt"       : None,
+                "width"     : file["width"],
+                "height"    : file["height"],
+                "alternates": {},
+                "has"       : False,
+            }
+
+        stats = post.pop("stats")
+        post["score"] = stats["score"]
+        post["fav_count"] = stats["fav_count"]
+        post["comment_count"] = stats["comment_count"]
+        post["is_favorited"] = stats["is_favorited"]
+        post["vote"] = stats["vote"]
+
+        post["has_notes"] = has.get("notes")
+        post["duration"] = meta.get("duration")
+
+        relationships = post["relationships"]
+        relationships["has_children"] = has.get("children")
+        relationships["has_active_children"] = has.get("active_children")
 
     def _get_notes(self, id):
         return self.request_json(
@@ -175,7 +228,7 @@ class E621PostExtractor(E621Extractor, danbooru.DanbooruPostExtractor):
     def posts(self):
         pid = self.groups[-2] or int(self.groups[-1], 32)
         url = f"{self.root}/posts/{pid}.json"
-        post = self.request_json(url, params={"mode": "extended"})
+        post = self.request_json(url, params=self.params_extra)
         return (post["post"] if "post" in post else post,)
 
 
