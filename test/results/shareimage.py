@@ -11,7 +11,7 @@ from gallery_dl import exception
 __tests__ = (
 {
     "#url"      : "https://www.share-image.com/340-amateur-set-young-girl-with-big-boobs",
-    "#comment"  : "old gallery URL redirected after site redesign",
+    "#comment"  : "old gallery URL returns 410 Gone",
     "#class"    : shareimage.ShareimageGalleryExtractor,
     "#exception": exception.NotFoundError,
 },
@@ -24,13 +24,32 @@ __tests__ = (
 },
 
 {
-    "#url"     : "https://www.share-image.com/image/24-latina-beauty-topless-on-a-tropical-beach",
-    "#class"   : shareimage.ShareimageGalleryExtractor,
-    "#results" : "https://www.share-image.com/media/full/fa/latina-beauty-topless-on-a-tropical-beach-fa72447466.webp",
+    "#url"      : "https://www.share-image.com/image/24-latina-beauty-topless-on-a-tropical-beach",
+    "#comment"  : "previous /image/ URL is gone",
+    "#class"    : shareimage.ShareimageGalleryExtractor,
+    "#exception": exception.NotFoundError,
+},
 
-    "gallery_id" : 24,
-    "gallery_url": "https://www.share-image.com/image/24-latina-beauty-topless-on-a-tropical-beach",
-    "title"      : "Latina beauty topless on a tropical beach",
+{
+    "#url"     : "https://www.share-image.com/galleries/1-redhead-log-cabin-weekend",
+    "#class"   : shareimage.ShareimageGalleryExtractor,
+    "#pattern" : r"https://www\.share-image\.com/media/full/[0-9a-f]{2}/.+\.webp",
+    "#count"   : 21,
+
+    "gallery_id" : 1,
+    "gallery_url": "https://www.share-image.com/galleries/1-redhead-log-cabin-weekend",
+    "title"      : "Redhead's weekend in a log cabin",
+    "extension"  : "webp",
+},
+
+{
+    "#url"     : "https://www.share-image.com/image/97-redhead-in-a-log-cabin-smiling-in-a-chunky-wool-sweater-by-the-window",
+    "#class"   : shareimage.ShareimageGalleryExtractor,
+    "#results" : "https://www.share-image.com/media/full/71/redhead-in-a-log-cabin-smiling-in-a-chunky-wool-sweater-by-the-window-71fc425342.webp",
+
+    "gallery_id" : 97,
+    "gallery_url": "https://www.share-image.com/image/97-redhead-in-a-log-cabin-smiling-in-a-chunky-wool-sweater-by-the-window",
+    "title"      : "Redhead in a log cabin – smiling in a chunky wool sweater by the window",
     "extension"  : "webp",
 },
 
