@@ -327,8 +327,8 @@ class InstagramExtractor(Extractor):
             if not self._static_video and \
                     (manifest := item.get("video_dash_manifest")) and \
                     (framerate := text.extr(manifest, 'frameRate="', '"')):
-                num, _, den = framerate.partition("/")
-                if num == den:
+                numerator, _, denominator = framerate.partition("/")
+                if numerator == denominator:
                     item.pop("video_versions", None)
                     item["original_width"] = image["width"]
                     item["original_height"] = image["height"]
