@@ -998,7 +998,8 @@ class TwitterRepostsExtractor(TwitterExtractor):
     example = "https://x.com/USER/reposts"
 
     def tweets(self):
-        self.retweets = True
+        if not self.retweets:
+            self.retweets = True
         return self.api.user_reposts(self.user)
 
 
@@ -2120,10 +2121,8 @@ class TwitterAPI():
                         tweet = retweet
                     elif retweet:
                         tweet["author"] = users[retweet["user_id_str"]]
-                        if "extended_entities" in retweet and \
-                                "extended_entities" not in tweet:
-                            tweet["extended_entities"] = \
-                                retweet["extended_entities"]
+                        if ee := retweet.get("extended_entities"):
+                            tweet["extended_entities"] = ee
                 tweet["user"] = users[tweet["user_id_str"]]
                 yield tweet
 
@@ -2369,10 +2368,8 @@ class TwitterAPI():
                             if "note_tweet" in retweet:
                                 tweet["note_tweet"] = retweet["note_tweet"]
 
-                            if "extended_entities" in rtlegacy and \
-                                    "extended_entities" not in legacy:
-                                legacy["extended_entities"] = \
-                                    rtlegacy["extended_entities"]
+                            if ee := rtlegacy.get("extended_entities"):
+                                legacy["extended_entities"] = ee
 
                             if "withheld_scope" in rtlegacy and \
                                     "withheld_scope" not in legacy:
