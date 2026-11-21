@@ -1682,7 +1682,7 @@ Consider all listed sites to potentially be NSFW.
 <tr id="shareimage" title="shareimage">
     <td>Share-Image</td>
     <td>https://www.share-image.com/</td>
-    <td><span title="https://www.share-image.com/image/12345-TITLE">Galleries</span></td>
+    <td><span title="https://www.share-image.com/galleries/12345-TITLE">Galleries</span></td>
     <td></td>
 </tr>
 <tr id="simplyhentai" title="simplyhentai">
@@ -2336,18 +2336,6 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://e926.net/posts?tags=TAG">Tag Searches</span></td>
     <td>Supported</td>
 </tr>
-<tr id="e6ai" title="e6ai">
-    <td>e6AI</td>
-    <td>https://e6ai.net/</td>
-    <td><span title="https://e6ai.net/artists/12345">Artists</span> |
-        <span title="https://e6ai.net/artists?QUERY">Artist Searches</span> |
-        <span title="https://e6ai.net/favorites">Favorites</span> |
-        <span title="https://e6ai.net/pools/12345">Pools</span> |
-        <span title="https://e6ai.net/explore/posts/popular">Popular Images</span> |
-        <span title="https://e6ai.net/posts/12345">Posts</span> |
-        <span title="https://e6ai.net/posts?tags=TAG">Tag Searches</span></td>
-    <td>Supported</td>
-</tr>
 <tr id="blep" title="blep">
     <td>Blep</td>
     <td>https://blep.art/</td>
@@ -2358,7 +2346,7 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://blep.art/explore/posts/popular">Popular Images</span> |
         <span title="https://blep.art/posts/12345">Posts</span> |
         <span title="https://blep.art/posts?tags=TAG">Tag Searches</span></td>
-    <td></td>
+    <td>Supported</td>
 </tr>
 <tr id="hmofa" title="hmofa">
     <td>hmofa gallery</td>
@@ -2370,7 +2358,7 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://hmofa.gallery/explore/posts/popular">Popular Images</span> |
         <span title="https://hmofa.gallery/posts/12345">Posts</span> |
         <span title="https://hmofa.gallery/posts?tags=TAG">Tag Searches</span></td>
-    <td></td>
+    <td>Supported</td>
 </tr>
 <tr id="floofgens" title="floofgens">
     <td>Floofgens</td>
@@ -2382,7 +2370,7 @@ Consider all listed sites to potentially be NSFW.
         <span title="https://floofgens.net/explore/posts/popular">Popular Images</span> |
         <span title="https://floofgens.net/posts/12345">Posts</span> |
         <span title="https://floofgens.net/posts?tags=TAG">Tag Searches</span></td>
-    <td></td>
+    <td>Supported</td>
 </tr>
 
 <tr id="gelbooru_v01" title="gelbooru_v01">

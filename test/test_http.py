@@ -54,6 +54,29 @@ class TestSanitizeRequestKwargs(unittest.TestCase):
         self.assertNotIn("params", kwargs)
 
 
+class TestCookiesClear(unittest.TestCase):
+
+    def test_clear_by_name_like_requests(self):
+        jar = http.Cookies()
+        jar.set("_danbooru2_session", "abc",
+                domain="danbooru.donmai.us", path="/")
+        jar.set("other", "xyz", domain="danbooru.donmai.us", path="/")
+        jar.clear("danbooru.donmai.us", "/", "_danbooru2_session")
+        self.assertNotIn("_danbooru2_session", jar)
+        self.assertIn("other", jar)
+
+    def test_clear_missing_raises_keyerror(self):
+        jar = http.Cookies()
+        with self.assertRaises(KeyError):
+            jar.clear("danbooru.donmai.us", "/", "_danbooru2_session")
+
+    def test_clear_all(self):
+        jar = http.Cookies()
+        jar.set("a", "1", domain="example.com", path="/")
+        jar.clear()
+        self.assertEqual(len(jar), 0)
+
+
 class TestResponseContextManager(unittest.TestCase):
 
     def test_response_is_context_manager(self):

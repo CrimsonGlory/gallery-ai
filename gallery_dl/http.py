@@ -44,8 +44,12 @@ class Cookies(_curl_cookies.Cookies):
     ``for cookie in jar`` yields ``Cookie`` objects. ``keys()``,
     ``values()``, ``items()``, and ``name in jar`` use cookie names.
     ``set()`` accepts the same fields as ``requests``' ``create_cookie``,
-    including ``expires``.
+    including ``expires``. ``clear()`` matches ``CookieJar.clear``
+    (domain, path, name).
     """
+
+    def clear(self, domain=None, path=None, name=None):
+        self.jar.clear(domain, path, name)
 
     def set(self, name, value, **kwargs):
         if value is None:
