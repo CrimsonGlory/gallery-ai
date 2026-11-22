@@ -34,7 +34,7 @@ __tests__ = (
     "#url"     : "https://www.share-image.com/galleries/1-redhead-log-cabin-weekend",
     "#class"   : shareimage.ShareimageGalleryExtractor,
     "#pattern" : r"https://www\.share-image\.com/media/full/[0-9a-f]{2}/.+\.webp",
-    "#count"   : 21,
+    "#count"   : 20,
 
     "gallery_id" : 1,
     "gallery_url": "https://www.share-image.com/galleries/1-redhead-log-cabin-weekend",
@@ -43,12 +43,19 @@ __tests__ = (
 },
 
 {
-    "#url"     : "https://www.share-image.com/image/97-redhead-in-a-log-cabin-smiling-in-a-chunky-wool-sweater-by-the-window",
-    "#class"   : shareimage.ShareimageGalleryExtractor,
-    "#results" : "https://www.share-image.com/media/full/71/redhead-in-a-log-cabin-smiling-in-a-chunky-wool-sweater-by-the-window-71fc425342.webp",
+    "#url"      : "https://www.share-image.com/image/97-redhead-in-a-log-cabin-smiling-in-a-chunky-wool-sweater-by-the-window",
+    "#comment"  : "previous /image/ URL is gone",
+    "#class"    : shareimage.ShareimageGalleryExtractor,
+    "#exception": exception.NotFoundError,
+},
 
-    "gallery_id" : 97,
-    "gallery_url": "https://www.share-image.com/image/97-redhead-in-a-log-cabin-smiling-in-a-chunky-wool-sweater-by-the-window",
+{
+    "#url"     : "https://www.share-image.com/image/135-redhead-in-a-log-cabin-smiling-in-a-chunky-wool-sweater-by-the-window",
+    "#class"   : shareimage.ShareimageGalleryExtractor,
+    "#results" : "https://www.share-image.com/media/full/8c/redhead-in-a-log-cabin-smiling-in-a-chunky-wool-sweater-by-the-window-8cf0294fd6.webp",
+
+    "gallery_id" : 135,
+    "gallery_url": "https://www.share-image.com/image/135-redhead-in-a-log-cabin-smiling-in-a-chunky-wool-sweater-by-the-window",
     "title"      : "Redhead in a log cabin – smiling in a chunky wool sweater by the window",
     "extension"  : "webp",
 },
