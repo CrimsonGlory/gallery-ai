@@ -221,6 +221,17 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://x.com/i/history/bookmarks",
+    "#class"   : twitter.TwitterBookmarkExtractor,
+},
+
+{
+    "#url"     : "https://x.com/i/history/bookmarks/1234567890987654321",
+    "#comment" : "bookmark folder",
+    "#class"   : twitter.TwitterBookmarkExtractor,
+},
+
+{
     "#url"     : "https://twitter.com/i/bookmarks",
     "#class"   : twitter.TwitterBookmarkExtractor,
 },
