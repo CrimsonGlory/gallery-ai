@@ -1038,7 +1038,8 @@ class TwitterRepostsExtractor(TwitterExtractor):
     example = "https://x.com/USER/reposts"
 
     def tweets(self):
-        self.retweets = True
+        if not self.retweets:
+            self.retweets = True
         return self.api.user_reposts(self.user)
 
 
@@ -1099,12 +1100,16 @@ class TwitterLikesExtractor(TwitterExtractor):
 class TwitterBookmarkExtractor(TwitterExtractor):
     """Extractor for bookmarked tweets"""
     subcategory = "bookmark"
-    pattern = BASE_PATTERN + r"/i/(?:history|bookmarks)/?$()"
+    pattern = (BASE_PATTERN +
+               r"/i/(?:history(?:/bookmarks(?:/(\d+))?)?|bookmarks)/?$")
     example = "https://x.com/i/history"
 
     def tweets(self):
         self.replies = True if self.replies else False
-        return self.api.user_bookmarks()
+        if self.user:
+            self.kwdict["bookmark_folder"] = self.user
+            return self.api.bookmark_folder_timeline(self.user)
+        return self.api.bookmarks()
 
     def _transform_tweet(self, tweet):
         tdata = TwitterExtractor._transform_tweet(self, tweet)
@@ -1706,7 +1711,7 @@ class TwitterAPI():
         }
         return self._pagination_tweets(endpoint, variables)
 
-    def user_bookmarks(self):
+    def bookmarks(self):
         endpoint = "/graphql/jbqsfdzI0EMFHAtpEC6vyA/Bookmarks"
         variables = {
             "count": self.extractor.config("limit", 50),
@@ -1715,6 +1720,16 @@ class TwitterAPI():
         return self._pagination_tweets(
             endpoint, variables, ("bookmark_timeline_v2", "timeline"),
             stop_tweets=128)
+
+    def bookmark_folder_timeline(self, folder_id):
+        endpoint = "/graphql/nz7Djl5BU-GrZck9H4HnUA/BookmarkFolderTimeline"
+        variables = {
+            "bookmark_collection_id": folder_id,
+            "count": self.extractor.config("limit", 50),
+            "includePromotedContent": False,
+        }
+        return self._pagination_tweets(
+            endpoint, variables, ("bookmark_collection_timeline", "timeline"))
 
     def search_timeline(self, query, product=None):
         cfg = self.extractor.config
@@ -2171,10 +2186,8 @@ class TwitterAPI():
                         tweet = retweet
                     elif retweet:
                         tweet["author"] = users[retweet["user_id_str"]]
-                        if "extended_entities" in retweet and \
-                                "extended_entities" not in tweet:
-                            tweet["extended_entities"] = \
-                                retweet["extended_entities"]
+                        if ee := retweet.get("extended_entities"):
+                            tweet["extended_entities"] = ee
                 tweet["user"] = users[tweet["user_id_str"]]
                 yield tweet
 
@@ -2420,10 +2433,8 @@ class TwitterAPI():
                             if "note_tweet" in retweet:
                                 tweet["note_tweet"] = retweet["note_tweet"]
 
-                            if "extended_entities" in rtlegacy and \
-                                    "extended_entities" not in legacy:
-                                legacy["extended_entities"] = \
-                                    rtlegacy["extended_entities"]
+                            if ee := rtlegacy.get("extended_entities"):
+                                legacy["extended_entities"] = ee
 
                             if "withheld_scope" in rtlegacy and \
                                     "withheld_scope" not in legacy:

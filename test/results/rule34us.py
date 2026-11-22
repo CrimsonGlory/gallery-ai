@@ -19,6 +19,16 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://rule34.us/index.php?r=posts/index&q=sfw+%7bmina_ashido+%7e+spider-man_%28series%29%7d",
+    "#comment" : "'OR' query pagination",
+    "#category": ("booru", "rule34us", "tag"),
+    "#class"   : rule34us.Rule34usTagExtractor,
+    "#pattern" : r"https://img\d*\.rule34\.us/images/../../[0-9a-f]{32}\.\w+",
+    "#range"   : "40-45",
+    "#count"   : 6,
+},
+
+{
     "#url"     : "https://rule34.us/index.php?r=posts/index&q=",
     "#comment" : "empty 'q' query parameter (#8546)",
     "#category": ("booru", "rule34us", "tag"),
