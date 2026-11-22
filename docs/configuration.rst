@@ -7601,9 +7601,10 @@ Type
     * ``string``
     * ``list`` of ``strings``
 Default
-    | ``"tweets"``
-    | + ``"replies"`` if `replies <extractor.twitter.replies_>`__ is enabled
-    | + ``"reposts"`` if `retweets <extractor.twitter.retweets_>`__ is enabled
+    * ``["tweets"]`` if
+      `replies <extractor.twitter.replies_>`__ or
+      `retweets <extractor.twitter.retweets_>`__ is enabled
+    * ``["posts"]`` otherwise
 Example
     * ``"avatar,background,tweets"``
     * ``["avatar", "background", "tweets"]``

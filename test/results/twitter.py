@@ -17,11 +17,12 @@ __tests__ = (
         "https://x.com/supernaturepics/info",
         "https://x.com/supernaturepics/photo",
         "https://x.com/supernaturepics/header_photo",
-        "https://x.com/supernaturepics/tweets",
+        "https://x.com/supernaturepics/all",
         "https://x.com/supernaturepics/media",
         "https://x.com/supernaturepics/with_replies",
         "https://x.com/supernaturepics/reposts",
         "https://x.com/supernaturepics/highlights",
+        "https://x.com/supernaturepics/articles",
     ),
 },
 
@@ -168,6 +169,16 @@ __tests__ = (
 
 {
     "#url"     : "https://www.twitter.com/id:2976459548/tweets",
+    "#class"   : twitter.TwitterTweetsExtractor,
+},
+
+{
+    "#url"     : "https://x.com/supernaturepics/all",
+    "#class"   : twitter.TwitterTweetsExtractor,
+},
+
+{
+    "#url"     : "https://x.com/supernaturepics/posts",
     "#class"   : twitter.TwitterTweetsExtractor,
 },
 

@@ -946,18 +946,17 @@ class TwitterUserExtractor(Dispatch, TwitterExtractor):
         if user_id is not None:
             user = "id:" + user_id
 
-        default = ["tweets"]
-        if self.config("retweets", False):
-            default.append("reposts")
-        if self.config("replies", True):
-            default.append("with-replies")
+        if self.config("replies", True) or self.config("retweets", False):
+            default = ("tweets",)
+        else:
+            default = ("posts",)
 
         base = f"{self.root}/{user}/"
         return self._dispatch_extractors((
             (TwitterInfoExtractor       , base + "info"),
             (TwitterAvatarExtractor     , base + "photo"),
             (TwitterBackgroundExtractor , base + "header_photo"),
-            (TwitterTweetsExtractor     , base + "tweets"),
+            (TwitterTweetsExtractor     , base + "all"),
             (TwitterMediaExtractor      , base + "media"),
             (TwitterWithRepliesExtractor, base + "with_replies"),
             (TwitterRepostsExtractor    , base + "reposts"),
@@ -965,6 +964,8 @@ class TwitterUserExtractor(Dispatch, TwitterExtractor):
             (TwitterArticlesExtractor   , base + "articles"),
         ), default, (
             ("with-replies", "replies", None),
+            ("tweets", "all"  , base + "all"),
+            ("tweets", "posts", base + "posts"),
             ("media", "photos", base + "media?filter=photo"),
             ("media", "videos", base + "media?filter=video"),
         ))
@@ -973,11 +974,13 @@ class TwitterUserExtractor(Dispatch, TwitterExtractor):
 class TwitterTweetsExtractor(TwitterExtractor):
     """Extractor for Tweets from a user's Posts timeline"""
     subcategory = "tweets"
-    pattern = USER_PATTERN + r"/t(?:weets|imeline)(?!\w)"
-    example = "https://x.com/USER/tweets"
+    pattern = USER_PATTERN + r"/(all|tweets|timeline|posts)(?!\w)"
+    example = "https://x.com/USER/all"
 
     def tweets(self):
-        return self.api.user_original_timeline(self.user)
+        if self.groups[1] == "posts":
+            return self.api.user_original_timeline(self.user)
+        return self.api.user_tweets_and_replies(self.user)
 
 
 class TwitterWithRepliesExtractor(TwitterExtractor):
@@ -1568,11 +1571,23 @@ class TwitterAPI():
             field_toggles=field_toggles, cursor=cursor)
 
     def user_original_timeline(self, handle):
-        endpoint = "/graphql/0L_XictlTdXhxJyxhMDxQA/UserOriginalsTimeline"
+        endpoint = "/graphql/ZFKu1DFS63hgrkLzR3Hsdw/UserOriginalsTimeline"
         variables = {
             "userId": self._user_id(handle),
             "count": self.extractor.config("limit", 50),
             "includePromotedContent": False,
+            "withQuickPromoteEligibilityTweetFields": False,
+            "withVoice": True,
+        }
+        return self._pagination_tweets(endpoint, variables)
+
+    def user_tweets_and_replies(self, handle):
+        endpoint = "/graphql/FmuxExUC21Xn_C2NwtX5sQ/UserTweetsAndReplies"
+        variables = {
+            "userId": self._user_id(handle),
+            "count": self.extractor.config("limit", 50),
+            "includePromotedContent": False,
+            "withCommunity": True,
             "withQuickPromoteEligibilityTweetFields": False,
             "withVoice": True,
         }
