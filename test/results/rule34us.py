@@ -19,6 +19,15 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://rule34.us/index.php?r=posts/index&q=sfw+%7bmina_ashido+%7e+spider-man_%28series%29%7d",
+    "#comment" : "OR query uses page parameter to handle pagination",
+    "#category": ("booru", "rule34us", "tag"),
+    "#class"   : rule34us.Rule34usTagExtractor,
+    "#pattern" : r"https://img\d*\.rule34\.us/images/../../[0-9a-f]{32}\.\w+",
+    "#count"   : 71,
+},
+
+{
     "#url"     : "https://rule34.us/index.php?r=posts/index&q=",
     "#comment" : "empty 'q' query parameter (#8546)",
     "#category": ("booru", "rule34us", "tag"),
@@ -39,7 +48,6 @@ __tests__ = (
     "#class"   : rule34us.Rule34usPostExtractor,
     "#results" : "https://video.rule34.us/images/a2/94/a294ff8e1f8e0efa041e5dc9d1480011.mp4",
 
-    "_fallback"    : ("https://video-cdn1.rule34.us/images/a2/94/a294ff8e1f8e0efa041e5dc9d1480011.mp4",),
     "extension"    : "mp4",
     "file_url"     : str,
     "filename"     : "a294ff8e1f8e0efa041e5dc9d1480011",

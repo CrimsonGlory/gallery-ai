@@ -82,6 +82,12 @@ class Rule34usTagExtractor(Rule34usExtractor):
             if cnt < self.per_page:
                 break
 
+            # NOTE: Workaround for OR-requests
+            # https://codeberg.org/mikf/gallery-dl/pulls/658
+            if "~" in tags:
+                params["page"] += 1
+                continue
+
             if "page" in params:
                 del params["page"]
             params["q"] = f"{tags} id:<{post_id}"
