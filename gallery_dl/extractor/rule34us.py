@@ -63,6 +63,7 @@ class Rule34usTagExtractor(Rule34usExtractor):
     def posts(self):
         self.kwdict["search_tags"] = tags = text.unquote(
             self.groups[0].replace("+", " "))
+        tags_OR = (" ~ " in tags)
 
         url = self.root + "/index.php"
         params = {
@@ -82,15 +83,14 @@ class Rule34usTagExtractor(Rule34usExtractor):
             if cnt < self.per_page:
                 break
 
-            # NOTE: Workaround for OR-requests
-            # https://codeberg.org/mikf/gallery-dl/pulls/658
-            if "~" in tags:
+            if tags_OR:
+                # Workaround for OR searches
+                # https://codeberg.org/mikf/gallery-dl/pulls/658
                 params["page"] += 1
-                continue
-
-            if "page" in params:
-                del params["page"]
-            params["q"] = f"{tags} id:<{post_id}"
+            else:
+                params["q"] = f"{tags} id:<{post_id}"
+                if "page" in params:
+                    del params["page"]
 
 
 class Rule34usPostExtractor(Rule34usExtractor):
