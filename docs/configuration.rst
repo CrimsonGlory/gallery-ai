@@ -80,6 +80,10 @@ for all the different ``pixiv`` extractors.
 Setting the ``extractor.pixiv.user.filename`` value lets you override this
 general pattern specifically for ``PixivUserExtractor`` instances.
 
+
+Global Options
+--------------
+
 Specifying an option on the top level, next to ``extractor``,
 acts as a *global* setting,
 overriding *all* other values with the same option name,
@@ -93,6 +97,45 @@ regardless of their position.
         },
         "<option-name>": "<value-global>"
     }
+
+
+Parent-Child Options
+--------------------
+
+It is possible to define options for an extractor category when
+an extractor of said category is spawned as a child by another extractor.
+For example, an `imgur` extractor (CHILD) spawned by a `reddit` extractor (PARENT).
+
+This can be done by using ``PARENT>CHILD`` or ``PARENT>*`` as category key
+(e.g. ``"reddit>imgur"`` | ``"reddit>*"``), where ``*`` acts as a wildcard
+matching any child extractor.
+
+.. code:: json
+
+    {
+        "extractor": {
+            "CHILD" : {
+                "<option-name-1>": "<value-1 (overridden)>",
+                "<option-name-2>": "<value-2 (overridden)>"
+                "<option-name-3>": "<value-3>"
+            },
+            "PARENT>*": {
+                "<option-name-1>": "<value-18 (overridden)>",
+                "<option-name-2>": "<value-28>"
+            },
+            "PARENT>CHILD": {
+                "<option-name-1>": "<value-19>"
+            }
+        }
+    }
+
+The effective options for ``CHILD`` when spawned by ``PARENT`` will be
+
+.. code:: json
+
+    "<option-name-1>": "<value-19>",
+    "<option-name-2>": "<value-28>",
+    "<option-name-3>": "<value-3>"
 
 
 
