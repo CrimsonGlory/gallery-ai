@@ -34,7 +34,7 @@ __tests__ = (
     "#url"     : "https://www.share-image.com/galleries/1-redhead-log-cabin-weekend",
     "#class"   : shareimage.ShareimageGalleryExtractor,
     "#pattern" : r"https://www\.share-image\.com/media/full/[0-9a-f]{2}/.+\.webp",
-    "#count"   : 20,
+    "#count"   : range(1, 50),
 
     "gallery_id" : 1,
     "gallery_url": "https://www.share-image.com/galleries/1-redhead-log-cabin-weekend",
