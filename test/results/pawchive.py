@@ -12,7 +12,8 @@ __tests__ = (
     "#url"     : "https://pawchive.st/patreon/user/3295915/post/129540190",
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
-    "#results" : "https://file.pawchive.pw/data/14f/3a/4f3a65f8e123dfc1fb0a91ae7f001b598c96135695e977701daf55d528145d74.png",
+    "#pattern" : r"https://(?:file|n\d+)\.pawchive\.pw/data/14f/3a/4f3a65f8e123dfc1fb0a91ae7f001b598c96135695e977701daf55d528145d74.png",
+    "#count"   : 1,
 
     "added"           : "2026-06-11T22:00:00",
     "archives"        : [],
@@ -44,7 +45,7 @@ __tests__ = (
     "tags"            : list,
     "title"           : "DANDADAN FULL ANIMATION!!",
     "type"            : "file",
-    "url"             : "https://file.pawchive.pw/data/14f/3a/4f3a65f8e123dfc1fb0a91ae7f001b598c96135695e977701daf55d528145d74.png",
+    "url"             : r"re:https://(?:file|n\d+)\.pawchive\.pw/data/14f/3a/4f3a65f8e123dfc1fb0a91ae7f001b598c96135695e977701daf55d528145d74.png",
     "user"            : "3295915",
     "username"        : "Maplestar",
     "attachments"     : list,
@@ -65,9 +66,9 @@ __tests__ = (
     "#url"     : "https://pawchive.pw/fanbox/user/37736420/post/11940782",
     "#category": ("", "pawchive", "fanbox"),
     "#class"   : pawchive.PawchivePostExtractor,
-    "#results" : (
-        "https://file.pawchive.pw/data/16a/74/6a74af514a95df7f215a7ce0968d87d82dad30a0b034ef767048add088885531.jpeg",
-        "https://file.pawchive.pw/data/185/2c/852cd836f165b4e0e9426e92a48f968b57d42e6b11fa90f7405779134fd12fb7.mp4",
+    "#pattern" : (
+        r"https://(?:file|n\d+)\.pawchive\.pw/data/16a/74/6a74af514a95df7f215a7ce0968d87d82dad30a0b034ef767048add088885531.jpeg",
+        r"https://(?:file|n\d+)\.pawchive\.pw/data/185/2c/852cd836f165b4e0e9426e92a48f968b57d42e6b11fa90f7405779134fd12fb7.mp4",
     ),
 
     "added"           : "2026-05-21T00:00:00",
@@ -108,7 +109,7 @@ __tests__ = (
         "name"     : "0250.png0000_5.mp4",
         "path"     : "/185/2c/852cd836f165b4e0e9426e92a48f968b57d42e6b11fa90f7405779134fd12fb7.mp4",
         "type"     : "attachment",
-        "url"      : "https://file.pawchive.pw/data/185/2c/852cd836f165b4e0e9426e92a48f968b57d42e6b11fa90f7405779134fd12fb7.mp4",
+        "url"      : r"re:https://(?:file|n\d+)\.pawchive\.pw/data/185/2c/852cd836f165b4e0e9426e92a48f968b57d42e6b11fa90f7405779134fd12fb7.mp4",
     }],
     "file"            : {
         "extension": "jpeg",
@@ -117,7 +118,7 @@ __tests__ = (
         "name"     : "cover.jpeg",
         "path"     : "/16a/74/6a74af514a95df7f215a7ce0968d87d82dad30a0b034ef767048add088885531.jpeg",
         "type"     : "file",
-        "url"      : "https://file.pawchive.pw/data/16a/74/6a74af514a95df7f215a7ce0968d87d82dad30a0b034ef767048add088885531.jpeg",
+        "url"      : r"re:https://(?:file|n\d+)\.pawchive\.pw/data/16a/74/6a74af514a95df7f215a7ce0968d87d82dad30a0b034ef767048add088885531.jpeg",
     },
     "user_profile"    : {
         "ever_imported"   : True,
@@ -158,7 +159,7 @@ __tests__ = (
     "#comment" : "'haven't archived this post yet. have a subscription? use the importer!'",
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
-    "#results" : "https://file.pawchive.pw/data/1c9/2a/c92a7395e18fcb776b462777a588bc953b7dbb89ec93b14b398b09add727803d.png",
+    "#pattern" : r"https://(?:file|n\d+)\.pawchive\.pw/data/1c9/2a/c92a7395e18fcb776b462777a588bc953b7dbb89ec93b14b398b09add727803d.png",
     "#log"     : "~89926515: Incomplete/Missing file import ('pending')",
 
     "content"      : "<p>The long awaited sheet is here. Please yell at me about how your class deserves an item over another class. THIS IS AN OPINION. ALWAYS PLAYER &gt; CLASS ETC ETC.</p>",
@@ -173,7 +174,7 @@ __tests__ = (
     "#url"     : "https://pawchive.pw/patreon/user/19058948/post/159056579/revision/36405",
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
-    "#pattern" : r"https://file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.(?:jpg|png|mp4)",
+    "#pattern" : r"https://(?:file|n\d+)\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.(?:jpg|png|mp4)",
     "#count"   : range(1, 6),
 
     "added"         : "iso:dt",
@@ -215,7 +216,7 @@ __tests__ = (
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
     "#archive" : False,
-    "#pattern" : r"(?:ytdl:)?https://(?:t\d+\.pawchive\.pw/.+|file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+)",
+    "#pattern" : r"(?:ytdl:)?https://(?:t\d+\.pawchive\.pw/.+|(?:file|n\d+)\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+)",
     "#count"   : range(2, 8),
 
     "added"         : "iso:dt",
@@ -286,7 +287,7 @@ __tests__ = (
     "#comment" : "'deferred' zip archive (zip may lack temp_url)",
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
-    "#pattern" : r"https://(?:file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+|t\d+\.pawchive\.pw/f/[0-9a-f]+/.+\?e=\d+&s=\w+)",
+    "#pattern" : r"https://(?:(?:file|n\d+)\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+|t\d+\.pawchive\.pw/f/[0-9a-f]+/.+\?e=\d+&s=\w+)",
     "#count"   : range(1, 30),
 
     "content"       : """<p>2026年8月中に投稿した通常投稿のフルバージョンとなります。</p><p>ファイルには合計621枚の画像が含まれます。ファイル形式はzip/pdfとなります。</p><p>（サンプル画像は<a href="https://www.pixiv.net/users/103255821">Pixiv</a>でご覧いただけます。）</p><p>----------------------------------------</p><p>This is the full version of regular posts posted during August 2026.</p><p>The file contains a total of 621 images.The file formats are zip or pdf.</p><p>[You can see sample images on <a href="https://www.pixiv.net/users/103255821">Pixiv</a>.]</p><p>----------------------------------------</p><p>キャラクター/Girls：</p><p>ニコ・ロビン/Nico Robin/ルーシィ・ハートフィリア/Lucy Heartfilia/エルザ・スカーレット/Erza Scarlet/ティファ ロックハート/Tifa Lockhart/シャウラ/Shaula/井上織姫/Inoue Orihime/松本乱菊/Matsumoto Rangiku/八百万百/Yaoyorozu Momo/地獄のフブキ/Fubuki/ヨル・フォージャー/Yor Forger/綾瀬桃/Ayase Momo/宮本麗/Miyamoto Rei/薙切えりな/Nakiri Erina/黒川あかね/Kurokawa Akane/釘崎野薔薇/Kugisaki Nobara</p><p></p>""",
@@ -351,8 +352,7 @@ __tests__ = (
     "#comment" : "'deferred' files without download URL (gh#9768)",
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
-    "#results" : "https://file.pawchive.pw/data/18f/78/8f781dc6e3cf5b643e5802d48d43404dcbcde51703845bd4563b11269f87f609.zip",
-    "#pattern" : r"https://(?:file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+|t\d+\.pawchive\.pw/f/[0-9a-f]+/.+)",
+    "#pattern" : r"https://(?:(?:file|n\d+)\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+|t\d+\.pawchive\.pw/f/[0-9a-f]+/.+)",
     "#count"   : range(1, 300),
 
     "date"     : "dt:2026-07-29 01:36:00",
@@ -369,7 +369,7 @@ __tests__ = (
     "#comment" : "'deferred' files marked as 'preview_only'",
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchivePostExtractor,
-    "#pattern" : r"https://(?:file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+|t\d+\.pawchive\.pw/f/[0-9a-f]+/.+\?e=\d+&s=\w+)",
+    "#pattern" : r"https://(?:(?:file|n\d+)\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/[0-9a-f]{64}\.\w+|t\d+\.pawchive\.pw/f/[0-9a-f]+/.+\?e=\d+&s=\w+)",
     "#count"   : range(1, 10),
 
     "count"         : int,
@@ -417,7 +417,7 @@ __tests__ = (
     "#category": ("", "pawchive", "patreon"),
     "#class"   : pawchive.PawchiveUserExtractor,
     "#options" : {"max-posts": 10},
-    "#pattern" : r"https://file\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/\w{64}\.\w+",
+    "#pattern" : r"https://(?:file|n\d+)\.pawchive\.pw/data/[0-9a-f]{2,4}/[0-9a-f]{2}/\w{64}\.\w+",
     "#range"   : "1-10",
     "#count"   : 10,
 

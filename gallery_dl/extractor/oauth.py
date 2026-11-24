@@ -385,7 +385,9 @@ class OAuthMastodon(OAuthBase):
         from . import mastodon
 
         for _, root, application in mastodon.MastodonExtractor.instances:
-            if self.instance == root.partition("://")[2]:
+            if self.instance == root.partition("://")[2] and \
+                    application.get("client-id") and \
+                    application.get("client-secret"):
                 break
         else:
             application = self.cache(self._register, self.instance, _mem=False)

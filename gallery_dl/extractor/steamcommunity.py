@@ -160,7 +160,7 @@ class SteamcommunityGameExtractor(SteamcommunityExtractor):
             "section"    : extr('class="apphub_CardContentType">', '<'),
             "url"        : extr('src="', '"'),
             "comments"   : extr('class="apphub_CardCommentCount">', '<'),
-            "description": text.unescape(extr(
+            self._kw_key : text.unescape(extr(
                 'class="apphub_CardContentTitle ellipsis">', '<')).strip(),
             "creator_id" : extr('data-miniprofile="', '"'),
             "extension"  : "jpg",
@@ -175,6 +175,8 @@ class SteamcommunityGameExtractor(SteamcommunityExtractor):
 
     def _pagination(self, per_page=10):
         appid, type, qs = self.groups
+        self._kw_key = "description" if type == "screenshots" else "title"
+
         url = f"{self.root}/app/{appid}/homecontent/"
         params = text.parse_query(qs)
         pnum = text.parse_int(params.get("p"), 1)
@@ -271,7 +273,7 @@ class SteamcommunityUserExtractor(SteamcommunityExtractor):
             "game_appid" : extr('data-appid="', '"'),
             "file_id"    : extr('data-publishedfileid="', '"'),
             "url"        : extr("url('", "'"),
-            "description": text.unescape(extr(
+            self._kw_key : text.unescape(extr(
                 '<q class="ellipsis">', '<')).strip(),
             "extension"  : "jpg",
         }
@@ -284,6 +286,8 @@ class SteamcommunityUserExtractor(SteamcommunityExtractor):
 
     def _pagination(self, per_page=12):
         uid, type, qs = self.groups
+        self._kw_key = "description" if type == "screenshots" else "title"
+
         url = f"{self.root}/{uid}/{type}/screenshots"
         params = text.parse_query(qs)
         pnum = text.parse_int(params.get("p"), 1)

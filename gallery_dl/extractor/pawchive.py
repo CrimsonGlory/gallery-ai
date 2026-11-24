@@ -162,7 +162,8 @@ class PawchiveExtractor(Extractor):
                 if "url" in file:
                     pass
                 elif path[0] == "/":
-                    file["url"] = f"{self.root_dl}/data{path}"
+                    root = file.get("server") or self.root_dl
+                    file["url"] = f"{root}/data{path}"
                 else:
                     file["url"] = path
 
