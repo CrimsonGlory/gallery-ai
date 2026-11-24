@@ -82,7 +82,6 @@ __tests__ = (
         "初音ミク",
         "Miku",
         "VOCALOID",
-        "ツインテール",
         " 後背位/DoggyStyle",
     ],
     "authorUser"     : {
