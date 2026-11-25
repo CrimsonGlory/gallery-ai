@@ -15,19 +15,24 @@ Contents
 ========
 
 1) `Extractor Options`_
-2) `Extractor-specific Options`_
-3) `Downloader Options`_
-4) `Output Options`_
-5) `Postprocessor Options`_
-6) `Miscellaneous Options`_
-7) `API Tokens & IDs`_
-8) `Custom Types`_
+    1) `Core Concepts`_
+    2) `General Extractor Options`_
+    3) `Site-specific Extractor Options`_
+2) `Downloader Options`_
+3) `Output Options`_
+4) `Postprocessor Options`_
+5) `Miscellaneous Options`_
+6) `API Tokens & IDs`_
+7) `Custom Types`_
 
 
 
 Extractor Options
 =================
 
+
+Core Concepts
+=============
 
 Each extractor is identified by its ``category`` and ``subcategory``.
 
@@ -137,6 +142,59 @@ The effective options for ``CHILD`` when spawned by ``PARENT`` will be
     "<option-name-2>": "<value-28>",
     "<option-name-3>": "<value-3>"
 
+
+Command-line Options
+--------------------
+
+Many of the available `command-line options <options.md>`__ are implemented
+by overriding their corresponding configuration options and setting them as
+`global options <Global Options_>`__.
+For example, ``-A/--abort`` overrides `extractor.*.skip`_, while
+``-R/--retries`` overrides both `extractor.*.retries`_ & `downloader.*.retries`_.
+
+To set an option value directly, use ``-o/--option``.
+
+.. code::
+
+    -o, --option KEY=VALUE      Additional options. Example: -o browser=firefox
+
+For example:
+
+.. code::
+
+    -o retries=2
+
+    -o extractor.retries=2
+    -o extractor.pixiv.retries=2
+
+    -o downloader.retries=2
+    -o downloader.ytdl.retries=2
+
+
+Option values (the part after ``=``) are parsed as a JSON value if possible
+and treated as a literal ``string`` otherwise.
+
+``object`` values can be set either as complete, valid JSON objects
+or as its individual key-value pairs:
+
+.. code::
+
+    -o cookies='{"auth_token": "13482b08c78064ed"}'
+
+    -o cookies.auth_token="13482b08c78064ed"
+
+.. code::
+
+    -o output.colors='{"success": "1;33", "skip": "3", "error": "1;41"}'
+
+    -o output.colors.success="1;33"
+    -o output.colors.skip="3"
+    -o output.colors.error="1;41"
+
+
+
+General Extractor Options
+=========================
 
 
 extractor.*.filename
@@ -1950,8 +2008,8 @@ Special Values
 
 
 
-Extractor-specific Options
-==========================
+Site-specific Extractor Options
+===============================
 
 
 extractor.ao3.formats
