@@ -257,6 +257,7 @@ def parse_docs_configuration():
         elif re.match(r"^-+$", line):
             opt_name = last.strip()
             opt_desc = {}
+            name = None
 
         # end of option block
         elif opt_name and opt_desc and line == "\n" and not last:
@@ -269,6 +270,8 @@ def parse_docs_configuration():
             if line[0].isalpha():
                 name = line.strip()
                 opt_desc[name] = ""
+            elif not name:
+                opt_name = None
             else:
                 line = line.strip()
                 if line.startswith(("* ", "- ")):
