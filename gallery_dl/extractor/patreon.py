@@ -129,8 +129,23 @@ class PatreonExtractor(Extractor):
                 r'><(?:figure><img|video|audio) src="([^"]+)([^>]*)')
             for url, attrs in pattern.findall(content):
                 url = text.unescape(url)
-                data = {"media_id": text.extr(attrs, 'media_id="', '"')}
-                yield "content", data, url, self._filename(url) or url
+                if url.startswith("https://www.patreon.com/api/media/"):
+                    mid = url[url.rfind("/")+1:]
+                    try:
+                        data = self.request_json(url)
+                        attr = data["data"]["attributes"]
+                        url = (attr.get("download_url") or
+                               attr["display"]["url"])
+                        name = attrs.get("file_name") or url
+                    except Exception as exc:
+                        self.log.debug(
+                            "Failed to extract media file %s (%s: %s)",
+                            mid, exc.__class__.__name__, exc)
+                    else:
+                        yield "content", data, url, name
+                else:
+                    data = {"media_id": text.extr(attrs, 'media_id="', '"')}
+                    yield "content", data, url, self._filename(url) or url
 
     def posts(self):
         """Return all relevant post objects"""
