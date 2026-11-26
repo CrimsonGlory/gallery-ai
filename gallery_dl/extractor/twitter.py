@@ -1218,14 +1218,24 @@ class TwitterTweetExtractor(TwitterExtractor):
 
         while True:
             parent_id = tweet["rest_id"]
-            tweet_id = tweet["legacy"].get("quoted_status_id_str")
-            if not tweet_id:
+            quoted = tweet.get("quoted_tweet_results")
+            if not quoted:
                 break
-            tweet = self.api.tweet_result_by_rest_id(tweet_id)
-            if "legacy" not in tweet:
+
+            tweet = quoted.get("result")
+            tweet_id = quoted.get("rest_id")
+            if tweet and len(tweet) < 8 and tweet_id:
+                tweet = self.api.tweet_result_by_rest_id(tweet_id)
+            if legacy := tweet.pop("legacy", None):
+                tweet.update(legacy)
+            else:
                 self.log.debug("%s: %s", tweet_id, tweet)
                 break
-            tweet["legacy"]["quoted_by_id_str"] = parent_id
+
+            tweet["id_str"] = tweet["rest_id"]
+            tweet["extended_entities"] = {
+                "media": tweet.pop("media_entities2", "")}
+            tweet["quoted_by_id_str"] = parent_id
             yield tweet
 
     def _tweets_detail(self, tweet_id):
