@@ -396,6 +396,7 @@ class ImgspiceImageExtractor(ImagehostImageExtractor):
     category = "imgspice"
     pattern = r"(?:https?://)?((?:www\.)?imgspice\.com/([^/?#]+))"
     example = "https://imgspice.com/ID/NAME.EXT.html"
+    _notfound = True
 
     def get_info(self, page):
         pos = page.find('id="imgpreview"')
