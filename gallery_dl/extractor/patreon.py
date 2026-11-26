@@ -136,7 +136,7 @@ class PatreonExtractor(Extractor):
                         attr = data["data"]["attributes"]
                         url = (attr.get("download_url") or
                                attr["display"]["url"])
-                        name = attrs.get("file_name") or url
+                        name = attr.get("file_name") or url
                     except Exception as exc:
                         self.log.debug(
                             "Failed to extract media file %s (%s: %s)",
