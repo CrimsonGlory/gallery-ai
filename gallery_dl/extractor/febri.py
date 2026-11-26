@@ -20,6 +20,12 @@ class FebriExtractor(Extractor):
     filename_fmt = "{num:>02}{caption:? //}.{extension}"
     archive_fmt = "{slug}-{num}"
 
+    def _request_page(self, url):
+        response = self.request(url)
+        if "febri.jp" not in response.url:
+            raise self.exc.NotFoundError(self.subcategory)
+        return response.text
+
 
 class FebriArticleExtractor(FebriExtractor):
     subcategory = "article"
@@ -29,7 +35,7 @@ class FebriArticleExtractor(FebriExtractor):
     def items(self):
         slug = self.groups[0]
         url = f"{self.root}/topics/{slug}/"
-        page = self.request(url).text
+        page = self._request_page(url)
         extr = text.extract_from(page)
 
         og_title = extr('property="og:title" content="', ' | Febri"')
@@ -89,7 +95,7 @@ class FebriTopicsExtractor(FebriExtractor):
 
         while True:
             url = f"{base}page/{pnum}/" if pnum > 1 else base
-            page = self.request(url).text
+            page = self._request_page(url)
 
             for box in text.extract_iter(page, 'class="box-article', '</div>'):
                 href = text.unescape(text.extr(box, 'href="', '"'))
