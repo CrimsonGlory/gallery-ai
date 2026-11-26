@@ -98,6 +98,7 @@ class ImxtoImageExtractor(ImagehostImageExtractor):
                r"/(?:i/|img-)(\w+)(\.html)?)")
     example = "https://imx.to/i/ID"
     _encoding = "utf-8"
+    _notfound = True
 
     def __init__(self, match):
         ImagehostImageExtractor.__init__(self, match)
