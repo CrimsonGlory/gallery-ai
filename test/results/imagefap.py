@@ -91,6 +91,17 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://www.imagefap.com/gallery/14100681",
+    "#comment" : "incomplete gallery (gh#9910)",
+    "#class"   : imagefap.ImagefapGalleryExtractor,
+    "#count"   : 23,
+
+    "count"      : 24,
+    "gallery_id" : 14100681,
+    "uploader"   : "tom22tom",
+},
+
+{
     "#url"     : "https://www.imagefap.com/photo/1962981893",
     "#category": ("", "imagefap", "image"),
     "#class"   : imagefap.ImagefapImageExtractor,

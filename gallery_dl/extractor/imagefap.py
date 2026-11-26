@@ -85,18 +85,22 @@ class ImagefapGalleryExtractor(ImagefapExtractor):
         }
 
         num = 0
+        seen = set()
         total = self._count
         while True:
             page = self.request(url, params=params, headers=headers).text
 
             cnt = 0
             for image_url in text.extract_iter(page, '<a href="', '"'):
-                num += 1
                 cnt += 1
                 data = text.nameext_from_url(image_url)
-                data["num"] = num
-                data["image_id"] = text.parse_int(data["filename"])
-                yield image_url, data
+                image_id = text.parse_int(data["filename"])
+                if image_id not in seen:
+                    seen.add(image_id)
+                    num += 1
+                    data["num"] = num
+                    data["image_id"] = image_id
+                    yield image_url, data
 
             if not cnt or cnt < 24 and num >= total:
                 return
