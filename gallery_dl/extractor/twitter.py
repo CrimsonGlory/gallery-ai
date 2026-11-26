@@ -1262,15 +1262,31 @@ class TwitterTweetExtractor(TwitterExtractor):
 
         while True:
             parent_id = tweet.get("rest_id") or tweet.get("id_str")
+            quoted = (tweet.get("quoted_tweet_results") or
+                      tweet.get("quoted_status_result"))
             tweet_id = (tweet.get("legacy") or tweet).get(
                 "quoted_status_id_str")
-            if not tweet_id:
+
+            nxt = None
+            if quoted:
+                nxt = quoted.get("result")
+                if nxt and "tweet" in nxt:
+                    nxt = nxt["tweet"]
+                tweet_id = (quoted.get("rest_id") or
+                            (nxt or {}).get("rest_id") or tweet_id)
+                if nxt and len(nxt) < 8 and tweet_id:
+                    nxt = self.api.tweet_result_by_rest_id(tweet_id)
+
+            if not nxt and tweet_id:
+                nxt = self.api.tweet_result_by_rest_id(tweet_id)
+
+            if not nxt:
                 break
-            tweet = self.api.tweet_result_by_rest_id(tweet_id)
-            if "legacy" not in tweet and "media_entities2" not in tweet:
-                self.log.debug("%s: %s", tweet_id, tweet)
+            if "legacy" not in nxt and "media_entities2" not in nxt:
+                self.log.debug("%s: %s", tweet_id, nxt)
                 break
-            tweet = self._flatten_tweet(tweet, tweet_id)
+
+            tweet = self._flatten_tweet(nxt, tweet_id)
             tweet["quoted_by_id_str"] = parent_id
             yield tweet
 
