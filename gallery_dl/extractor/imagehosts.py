@@ -246,8 +246,10 @@ class ImagetwistImageExtractor(ImagehostImageExtractor):
         return self.request(self.page_url).cookies
 
     def get_info(self, page):
-        url     , pos = text.extract(page, '<img src="', '"')
-        if url and url.startswith("/imgs/"):
+        pos = page.find("</header>") + 1
+        url     , pos = text.extract(page, '<img src="', '"', pos)
+        if url is None or url.startswith("/imgs/") or \
+                'class="it-missing' in page:
             self.not_found()
         filename, pos = text.extract(page, ' alt="', '"', pos)
         return url, filename
@@ -268,24 +270,23 @@ class ImagetwistGalleryExtractor(ImagehostImageExtractor):
         page = self.request(url).text
 
         extr = text.extract_from(page)
+        title = extr('id="it-gallery-title"', "<")
         data = {
             "_extractor"   : ImagetwistImageExtractor,
-            "gallery_title": text.unescape(extr('page_main_title">', "<")),
+            "gallery_title": text.unescape(title[title.find(">")+1:]),
             "gallery_id"   : self.groups[2] or extr("&amp;fld_id=", "&"),
         }
         del extr
 
         while True:
-            gallery = text.extr(page, 'class="gallerys', "</div")
-            for path in text.extract_iter(gallery, ' href="', '"'):
-                yield Message.Queue, root + path, data
+            for url in text.extract_iter(
+                    page, 'class="it-pg__card" href="', '"'):
+                yield Message.Queue, url, data
 
-            pos = page.find("&#187;</a>")
-            if pos < 0:
+            next = text.extr(page, 'rel="next" href="', '"')
+            if not next:
                 break
-            qs = text.unescape(text.rextr(page, "href='", "'", pos))
-
-            page = self.request(f"{root}/{qs}").text
+            page = self.request(root + text.unescape(next)).text
 
 
 class ImgadultImageExtractor(ImagehostImageExtractor):

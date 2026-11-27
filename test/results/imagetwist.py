@@ -62,10 +62,10 @@ __tests__ = (
     "#category": ("imagehost", "imagetwist", "gallery"),
     "#class"   : imagehosts.ImagetwistGalleryExtractor,
     "#results" : (
-        "https://imagetwist.com/j6eu91sbl9bs",
-        "https://imagetwist.com/vx4oh119izyr",
-        "https://imagetwist.com/n3td3a6vzzed",
-        "https://imagetwist.com/8uz6lmg31nmc",
+        "https://imagetwist.com/j6eu91sbl9bs/4.png",
+        "https://imagetwist.com/vx4oh119izyr/3.png",
+        "https://imagetwist.com/n3td3a6vzzed/2.png",
+        "https://imagetwist.com/8uz6lmg31nmc/1.png",
     ),
 
     "gallery_id"   : "747223",
