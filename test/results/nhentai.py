@@ -101,4 +101,9 @@ __tests__ = (
     "#class"   : nhentai.NhentaiFavoriteExtractor,
 },
 
+{
+    "#url"     : "https://nhentai.net/user/favorites/",
+    "#class"   : nhentai.NhentaiFavoriteExtractor,
+},
+
 )
