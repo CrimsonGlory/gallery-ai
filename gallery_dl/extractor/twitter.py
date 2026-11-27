@@ -2098,8 +2098,9 @@ class TwitterAPI():
 
             retry = False
             for error in errors:
-                msg = error.get("message") or "Unspecified"
-                self.log.debug("API error: '%s'", msg)
+                if msg := error.get("message") or "":
+                    self.log.warning("'%s'", msg)
+                self.log.debug("API error: %s", error)
 
                 if "this account is temporarily locked" in msg:
                     msg = "Account temporarily locked"
@@ -2109,7 +2110,7 @@ class TwitterAPI():
                     self.extractor.input("Press ENTER to retry.")
                     retry = True
 
-                elif "Could not authenticate you" in msg:
+                elif "ould not authenticate you" in msg:
                     raise self.exc.AbortExtraction(f"'{msg}'")
 
                 elif msg.lower().startswith("timeout"):

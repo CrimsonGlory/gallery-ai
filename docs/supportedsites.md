@@ -1277,7 +1277,7 @@ Consider all listed sites to potentially be NSFW.
 <tr id="nhentai" title="nhentai">
     <td>nhentai</td>
     <td>https://nhentai.net/</td>
-    <td><span title="https://nhentai.net/favorites/">Favorites</span> |
+    <td><span title="https://nhentai.net/user/favorites/">Favorites</span> |
         <span title="https://nhentai.net/g/12345/">Galleries</span> |
         <span title="https://nhentai.net/search/?q=QUERY">Search Results</span> |
         <span title="https://nhentai.net/tag/TAG/">Tag Searches</span></td>
