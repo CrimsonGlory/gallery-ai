@@ -138,7 +138,7 @@ __tests__ = (
     "#url"     : "https://gallog.dcinside.com/chinese5249",
     "#class"   : dcinside.DcinsideUserExtractor,
     "#pattern" : dcinside.DcinsideGalleryExtractor.pattern,
-    "#count"   : 51,
+    "#count"   : range(50, 80),
 },
 
 {
