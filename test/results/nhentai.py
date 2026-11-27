@@ -97,6 +97,11 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://nhentai.net/favorites/",
+    "#class"   : nhentai.NhentaiFavoriteExtractor,
+},
+
+{
     "#url"     : "https://nhentai.net/user/favorites/",
     "#class"   : nhentai.NhentaiFavoriteExtractor,
 },

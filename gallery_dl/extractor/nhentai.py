@@ -139,7 +139,7 @@ class NhentaiSearchExtractor(NhentaiExtractor):
 class NhentaiFavoriteExtractor(NhentaiExtractor):
     """Extractor for nhentai favorites"""
     subcategory = "favorite"
-    pattern = BASE_PATTERN + r"/user/favorites/?(?:\?([^#]+))?"
+    pattern = BASE_PATTERN + r"/(?:user/)?favorites/?(?:\?([^#]+))?"
     example = "https://nhentai.net/user/favorites/"
 
     def galleries(self):
