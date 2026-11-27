@@ -489,11 +489,7 @@ class TwitterExtractor(Extractor):
                 files.append({"url": url})
 
     def _transform_tweet(self, tweet):
-        if "legacy" in tweet:
-            legacy = tweet["legacy"]
-
-        else:
-            legacy = tweet
+        legacy = tweet["legacy"] if "legacy" in tweet else tweet
         tweet_id = int(legacy["id_str"])
 
         if "author" in tweet:
@@ -546,6 +542,7 @@ class TwitterExtractor(Extractor):
             "reply_count"   : tget("reply_count"),
             "retweet_count" : tget("retweet_count"),
             "bookmark_count": tget("bookmark_count"),
+            "ai_generated"  : None,
         }
 
         if "views" in tweet:
@@ -598,6 +595,13 @@ class TwitterExtractor(Extractor):
             except KeyError:
                 self.log.debug("Unable to extract 'birdwatch' note from %s",
                                tweet["birdwatch_pivot"])
+        if "content_disclosure" in tweet:
+            try:
+                tdata["ai_generated"] = (
+                    tweet["content_disclosure"]["ai_generated_disclosure"]
+                    ["has_ai_generated_media"])
+            except KeyError:
+                pass
         if "article" in tweet:
             tdata["article"] = tweet["article"]
         if "in_reply_to_screen_name" in legacy:
