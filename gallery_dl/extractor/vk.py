@@ -218,8 +218,16 @@ class VkAlbumExtractor(VkExtractor):
         _, user_id, album_id = self.groups
 
         url = f"{self.root}/album{user_id}_{album_id}"
-        page = self.request(url).text
-        desc = text.extr(page, 'name="og:description" value="', '"')
+        response = self.request(url)
+        if "/challenge.html" in response.url:
+            raise self.exc.AbortExtraction(
+                "HTTP redirect to 'challenge' page:\n" + response.url)
+        page = response.text
+        desc = (
+            text.extr(page, 'name="og:description" value="', '"') or
+            text.extr(page, 'property="og:description" content="', '"') or
+            text.extr(page, 'name="og:description" content="', '"')
+        )
         try:
             album_name, user_name, photos = desc.rsplit(" - ", 2)
         except ValueError:

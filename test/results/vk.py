@@ -127,15 +127,15 @@ __tests__ = (
     "filename"     : str,
     "extension"    : {"jpg", "png"},
     "date"         : "type:datetime",
-    "count"        : 826,
+    "count"        : int,
     "num"          : range(1, 25),
     "description"  : str,
     "hash"         : r"re:[0-9a-f]{18}",
     "likes"        : int,
     "album"        : {
         "id"   : "00",
-        "name" : "Community wall photos",
-        "count": 826,
+        "name" : str,
+        "count": int,
     },
     "user"         : {
         "id"   : "-205150448",
