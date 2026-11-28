@@ -377,7 +377,7 @@ __tests__ = (
 {
     "#url"     : "https://www.newgrounds.com/search/conduct/art?terms=tree",
     "#class"   : newgrounds.NewgroundsSearchExtractor,
-    "#pattern" : newgrounds.NewgroundsImageExtractor.pattern,
+    "#pattern" : r"https://(?:www\.newgrounds\.com/art/view/|art\.ngfiles\.com/(?:images|comments)/)",
     "#range"   : "1-10",
     "#count"   : 10,
 
