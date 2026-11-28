@@ -5,13 +5,16 @@
 # published by the Free Software Foundation.
 
 from gallery_dl.extractor import mangapark
+from gallery_dl import exception
 
 
 __tests__ = (
 {
     "#url"     : "https://mangapark.net/title/114972-aria/6710214-en-ch.60.2",
+    "#comment" : "mangapark.net is a parking page; GraphQL /apo/ returns 405",
     "#category": ("", "mangapark", "chapter"),
     "#class"   : mangapark.MangaparkChapterExtractor,
+    "#exception": exception.HttpError,
     "#pattern" : r"https://[\w-]+\.mp\w+\.org/media/2002/e67/61e29278a583b9227964076e/\d+_\d+_\d+_\d+\.jpeg",
     "#count"   : 70,
 
@@ -43,8 +46,9 @@ __tests__ = (
 
 {
     "#url"     : "https://mangapark.net/comic/10426/aria/c60.2-en-i6712231",
-    "#comment" : "v3 URL",
+    "#comment" : "v3 URL; mangapark.net is a parking page; GraphQL /apo/ returns 405",
     "#class"   : mangapark.MangaparkChapterExtractor,
+    "#exception": exception.HttpError,
     "#pattern" : r"https://[\w-]+\.mp\w+\.org/media/2001/a2e/61e2acf8062ec26ee5ef8e2a/\d+_\d+_\d+_\d+\.jpeg",
     "#count"   : 70,
 
@@ -106,8 +110,10 @@ __tests__ = (
 
 {
     "#url"     : "https://mangapark.net/title/114972-aria",
+    "#comment" : "mangapark.net is a parking page; GraphQL /apo/ returns 405",
     "#category": ("", "mangapark", "manga"),
     "#class"   : mangapark.MangaparkMangaExtractor,
+    "#exception": exception.HttpError,
     "#pattern" : mangapark.MangaparkChapterExtractor.pattern,
     "#count"   : 71,
 
@@ -126,8 +132,9 @@ __tests__ = (
 
 {
     "#url"     : "https://mangapark.net/comic/10426/aria",
-    "#comment" : "v3 URL",
+    "#comment" : "v3 URL; mangapark.net is a parking page; GraphQL /apo/ returns 405",
     "#class"   : mangapark.MangaparkMangaExtractor,
+    "#exception": exception.HttpError,
     "#pattern" : mangapark.MangaparkChapterExtractor.pattern,
     "#count"   : 74,
 
